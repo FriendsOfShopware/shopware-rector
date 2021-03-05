@@ -1,0 +1,23 @@
+{
+    "name": "frosh/shopware-rector",
+    "description": "Shopware specific Rector",
+    "type": "library",
+    "license": "mit",
+    "require": {
+        "php": "^7.4 || ^8.0",
+        "rector/rector": "^0.9.31"
+    },
+    "autoload": {
+        "psr-4": {
+            "Frosh\\Rector\\": "src"
+        }
+    },
+    "bin": [
+        "bin/sw-rector"
+    ],
+    "config": {
+        "optimize-autoloader": true,
+        "update-with-dependencies": true,
+        "sort-packages": true
+    }
+}
