@@ -2,7 +2,10 @@
 
 namespace Frosh\Rector\Set;
 
-class ShopwareSetList
+final class ShopwareSetList
 {
-    public const SHOPWARE_6_4 = __DIR__ . '/../../config/shopware-6.4.php';
+    /**
+     * @var string
+     */
+    public const SHOPWARE_6_5_0 = __DIR__ . '/../../config/shopware-6.5.0.php';
 }
