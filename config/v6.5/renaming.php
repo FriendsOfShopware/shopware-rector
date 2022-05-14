@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use Frosh\Rector\Rule\ClassConstructor\RemoveArgumentFromClassConstruct;
+use Frosh\Rector\Rule\ClassConstructor\RemoveArgumentFromClassConstructRector;
 use Frosh\Rector\Rule\v65\MigrateLoginRequiredAnnotationToRouteRector;
 use Frosh\Rector\Rule\v65\RedisConnectionFactoryCreateRector;
 use Frosh\Rector\Rule\v65\ThemeCompilerPrefixRector;
@@ -10,6 +12,7 @@ use PHPStan\Type\ObjectType;
 use Rector\Arguments\Rector\MethodCall\RemoveMethodCallParamRector;
 use Rector\Arguments\ValueObject\RemoveMethodCallParam;
 use Rector\Config\RectorConfig;
+use Rector\DeadCode\Rector\ClassMethod\RemoveUnusedConstructorParamRector;
 use Rector\Renaming\Rector\MethodCall\RenameMethodRector;
 use Rector\Renaming\Rector\Name\RenameClassRector;
 use Rector\Renaming\ValueObject\MethodCallRename;
@@ -47,6 +50,13 @@ return static function (RectorConfig $rectorConfig): void {
         RemoveMethodCallParamRector::class,
         [
             new RemoveMethodCallParam('Shopware\\Core\\Checkout\\Cart\\Tax\\Struct\\CalculatedTaxCollection', 'merge', 1),
+        ],
+    );
+
+    $rectorConfig->ruleWithConfiguration(
+        RemoveArgumentFromClassConstructRector::class,
+        [
+            new RemoveArgumentFromClassConstruct('Shopware\\Core\\Checkout\\Customer\\Exception\\DuplicateWishlistProductException', 0),
         ],
     );
 
