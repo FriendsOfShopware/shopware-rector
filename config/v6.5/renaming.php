@@ -5,6 +5,8 @@ declare(strict_types=1);
 use Frosh\Rector\Rule\v65\MigrateLoginRequiredAnnotationToRouteRector;
 use Frosh\Rector\Rule\v65\RedisConnectionFactoryCreateRector;
 use PHPStan\Type\ObjectType;
+use Rector\Arguments\Rector\MethodCall\RemoveMethodCallParamRector;
+use Rector\Arguments\ValueObject\RemoveMethodCallParam;
 use Rector\Config\RectorConfig;
 use Rector\Renaming\Rector\MethodCall\RenameMethodRector;
 use Rector\Renaming\Rector\Name\RenameClassRector;
@@ -31,6 +33,13 @@ return static function (RectorConfig $rectorConfig): void {
             'Shopware\\Core\\Framework\\Event\\MailActionInterface' => 'Shopware\\Core\\Framework\\Event\\MailAware',
             'Shopware\\Core\\Framework\\Log\\LogAwareBusinessEventInterface' => 'Shopware\\Core\\Framework\\Log\\LogAware',
             'Shopware\\Administration\\Service\\AdminOrderCartService' => 'Shopware\\Core\\Checkout\\Cart\\ApiOrderCartService',
+        ],
+    );
+
+    $rectorConfig->ruleWithConfiguration(
+        RemoveMethodCallParamRector::class,
+        [
+            new RemoveMethodCallParam('Shopware\\Core\\Checkout\\Cart\\Tax\\Struct\\CalculatedTaxCollection', 'merge', 1),
         ],
     );
 
