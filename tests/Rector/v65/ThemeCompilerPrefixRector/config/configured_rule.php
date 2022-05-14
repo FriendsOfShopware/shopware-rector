@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use Frosh\Rector\Rule\v65\RedisConnectionFactoryCreateRector;
 use Frosh\Rector\Rule\v65\ThemeCompilerPrefixRector;
 use Rector\Config\RectorConfig;
 

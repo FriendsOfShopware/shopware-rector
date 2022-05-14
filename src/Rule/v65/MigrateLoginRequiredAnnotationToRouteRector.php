@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Frosh\Rector\Rule\v65;
 
 use PhpParser\Builder\Class_;
@@ -11,7 +13,6 @@ use Rector\BetterPhpDocParser\ValueObject\PhpDoc\DoctrineAnnotation\CurlyListNod
 use Rector\Core\Rector\AbstractRector;
 use Symplify\RuleDocGenerator\ValueObject\CodeSample\CodeSample;
 use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
-use function var_dump;
 
 class MigrateLoginRequiredAnnotationToRouteRector extends AbstractRector
 {

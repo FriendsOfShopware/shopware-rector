@@ -13,7 +13,7 @@ return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->ruleWithConfiguration(
         AddArgumentToClassWithoutDefaultRector::class,
         [
-            new AddArgumentToClassWithoutDefault('AbstractCaptcha', 'supports', 1, 'captcha', new ArrayType(new StringType(), new StringType()))
+            new AddArgumentToClassWithoutDefault('AbstractCaptcha', 'supports', 1, 'captcha', new ArrayType(new StringType(), new StringType())),
         ]
     );
 };

@@ -13,6 +13,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         __DIR__ . '/src',
         __DIR__ . '/tests',
     ]);
+    $parameters->set(Option::PARALLEL, true);
 
     $services = $containerConfigurator->services();
     $services->set(ArraySyntaxFixer::class)
@@ -21,4 +22,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ]]);
 
     $containerConfigurator->import(SetList::PSR_12);
+    $containerConfigurator->import(SetList::ARRAY);
+    $containerConfigurator->import(SetList::CLEAN_CODE);
+    $containerConfigurator->import(SetList::STRICT);
 };

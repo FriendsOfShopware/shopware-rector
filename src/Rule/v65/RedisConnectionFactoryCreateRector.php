@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Frosh\Rector\Rule\v65;
 
 use PhpParser\Node;
@@ -24,7 +26,7 @@ CODE_SAMPLE
 $redisFactory = new RedisConnectionFactory;
 $redisFactory->create('redis://localhost');
 CODE_SAMPLE
-                )
+                ),
             ],
         );
     }
@@ -32,7 +34,7 @@ CODE_SAMPLE
     public function getNodeTypes(): array
     {
         return [
-            Node\Expr\StaticCall::class
+            Node\Expr\StaticCall::class,
         ];
     }
 

@@ -2,6 +2,7 @@
 
 use Frosh\Rector\Rule\ClassMethod\AddArgumentToClassWithoutDefault;
 use Frosh\Rector\Rule\ClassMethod\AddArgumentToClassWithoutDefaultRector;
+use Frosh\Rector\Rule\v65\AddBanAllToReverseProxyRector;
 use PHPStan\Type\ArrayType;
 use PHPStan\Type\BooleanType;
 use PHPStan\Type\ObjectType;
@@ -37,7 +38,10 @@ return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->ruleWithConfiguration(
         AddArgumentToClassWithoutDefaultRector::class,
         [
-            new AddArgumentToClassWithoutDefault('Shopware\Storefront\Framework\Captcha\AbstractCaptcha', 'supports', 1, 'captchaConfig', new ArrayType(new StringType(), new StringType()))
+            new AddArgumentToClassWithoutDefault('Shopware\Storefront\Framework\Captcha\AbstractCaptcha', 'supports', 1, 'captchaConfig', new ArrayType(new StringType(), new StringType())),
+            new AddArgumentToClassWithoutDefault('Shopware\Storefront\Framework\Cache\ReverseProxy\AbstractReverseProxyGateway', 'tag', 2, 'response', new ObjectType('Symfony\Component\HttpFoundation\Response')),
         ]
     );
+
+    $rectorConfig->rule(AddBanAllToReverseProxyRector::class);
 };

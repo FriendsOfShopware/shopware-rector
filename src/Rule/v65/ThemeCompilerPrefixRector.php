@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Frosh\Rector\Rule\v65;
 
 use PhpParser\Node;
@@ -29,7 +31,7 @@ PHP
     public function getNodeTypes(): array
     {
         return [
-            Node\Expr\StaticCall::class
+            Node\Expr\StaticCall::class,
         ];
     }
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Frosh\Rector\Rule\ClassMethod;
 
 use PhpParser\Node;
@@ -54,16 +56,16 @@ class MyCustomClass extends SomeExampleClass
 CODE_SAMPLE
 ,
                     [
-        new AddArgumentToClassWithoutDefault('SomeExampleClass', 'someMethod', 0, 'someArgument', new ObjectType('SomeType'))]
-                )
-    ]
+                        new AddArgumentToClassWithoutDefault('SomeExampleClass', 'someMethod', 0, 'someArgument', new ObjectType('SomeType')), ]
+                ),
+            ]
         );
     }
 
     public function getNodeTypes(): array
     {
         return [
-            ClassMethod::class
+            ClassMethod::class,
         ];
     }
 
