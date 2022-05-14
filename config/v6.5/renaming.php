@@ -2,15 +2,17 @@
 
 declare(strict_types=1);
 
+use Frosh\Rector\Rule\Class_\InterfaceReplacedWithAbstractClass;
+use Frosh\Rector\Rule\Class_\InterfaceReplacedWithAbstractClassRector;
 use Frosh\Rector\Rule\ClassConstructor\RemoveArgumentFromClassConstruct;
 use Frosh\Rector\Rule\ClassConstructor\RemoveArgumentFromClassConstructRector;
 use Frosh\Rector\Rule\v65\MigrateLoginRequiredAnnotationToRouteRector;
 use Frosh\Rector\Rule\v65\RedisConnectionFactoryCreateRector;
 use Frosh\Rector\Rule\v65\ThemeCompilerPrefixRector;
+use Frosh\Rector\Rule\v65\ThumbnailGenerateSingleToMultiGenerateRector;
 use Rector\Arguments\Rector\MethodCall\RemoveMethodCallParamRector;
 use Rector\Arguments\ValueObject\RemoveMethodCallParam;
 use Rector\Config\RectorConfig;
-use Rector\DeadCode\Rector\ClassMethod\RemoveUnusedConstructorParamRector;
 use Rector\Renaming\Rector\MethodCall\RenameMethodRector;
 use Rector\Renaming\Rector\Name\RenameClassRector;
 use Rector\Renaming\ValueObject\MethodCallRename;
@@ -62,6 +64,7 @@ return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->rule(MigrateLoginRequiredAnnotationToRouteRector::class);
     $rectorConfig->rule(RedisConnectionFactoryCreateRector::class);
     $rectorConfig->rule(ThemeCompilerPrefixRector::class);
+    $rectorConfig->rule(ThumbnailGenerateSingleToMultiGenerateRector::class);
 
     $rectorConfig->ruleWithConfiguration(
         PropertyFetchToMethodCallRector::class,
@@ -71,5 +74,13 @@ return static function (RectorConfig $rectorConfig): void {
             'getSequenceId',
             null
         )]
+    );
+
+    $rectorConfig->ruleWithConfiguration(
+        InterfaceReplacedWithAbstractClassRector::class,
+        [
+            new InterfaceReplacedWithAbstractClass('Shopware\Core\Checkout\Cart\CartPersisterInterface', 'Shopware\Core\Checkout\Cart\AbstractCartPersister'),
+            new InterfaceReplacedWithAbstractClass('Shopware\Core\Content\Sitemap\Provider\UrlProviderInterface', 'Shopware\Core\Content\Sitemap\Provider\AbstractUrlProvider'),
+        ]
     );
 };

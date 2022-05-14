@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Frosh\Rector\Rule\ClassMethod\AddArgumentToClassWithoutDefault;
 use Frosh\Rector\Rule\ClassMethod\AddArgumentToClassWithoutDefaultRector;
 use Frosh\Rector\Rule\v65\AddBanAllToReverseProxyRector;
@@ -38,8 +40,9 @@ return static function (RectorConfig $rectorConfig): void {
         AddReturnTypeDeclarationRector::class,
         [
             new AddReturnTypeDeclaration('Shopware\\Core\\Framework\\Adapter\\Twig\\TemplateIterator', 'getIterator', new ObjectType('Traversable')),
+            new AddReturnTypeDeclaration('Shopware\Core\Content\Cms\DataResolver\CriteriaCollection', 'getIterator', new ObjectType('Traversable')),
             new AddReturnTypeDeclaration('Shopware\\Core\\Checkout\\Cart\\CartBehavior', 'hasPermission', new BooleanType()),
-            new AddReturnTypeDeclaration('Shopware\\Storefront\\Page\\Product\\Review\\ReviewLoaderResult', 'getMatrix', new ObjectType('Shopware\Core\Content\Product\SalesChannel\Review\RatingMatrix'))
+            new AddReturnTypeDeclaration('Shopware\\Storefront\\Page\\Product\\Review\\ReviewLoaderResult', 'getMatrix', new ObjectType('Shopware\Core\Content\Product\SalesChannel\Review\RatingMatrix')),
         ]
     );
 
@@ -54,7 +57,7 @@ return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->ruleWithConfiguration(
         ArgumentAdderRector::class,
         [
-            new ArgumentAdder('Shopware\Core\Content\Media\Thumbnail\ThumbnailService', 'updateThumbnails', 2, 'strict', false, new BooleanType())
+            new ArgumentAdder('Shopware\Core\Content\Media\Thumbnail\ThumbnailService', 'updateThumbnails', 2, 'strict', false, new BooleanType()),
         ]
     );
 
