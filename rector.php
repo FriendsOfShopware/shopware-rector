@@ -10,6 +10,8 @@ return static function (RectorConfig $rectorConfig): void {
         __DIR__ . '/src'
     ]);
 
+    $rectorConfig->importNames();
+
     $rectorConfig->sets([
         ShopwareSetList::SHOPWARE_6_5_0
     ]);
