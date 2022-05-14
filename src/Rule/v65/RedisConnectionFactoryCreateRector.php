@@ -12,7 +12,8 @@ class RedisConnectionFactoryCreateRector extends AbstractRector
 {
     public function getRuleDefinition(): \Symplify\RuleDocGenerator\ValueObject\RuleDefinition
     {
-        return new RuleDefinition('Migrate RedisCommection static call to create connection on object',
+        return new RuleDefinition(
+            'Migrate RedisCommection static call to create connection on object',
             [
                 new CodeSample(
                     <<<'CODE_SAMPLE'
@@ -40,14 +41,14 @@ CODE_SAMPLE
      */
     public function refactor(Node $node)
     {
-        if (! $this->nodeTypeResolver->isMethodStaticCallOrClassMethodObjectType(
+        if (!$this->nodeTypeResolver->isMethodStaticCallOrClassMethodObjectType(
             $node,
             new ObjectType('Shopware\Core\Framework\Adapter\Cache\RedisConnectionFactory')
         )) {
             return null;
         }
 
-        if (! $this->isName($node->name, 'createConnection')) {
+        if (!$this->isName($node->name, 'createConnection')) {
             return null;
         }
 

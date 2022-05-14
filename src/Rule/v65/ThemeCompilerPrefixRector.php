@@ -38,7 +38,7 @@ PHP
      */
     public function refactor(Node $node)
     {
-        if (! $this->isName($node->name, 'getThemePrefix')) {
+        if (!$this->isName($node->name, 'getThemePrefix')) {
             return null;
         }
 
