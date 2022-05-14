@@ -7,12 +7,22 @@
         "php": "^7.4 || ^8.0"
     },
     "require-dev": {
-        "rector/rector": "~0.12"
+        "phpunit/phpunit": "^9.5",
+        "rector/rector": "~0.12",
+        "tracy/tracy": "^2.9"
     },
     "autoload": {
         "psr-4": {
             "Frosh\\Rector\\": "src"
         }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Frosh\\Rector\\Tests\\": "tests"
+        },
+        "exclude-from-classmap": [
+            "**.php.inc"
+        ]
     },
     "config": {
         "optimize-autoloader": true,
