@@ -5,14 +5,27 @@ namespace Frosh\Rector\Rule\v65;
 use PhpParser\Node;
 use PHPStan\Type\ObjectType;
 use Rector\Core\Rector\AbstractRector;
+use Symplify\RuleDocGenerator\ValueObject\CodeSample\CodeSample;
 use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
-use function var_dump;
 
 class RedisConnectionFactoryCreateRector extends AbstractRector
 {
     public function getRuleDefinition(): \Symplify\RuleDocGenerator\ValueObject\RuleDefinition
     {
-        return new RuleDefinition('test', []);
+        return new RuleDefinition('Migrate RedisCommection static call to create connection on object',
+            [
+                new CodeSample(
+                    <<<'CODE_SAMPLE'
+RedisConnectionFactory::createConnection('redis://localhost');
+CODE_SAMPLE
+                    ,
+                    <<<'CODE_SAMPLE'
+$redisFactory = new RedisConnectionFactory;
+$redisFactory->create('redis://localhost');
+CODE_SAMPLE
+                )
+            ],
+        );
     }
 
     public function getNodeTypes(): array
