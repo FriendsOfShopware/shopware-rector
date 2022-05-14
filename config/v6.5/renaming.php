@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 use Frosh\Rector\Rule\v65\MigrateLoginRequiredAnnotationToRouteRector;
 use Frosh\Rector\Rule\v65\RedisConnectionFactoryCreateRector;
+use Frosh\Rector\Rule\v65\ThemeCompilerPrefixRector;
+use PHPStan\Type\BooleanType;
 use PHPStan\Type\ObjectType;
 use Rector\Config\RectorConfig;
 use Rector\Renaming\Rector\MethodCall\RenameMethodRector;
 use Rector\Renaming\Rector\Name\RenameClassRector;
 use Rector\Renaming\ValueObject\MethodCallRename;
 use Rector\TypeDeclaration\Rector\ClassMethod\AddReturnTypeDeclarationRector;
+use Rector\TypeDeclaration\ValueObject\AddParamTypeDeclaration;
 use Rector\TypeDeclaration\ValueObject\AddReturnTypeDeclaration;
 
 return static function (RectorConfig $rectorConfig): void {
@@ -30,17 +33,14 @@ return static function (RectorConfig $rectorConfig): void {
             'Shopware\\Core\\Framework\\Event\\BusinessEventInterface' => 'Shopware\\Core\\Framework\\Event\\FlowEventAware',
             'Shopware\\Core\\Framework\\Event\\MailActionInterface' => 'Shopware\\Core\\Framework\\Event\\MailAware',
             'Shopware\\Core\\Framework\\Log\\LogAwareBusinessEventInterface' => 'Shopware\\Core\\Framework\\Log\\LogAware',
+            'Shopware\\Storefront\\Event\\ProductExportContentTypeEvent' => 'Shopware\\Core\\Content\\ProductExport\\Event\\ProductExportContentTypeEvent',
+            'Shopware\\Storefront\\Page\\Product\\Review\\MatrixElement' => 'Shopware\\Core\\Content\\Product\\SalesChannel\\Review\\MatrixElement',
+            'Shopware\\Storefront\\Page\\Product\\Review\\RatingMatrix' => 'Shopware\\Core\\Content\\Product\\SalesChannel\\Review\\RatingMatrix',
+            'Shopware\\Storefront\\Page\\Address\\Listing\\AddressListingCriteriaEvent' => 'Shopware\\Core\\Checkout\\Customer\\Event\\AddressListingCriteriaEvent',
         ],
     );
 
-    $rectorConfig->ruleWithConfiguration(
-        AddReturnTypeDeclarationRector::class,
-        [
-            new AddReturnTypeDeclaration('Shopware\\Core\\Framework\\Adapter\\Twig\\TemplateIterator', 'getIterator', new ObjectType('Traversable'))
-        ]
-    );
-
-
     $rectorConfig->rule(MigrateLoginRequiredAnnotationToRouteRector::class);
     $rectorConfig->rule(RedisConnectionFactoryCreateRector::class);
+    $rectorConfig->rule(ThemeCompilerPrefixRector::class);
 };
