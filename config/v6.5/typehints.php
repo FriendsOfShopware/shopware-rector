@@ -21,7 +21,15 @@ return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->ruleWithConfiguration(
         AddParamTypeDeclarationRector::class,
         [
+            new AddParamTypeDeclaration('Shopware\Core\Framework\DataAbstractionLayer\Indexing\EntityIndexer', 'iterate', 0, new ArrayType(new StringType(), new StringType())),
             new AddParamTypeDeclaration('Shopware\Storefront\Theme\DataAbstractionLayer\ThemeIndexer', 'iterate', 0, new ArrayType(new StringType(), new StringType())),
+            new AddParamTypeDeclaration('Shopware\Core\Content\Flow\Indexing\FlowIndexer', 'iterate', 0, new ArrayType(new StringType(), new StringType())),
+            new AddParamTypeDeclaration('Shopware\Core\Content\Media\DataAbstractionLayer\MediaFolderConfigurationIndexer', 'iterate', 0, new ArrayType(new StringType(), new StringType())),
+            new AddParamTypeDeclaration('Shopware\Core\Content\Media\DataAbstractionLayer\MediaFolderIndexer', 'iterate', 0, new ArrayType(new StringType(), new StringType())),
+            new AddParamTypeDeclaration('Shopware\Core\Content\Media\DataAbstractionLayer\MediaIndexer', 'iterate', 0, new ArrayType(new StringType(), new StringType())),
+            new AddParamTypeDeclaration('Shopware\Core\Content\LandingPage\DataAbstractionLayer\LandingPageIndexer', 'iterate', 0, new ArrayType(new StringType(), new StringType())),
+            new AddParamTypeDeclaration('Shopware\Core\Content\ProductStream\DataAbstractionLayer\ProductStreamIndexer', 'iterate', 0, new ArrayType(new StringType(), new StringType())),
+            new AddParamTypeDeclaration('Shopware\Core\Content\Rule\DataAbstractionLayer\RuleIndexer', 'iterate', 0, new ArrayType(new StringType(), new StringType())),
             new AddParamTypeDeclaration('Shopware\\Storefront\\Page\\Product\\Review\\ReviewLoaderResult', 'setMatrix', 0, new ObjectType('Shopware\Core\Content\Product\SalesChannel\Review\RatingMatrix')),
         ]
     );
@@ -40,6 +48,13 @@ return static function (RectorConfig $rectorConfig): void {
         [
             new AddArgumentToClassWithoutDefault('Shopware\Storefront\Framework\Captcha\AbstractCaptcha', 'supports', 1, 'captchaConfig', new ArrayType(new StringType(), new StringType())),
             new AddArgumentToClassWithoutDefault('Shopware\Storefront\Framework\Cache\ReverseProxy\AbstractReverseProxyGateway', 'tag', 2, 'response', new ObjectType('Symfony\Component\HttpFoundation\Response')),
+        ]
+    );
+
+    $rectorConfig->ruleWithConfiguration(
+        ArgumentAdderRector::class,
+        [
+            new ArgumentAdder('Shopware\Core\Content\Media\Thumbnail\ThumbnailService', 'updateThumbnails', 2, 'strict', false, new BooleanType())
         ]
     );
 

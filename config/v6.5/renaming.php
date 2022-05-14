@@ -7,8 +7,6 @@ use Frosh\Rector\Rule\ClassConstructor\RemoveArgumentFromClassConstructRector;
 use Frosh\Rector\Rule\v65\MigrateLoginRequiredAnnotationToRouteRector;
 use Frosh\Rector\Rule\v65\RedisConnectionFactoryCreateRector;
 use Frosh\Rector\Rule\v65\ThemeCompilerPrefixRector;
-use PHPStan\Type\BooleanType;
-use PHPStan\Type\ObjectType;
 use Rector\Arguments\Rector\MethodCall\RemoveMethodCallParamRector;
 use Rector\Arguments\ValueObject\RemoveMethodCallParam;
 use Rector\Config\RectorConfig;
@@ -16,9 +14,8 @@ use Rector\DeadCode\Rector\ClassMethod\RemoveUnusedConstructorParamRector;
 use Rector\Renaming\Rector\MethodCall\RenameMethodRector;
 use Rector\Renaming\Rector\Name\RenameClassRector;
 use Rector\Renaming\ValueObject\MethodCallRename;
-use Rector\TypeDeclaration\Rector\ClassMethod\AddReturnTypeDeclarationRector;
-use Rector\TypeDeclaration\ValueObject\AddParamTypeDeclaration;
-use Rector\TypeDeclaration\ValueObject\AddReturnTypeDeclaration;
+use Rector\Transform\Rector\Assign\PropertyFetchToMethodCallRector;
+use Rector\Transform\ValueObject\PropertyFetchToMethodCall;
 
 return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->import(__DIR__ . '/../config.php');
@@ -27,6 +24,8 @@ return static function (RectorConfig $rectorConfig): void {
         RenameMethodRector::class,
         [
             new MethodCallRename('Shopware\\Core\\Framework\\Adapter\\Twig\\EntityTemplateLoader', 'clearInternalCache', 'reset'),
+            new MethodCallRename('Shopware\Core\Content\ImportExport\Processing\Mapping\Mapping', 'getDefault', 'getDefaultValue'),
+            new MethodCallRename('Shopware\Core\Content\ImportExport\Processing\Mapping\Mapping', 'getMappedDefault', 'getDefaultValue'),
         ],
     );
 
@@ -63,4 +62,14 @@ return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->rule(MigrateLoginRequiredAnnotationToRouteRector::class);
     $rectorConfig->rule(RedisConnectionFactoryCreateRector::class);
     $rectorConfig->rule(ThemeCompilerPrefixRector::class);
+
+    $rectorConfig->ruleWithConfiguration(
+        PropertyFetchToMethodCallRector::class,
+        [new PropertyFetchToMethodCall(
+            'Shopware\Core\Content\Flow\Dispatching\FlowState',
+            'sequenceId',
+            'getSequenceId',
+            null
+        )]
+    );
 };
