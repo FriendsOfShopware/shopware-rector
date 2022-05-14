@@ -17,6 +17,7 @@
         }
     },
     "autoload-dev": {
+      "classmap": ["stubs"],
         "psr-4": {
             "Frosh\\Rector\\Tests\\": "tests"
         },
