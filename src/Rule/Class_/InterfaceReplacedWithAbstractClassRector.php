@@ -8,6 +8,7 @@ use PhpParser\Node;
 use Rector\Core\Contract\Rector\ConfigurableRectorInterface;
 use Rector\Core\Rector\AbstractRector;
 use Symplify\RuleDocGenerator\ValueObject\CodeSample\CodeSample;
+use Symplify\RuleDocGenerator\ValueObject\CodeSample\ConfiguredCodeSample;
 use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 
 class InterfaceReplacedWithAbstractClassRector extends AbstractRector implements ConfigurableRectorInterface
@@ -20,7 +21,7 @@ class InterfaceReplacedWithAbstractClassRector extends AbstractRector implements
     public function getRuleDefinition(): RuleDefinition
     {
         return new RuleDefinition('Replace UrlProviderInterface with AbstractClass', [
-            new CodeSample(
+            new ConfiguredCodeSample(
                 <<<'CODE_SAMPLE'
 class Foo implements Test {
 
@@ -31,7 +32,8 @@ CODE_SAMPLE
 class Foo extends AbstractTest {
 
 }
-PHP
+PHP,
+                [new InterfaceReplacedWithAbstractClass('Foo', 'AbstractTest')]
             ),
         ]);
     }

@@ -2,6 +2,8 @@
 
 This project extends Rector with multiple Rules for Shopware specific. 
 
+See available [Shopware rules](/docs/rector_rules_overview.md)
+
 
 ## Install
 

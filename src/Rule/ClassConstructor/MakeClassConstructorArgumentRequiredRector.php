@@ -4,10 +4,13 @@ namespace Frosh\Rector\Rule\ClassConstructor;
 
 use PhpParser\Node;
 use PhpParser\Node\Stmt\Class_;
+use PHPStan\Type\ArrayType;
+use PHPStan\Type\StringType;
 use Rector\Core\Contract\Rector\ConfigurableRectorInterface;
 use Rector\Core\Rector\AbstractRector;
 use Rector\PHPStanStaticTypeMapper\Enum\TypeKind;
 use Symplify\RuleDocGenerator\ValueObject\CodeSample\CodeSample;
+use Symplify\RuleDocGenerator\ValueObject\CodeSample\ConfiguredCodeSample;
 use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 use function var_dump;
 
@@ -21,7 +24,7 @@ class MakeClassConstructorArgumentRequiredRector extends AbstractRector implemen
     public function getRuleDefinition(): RuleDefinition
     {
         return new RuleDefinition('NAME', [
-            new CodeSample(
+            new ConfiguredCodeSample(
                 <<<'PHP'
 class Foo {
     public function __construct(array $foo = [])
@@ -32,11 +35,12 @@ PHP
                 ,
                 <<<'PHP'
 class Foo {
-    public function __construct(array $foo = [])
+    public function __construct(array $foo)
     {
     }
 }
-PHP
+PHP,
+                [new MakeClassConstructorArgumentRequired('Foo', 0, new ArrayType(new StringType(), new StringType()))]
             ),
         ]);
     }
