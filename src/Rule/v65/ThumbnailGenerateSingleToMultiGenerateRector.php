@@ -14,7 +14,7 @@ class ThumbnailGenerateSingleToMultiGenerateRector extends AbstractRector
 {
     public function getRuleDefinition(): RuleDefinition
     {
-        return new RuleDefinition('NAME', [
+        return new RuleDefinition('Move single thumbnail generation call to batch', [
             new CodeSample(
                 <<<'PHP'
 $thumbnail->generateThumbnails($media, $context);

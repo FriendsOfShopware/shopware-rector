@@ -188,7 +188,7 @@ Removes ThemeCompiler::getThemePrefix deprecation
 
 ## ThumbnailGenerateSingleToMultiGenerateRector
 
-NAME
+Move single thumbnail generation call to batch
 
 - class: [`Frosh\Rector\Rule\v65\ThumbnailGenerateSingleToMultiGenerateRector`](../src/Rule/v65/ThumbnailGenerateSingleToMultiGenerateRector.php)
 
