@@ -44,6 +44,7 @@ return static function (RectorConfig $rectorConfig): void {
             'Shopware\\Storefront\\Page\\Product\\Review\\RatingMatrix' => 'Shopware\\Core\\Content\\Product\\SalesChannel\\Review\\RatingMatrix',
             'Shopware\\Storefront\\Page\\Address\\Listing\\AddressListingCriteriaEvent' => 'Shopware\\Core\\Checkout\\Customer\\Event\\AddressListingCriteriaEvent',
             'Shopware\\Administration\\Service\\AdminOrderCartService' => 'Shopware\\Core\\Checkout\\Cart\\ApiOrderCartService',
+            'Shopware\\Core\\System\\User\\Service\\UserProvisioner' => 'Shopware\\Core\\Maintenance\\User\\Service\\UserProvisioner',
         ],
     );
 

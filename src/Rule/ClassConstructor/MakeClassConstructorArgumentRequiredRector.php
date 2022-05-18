@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Frosh\Rector\Rule\ClassConstructor;
 
 use PhpParser\Node;
@@ -9,10 +11,8 @@ use PHPStan\Type\StringType;
 use Rector\Core\Contract\Rector\ConfigurableRectorInterface;
 use Rector\Core\Rector\AbstractRector;
 use Rector\PHPStanStaticTypeMapper\Enum\TypeKind;
-use Symplify\RuleDocGenerator\ValueObject\CodeSample\CodeSample;
 use Symplify\RuleDocGenerator\ValueObject\CodeSample\ConfiguredCodeSample;
 use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
-use function var_dump;
 
 class MakeClassConstructorArgumentRequiredRector extends AbstractRector implements ConfigurableRectorInterface
 {
@@ -49,7 +49,7 @@ PHP,
     {
         return [
             Node\Stmt\ClassMethod::class,
-            Node\Expr\New_::class
+            Node\Expr\New_::class,
         ];
     }
 
