@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Frosh\Rector\Rule\ClassConstructor;
 
+use function array_values;
 use Frosh\Rector\Rule\ClassMethod\AddArgumentToClassWithoutDefault;
 use PhpParser\Node;
 use PhpParser\Node\Expr\New_;
@@ -13,7 +14,6 @@ use Rector\Core\Contract\Rector\ConfigurableRectorInterface;
 use Rector\Core\Rector\AbstractRector;
 use Symplify\RuleDocGenerator\ValueObject\CodeSample\ConfiguredCodeSample;
 use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
-use function array_values;
 
 class RemoveArgumentFromClassConstructRector extends AbstractRector implements ConfigurableRectorInterface
 {
@@ -48,7 +48,7 @@ CODE_SAMPLE
     {
         return [
             New_::class,
-            ClassMethod::class
+            ClassMethod::class,
         ];
     }
 
