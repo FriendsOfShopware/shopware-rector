@@ -1,4 +1,4 @@
-# 9 Rules Overview
+# 10 Rules Overview
 
 ## AddArgumentToClassWithoutDefaultRector
 
@@ -50,6 +50,19 @@ Adds banAll method to reverse proxy
 +    {
 +    }
  }
+```
+
+<br>
+
+## FakerPropertyToMethodCallRector
+
+Move faker property to method call
+
+- class: [`Frosh\Rector\Rule\v65\FakerPropertyToMethodCallRector`](../src/Rule/v65/FakerPropertyToMethodCallRector.php)
+
+```diff
+-$this->faker->randomDigit
++$this->faker->randomDigit()
 ```
 
 <br>

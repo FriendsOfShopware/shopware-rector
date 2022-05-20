@@ -6,6 +6,7 @@ use Frosh\Rector\Rule\Class_\InterfaceReplacedWithAbstractClass;
 use Frosh\Rector\Rule\Class_\InterfaceReplacedWithAbstractClassRector;
 use Frosh\Rector\Rule\ClassConstructor\RemoveArgumentFromClassConstruct;
 use Frosh\Rector\Rule\ClassConstructor\RemoveArgumentFromClassConstructRector;
+use Frosh\Rector\Rule\v65\FakerPropertyToMethodCallRector;
 use Frosh\Rector\Rule\v65\MigrateLoginRequiredAnnotationToRouteRector;
 use Frosh\Rector\Rule\v65\RedisConnectionFactoryCreateRector;
 use Frosh\Rector\Rule\v65\ThemeCompilerPrefixRector;
@@ -87,4 +88,6 @@ return static function (RectorConfig $rectorConfig): void {
             new InterfaceReplacedWithAbstractClass('Shopware\Core\Content\Sitemap\Provider\UrlProviderInterface', 'Shopware\Core\Content\Sitemap\Provider\AbstractUrlProvider'),
         ]
     );
+
+    $rectorConfig->rule(FakerPropertyToMethodCallRector::class);
 };
