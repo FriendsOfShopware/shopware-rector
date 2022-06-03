@@ -16,6 +16,7 @@ return static function (RectorConfig $rectorConfig): void {
             new RemoveArgumentFromClassConstruct('SomeMoreAdvancedExampleClass', 1),
             new RemoveArgumentFromClassConstruct('Foo', 1),
             new RemoveArgumentFromClassConstruct('Foo', 2),
+            new RemoveArgumentFromClassConstruct('RemoveFirstArgument', 0),
         ]
     );
 };
