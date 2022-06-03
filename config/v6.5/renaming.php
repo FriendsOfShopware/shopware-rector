@@ -63,6 +63,7 @@ return static function (RectorConfig $rectorConfig): void {
             new RemoveArgumentFromClassConstruct('Shopware\Core\Content\Newsletter\Exception\LanguageOfNewsletterDeleteException', 0),
             new RemoveArgumentFromClassConstruct('Shopware\Core\Content\Product\Events\ProductIndexerEvent', 1),
             new RemoveArgumentFromClassConstruct('Shopware\Core\Content\Product\Events\ProductIndexerEvent', 2),
+            new RemoveArgumentFromClassConstruct('Shopware\Core\Checkout\Order\Exception\LanguageOfOrderDeleteException', 0),
         ],
     );
 
