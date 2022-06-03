@@ -12,12 +12,14 @@ class MakeClassConstructorArgumentRequired
     protected string $class;
     protected int $position;
     protected ?Type $default;
+    protected bool $removeNullableForArgument;
 
-    public function __construct(string $class, int $position, ?Type $default = null)
+    public function __construct(string $class, int $position, ?Type $default = null, bool $removeNullableForArgument = false)
     {
         $this->class = $class;
         $this->position = $position;
         $this->default = $default;
+        $this->removeNullableForArgument = $removeNullableForArgument;
     }
 
     public function getClass(): string
@@ -38,5 +40,10 @@ class MakeClassConstructorArgumentRequired
     public function getDefault(): ?Type
     {
         return $this->default;
+    }
+
+    public function shouldNullableForArgumentBeRemoved(): bool
+    {
+        return $this->removeNullableForArgument;
     }
 }

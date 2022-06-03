@@ -27,7 +27,7 @@ class MakeClassConstructorArgumentRequiredRector extends AbstractRector implemen
             new ConfiguredCodeSample(
                 <<<'PHP'
 class Foo {
-    public function __construct(array $foo = [])
+    public function __construct(?array $foo = null)
     {
     }
 }
@@ -40,7 +40,7 @@ class Foo {
     }
 }
 PHP,
-                [new MakeClassConstructorArgumentRequired('Foo', 0, new ArrayType(new StringType(), new StringType()))]
+                [new MakeClassConstructorArgumentRequired('Foo', 0, new ArrayType(new StringType(), new StringType())), false]
             ),
         ]);
     }
@@ -94,6 +94,14 @@ PHP,
             }
 
             $node->params[$config->getPosition()]->default = null;
+
+            // remove the nullable indicator for the argument type
+            if ($config->shouldNullableForArgumentBeRemoved() === true
+                && $node->params[$config->getPosition()]->type instanceof Node\NullableType
+                && isset($node->params[$config->getPosition()]->type->type)
+            ) {
+                $node->params[$config->getPosition()]->type = new Node\Identifier($node->params[$config->getPosition()]->type->type->name, $node->params[$config->getPosition()]->type->type->getAttributes());
+            }
 
             $hasModified = true;
         }

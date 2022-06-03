@@ -13,6 +13,8 @@ return static function (RectorConfig $rectorConfig): void {
         MakeClassConstructorArgumentRequiredRector::class,
         [
             new MakeClassConstructorArgumentRequired('Foo', 1, new NullType()),
+            new MakeClassConstructorArgumentRequired('Bar', 1, new NullType()),
+            new MakeClassConstructorArgumentRequired('Baz', 1, new NullType(), true),
         ]
     );
 };
