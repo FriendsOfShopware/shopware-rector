@@ -2,35 +2,23 @@
 
 declare(strict_types=1);
 
-use Frosh\Rector\Rule\ClassMethod\AddArgumentToClassWithoutDefault;
-use Frosh\Rector\Rule\ClassMethod\AddArgumentToClassWithoutDefaultRector;
-use Frosh\Rector\Rule\v65\AddBanAllToReverseProxyRector;
-use PHPStan\Type\ArrayType;
-use PHPStan\Type\BooleanType;
-use PHPStan\Type\ObjectType;
-use PHPStan\Type\StringType;
-use Rector\Arguments\Rector\ClassMethod\ArgumentAdderRector;
-use Rector\Arguments\ValueObject\ArgumentAdder;
 use Rector\Config\RectorConfig;
 use Rector\Renaming\Rector\ClassConstFetch\RenameClassConstFetchRector;
 use Rector\Renaming\Rector\MethodCall\RenameMethodRector;
 use Rector\Renaming\Rector\Name\RenameClassRector;
 use Rector\Renaming\ValueObject\MethodCallRename;
 use Rector\Renaming\ValueObject\RenameClassAndConstFetch;
-use Rector\TypeDeclaration\Rector\ClassMethod\AddParamTypeDeclarationRector;
-use Rector\TypeDeclaration\Rector\ClassMethod\AddReturnTypeDeclarationRector;
-use Rector\TypeDeclaration\ValueObject\AddParamTypeDeclaration;
-use Rector\TypeDeclaration\ValueObject\AddReturnTypeDeclaration;
 
 return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->import(__DIR__ . '/../config.php');
 
-    $rectorConfig->ruleWithConfiguration(RenameClassRector::class,
+    $rectorConfig->ruleWithConfiguration(
+        RenameClassRector::class,
         [
             'League\\Flysystem\\FilesystemOperator' => 'League\\Flysystem\\FilesystemOperator',
             'League\\Flysystem\\FilesystemInterface' => 'League\\Flysystem\\FilesystemOperator',
             'League\\Flysystem\\AdapterInterface' => 'League\\Flysystem\\FilesystemAdapter',
-            'League\\Flysystem\\Memory\\MemoryAdapter' => 'League\\Flysystem\\InMemory\\InMemoryFilesystemAdapter'
+            'League\\Flysystem\\Memory\\MemoryAdapter' => 'League\\Flysystem\\InMemory\\InMemoryFilesystemAdapter',
         ]
     );
 
@@ -62,8 +50,8 @@ return static function (RectorConfig $rectorConfig): void {
             new MethodCallRename($class, 'getVisibility', 'visibility'),
         ];
 
-        $classConstRenaming[]  = new RenameClassAndConstFetch($class, 'VISIBILITY_PUBLIC', 'League\\Flysystem\\Visibility', 'PUBLIC');
-        $classConstRenaming[]  = new RenameClassAndConstFetch($class, 'VISIBILITY_PRIVATE', 'League\\Flysystem\\Visibility', 'PRIVATE');
+        $classConstRenaming[] = new RenameClassAndConstFetch($class, 'VISIBILITY_PUBLIC', 'League\\Flysystem\\Visibility', 'PUBLIC');
+        $classConstRenaming[] = new RenameClassAndConstFetch($class, 'VISIBILITY_PRIVATE', 'League\\Flysystem\\Visibility', 'PRIVATE');
     }
 
     $rectorConfig->ruleWithConfiguration(RenameMethodRector::class, $methodRenaming);
