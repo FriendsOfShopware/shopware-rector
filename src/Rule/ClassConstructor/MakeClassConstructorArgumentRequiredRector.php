@@ -122,9 +122,8 @@ PHP,
             if ($config->getDefault()) {
                 $arg = $this->staticTypeMapper->mapPHPStanTypeToPhpParserNode($config->getDefault(), TypeKind::ANY);
 
-                // todo: remove when https://github.com/rectorphp/rector-src/pull/2461 is released
                 if ($config->getDefault() instanceof NullType) {
-                    $arg = new Node\Expr\ConstFetch(new Node\Name('null'));
+                    $arg = new Node\Expr\ConstFetch($arg);
                 }
 
                 $node->args[$config->getPosition()] = new Node\Arg($arg);
