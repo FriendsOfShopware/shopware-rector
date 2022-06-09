@@ -87,7 +87,7 @@ CODE_SAMPLE
             $param = new Param(new Variable($config->getName()));
 
             if ($config->getType()) {
-                $param->type = $this->staticTypeMapper->mapPHPStanTypeToPhpParserNode($config->getType(), TypeKind::PARAM());
+                $param->type = $this->staticTypeMapper->mapPHPStanTypeToPhpParserNode($config->getType(), TypeKind::PARAM);
             }
 
             $node->params[$config->getPosition()] = $param;

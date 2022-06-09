@@ -8,6 +8,7 @@ use PhpParser\Node;
 use PhpParser\Node\Stmt\Class_;
 use PHPStan\Type\ArrayType;
 use PHPStan\Type\StringType;
+use PHPStan\Type\NullType;
 use Rector\Core\Contract\Rector\ConfigurableRectorInterface;
 use Rector\Core\Rector\AbstractRector;
 use Rector\PHPStanStaticTypeMapper\Enum\TypeKind;
@@ -119,7 +120,14 @@ PHP,
             }
 
             if ($config->getDefault()) {
-                $node->args[$config->getPosition()] = $this->staticTypeMapper->mapPHPStanTypeToPhpParserNode($config->getDefault(), TypeKind::ANY());
+                $arg = $this->staticTypeMapper->mapPHPStanTypeToPhpParserNode($config->getDefault(), TypeKind::ANY);
+
+                // todo: remove when https://github.com/rectorphp/rector-src/pull/2461 is released
+                if ($config->getDefault() instanceof NullType) {
+                    $arg = new Node\Expr\ConstFetch(new Node\Name('null'));
+                }
+
+                $node->args[$config->getPosition()] = new Node\Arg($arg);
             }
 
             $hasModified = true;
