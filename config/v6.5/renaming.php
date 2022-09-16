@@ -29,6 +29,8 @@ return static function (RectorConfig $rectorConfig): void {
             new MethodCallRename('Shopware\\Core\\Framework\\Adapter\\Twig\\EntityTemplateLoader', 'clearInternalCache', 'reset'),
             new MethodCallRename('Shopware\Core\Content\ImportExport\Processing\Mapping\Mapping', 'getDefault', 'getDefaultValue'),
             new MethodCallRename('Shopware\Core\Content\ImportExport\Processing\Mapping\Mapping', 'getMappedDefault', 'getDefaultValue'),
+            new MethodCallRename('Shopware\Core\Checkout\Payment\Cart\PaymentHandler\PaymentHandlerRegistry', 'getSyncHandler', 'getSyncPaymentHandler'),
+            new MethodCallRename('Shopware\Core\Checkout\Payment\Cart\PaymentHandler\PaymentHandlerRegistry', 'getAsyncHandler', 'getAsyncPaymentHandler'),
         ],
     );
 
