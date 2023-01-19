@@ -31,11 +31,11 @@ class RemoveArgumentFromClassConstructRector extends AbstractRector implements C
                     <<<'CODE_SAMPLE'
 $someObject = new SomeExampleClass($example);
 CODE_SAMPLE
-,
+                    ,
                     <<<'CODE_SAMPLE'
 $someObject = new SomeExampleClass();
 CODE_SAMPLE
-,
+                    ,
                     [
                         new RemoveArgumentFromClassConstruct('SomeExampleClass', 0),
                     ]

@@ -1,4 +1,4 @@
-# 10 Rules Overview
+# 11 Rules Overview
 
 ## AddArgumentToClassWithoutDefaultRector
 
@@ -50,6 +50,19 @@ Adds banAll method to reverse proxy
 +    {
 +    }
  }
+```
+
+<br>
+
+## ContextMetadataExtensionToStateRector
+
+Migrate extension metadata to state rector
+
+- class: [`Frosh\Rector\Rule\v65\ContextMetadataExtensionToStateRector`](../src/Rule/v65/ContextMetadataExtensionToStateRector.php)
+
+```diff
+-$context->addExtension(EntityIndexerRegistry::USE_INDEXING_QUEUE, new ArrayEntity());
++$context->addState(EntityIndexerRegistry::USE_INDEXING_QUEUE);
 ```
 
 <br>

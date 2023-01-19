@@ -42,7 +42,7 @@ class MyCustomClass extends SomeExampleClass
     }
 }
 CODE_SAMPLE
-,
+                    ,
                     <<<'CODE_SAMPLE'
 $someObject = new SomeExampleClass;
 $someObject->someMethod(true);
@@ -54,7 +54,7 @@ class MyCustomClass extends SomeExampleClass
     }
 }
 CODE_SAMPLE
-,
+                    ,
                     [
                         new AddArgumentToClassWithoutDefault('SomeExampleClass', 'someMethod', 0, 'someArgument', new ObjectType('SomeType')), ]
                 ),
