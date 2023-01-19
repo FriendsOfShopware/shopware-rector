@@ -7,11 +7,19 @@ namespace Frosh\Rector\Rule\v65;
 use PhpParser\Node;
 use PHPStan\Type\ObjectType;
 use Rector\Core\Rector\AbstractRector;
+use Rector\PostRector\Collector\NodesToAddCollector;
 use Symplify\RuleDocGenerator\ValueObject\CodeSample\CodeSample;
 use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 
 class ThemeCompilerPrefixRector extends AbstractRector
 {
+    private NodesToAddCollector $nodesToAddCollector;
+
+    public function __construct(NodesToAddCollector $nodesToAddCollector)
+    {
+        $this->nodesToAddCollector = $nodesToAddCollector;
+    }
+
     public function getRuleDefinition(): RuleDefinition
     {
         return new RuleDefinition('Removes ThemeCompiler::getThemePrefix deprecation', [

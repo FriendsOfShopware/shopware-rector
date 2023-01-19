@@ -6,6 +6,7 @@ namespace Frosh\Rector\Rule\v65;
 
 use PhpParser\Builder\Class_;
 use PhpParser\Node;
+use Rector\BetterPhpDocParser\PhpDoc\ArrayItemNode;
 use Rector\BetterPhpDocParser\PhpDoc\SpacelessPhpDocTagNode;
 use Rector\BetterPhpDocParser\PhpDocInfo\PhpDocInfo;
 use Rector\BetterPhpDocParser\PhpDocManipulator\PhpDocTagRemover;
@@ -73,12 +74,21 @@ CODE_SAMPLE
         }
 
         if (!$route->value->getValue('defaults')) {
-            $route->value->changeValue('defaults', new CurlyListNode());
+            $route->value->values[] = new ArrayItemNode(new CurlyListNode([]), 'defaults');
         }
 
         /** @var CurlyListNode $list */
-        $list = $route->value->getValue('defaults');
-        $list->changeValue('_loginRequired', true);
+        $list = $route->value->getValue('defaults')->value;
+
+        /** @var ArrayItemNode $item */
+        foreach ($list->values as $item) {
+            if ($item->key === '_loginRequired') {
+                return null;
+            }
+        }
+
+        $list->values[] = new ArrayItemNode('true', '_loginRequired', null, Node\Scalar\String_::KIND_DOUBLE_QUOTED);
+        $list->markAsChanged();
 
         $this->phpDocTagRemover->removeByName($phpDocInfo, 'LoginRequired');
 

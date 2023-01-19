@@ -13,9 +13,9 @@ abstract class AbstractFroshRectorTestCase extends AbstractRectorTestCase
     /**
      * @dataProvider provideData()
      */
-    public function test(SmartFileInfo $fileInfo): void
+    public function test($fileInfo): void
     {
-        $this->doTestFileInfo($fileInfo);
+        $this->doTestFile($fileInfo);
     }
 
     /**

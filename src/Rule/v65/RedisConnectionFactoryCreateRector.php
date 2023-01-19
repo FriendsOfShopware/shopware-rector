@@ -7,12 +7,20 @@ namespace Frosh\Rector\Rule\v65;
 use PhpParser\Node;
 use PHPStan\Type\ObjectType;
 use Rector\Core\Rector\AbstractRector;
+use Rector\PostRector\Collector\NodesToAddCollector;
 use Symplify\RuleDocGenerator\ValueObject\CodeSample\CodeSample;
 use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 
 class RedisConnectionFactoryCreateRector extends AbstractRector
 {
-    public function getRuleDefinition(): \Symplify\RuleDocGenerator\ValueObject\RuleDefinition
+    private NodesToAddCollector $nodesToAddCollector;
+
+    public function __construct(NodesToAddCollector $nodesToAddCollector)
+    {
+        $this->nodesToAddCollector = $nodesToAddCollector;
+    }
+
+    public function getRuleDefinition(): RuleDefinition
     {
         return new RuleDefinition(
             'Migrate RedisCommection static call to create connection on object',

@@ -26,7 +26,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class Foo
 {
     /**
-     * @Route("/store-api/product", name="store-api.product.search", methods={"GET", "POST"}, defaults={_loginRequired=true})
+     * @Route("/store-api/product", name="store-api.product.search", methods={"GET", "POST"}, defaults={"_loginRequired" = true})
      */
     public function myAction()
     {
