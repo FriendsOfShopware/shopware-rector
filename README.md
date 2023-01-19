@@ -17,7 +17,7 @@ composer req frosh/shopware-rector --dev
 
 ## Use Sets
 
-To add a set to your config, use `Rector\Symfony\Set\SymfonySetList` class and pick one of constants:
+To add a set to your config, use `Frosh\Rector\Set\ShopwareSetList` class and pick one of constants:
 
 ```php
 use Frosh\Rector\Set\ShopwareSetList;
@@ -27,4 +27,18 @@ return static function (RectorConfig $rectorConfig): void {
         ShopwareSetList::SHOPWARE_6_5_0,
     ]);
 };
+```
+
+## Use directly the config
+
+```bash
+# Clone this repo
+
+composer install
+
+# Dry Run
+./vendor/bin/rector process --config config/shopware-6.5.0.php --autoload-file [SHOPWARE]/vendor/autoload [SHOPWARE]/custom/plugins/MyPlugin --dry-run
+
+# Normal Run
+./vendor/bin/rector process --config config/shopware-6.5.0.php --autoload-file [SHOPWARE]/vendor/autoload [SHOPWARE]/custom/plugins/MyPlugin
 ```
