@@ -1,4 +1,4 @@
-# 11 Rules Overview
+# 13 Rules Overview
 
 ## AddArgumentToClassWithoutDefaultRector
 
@@ -142,6 +142,29 @@ return static function (RectorConfig $rectorConfig): void {
 
 <br>
 
+## MigrateCaptchaAnnotationToRouteRector
+
+NAME
+
+- class: [`Frosh\Rector\Rule\v65\MigrateCaptchaAnnotationToRouteRector`](../src/Rule/v65/MigrateCaptchaAnnotationToRouteRector.php)
+
+```diff
+ class Foo
+ {
+     /**
+-     * @Route("/form/contact", name="frontend.form.contact.send", methods={"POST"}, defaults={"XmlHttpRequest"=true})
+-     * @Captcha
++     * @Route("/form/contact", name="frontend.form.contact.send", methods={"POST"}, defaults={"XmlHttpRequest"=true, "_captcha"=true})
+      */
+-    public function sendContactForm()
++    public function sendContactForm(): Response
+     {
+     }
+ }
+```
+
+<br>
+
 ## MigrateLoginRequiredAnnotationToRouteRector
 
 Migrates Annotations to Route annotation
@@ -153,6 +176,24 @@ Migrates Annotations to Route annotation
 -@Route("/store-api/product", name="store-api.product.search", methods={"GET", "POST"})
 +@Route("/store-api/product", name="store-api.product.search", methods={"GET", "POST"}, defaults={"_loginRequired"=true})
  public function myAction()
+```
+
+<br>
+
+## MigrateRouteScopeToRouteDefaults
+
+NAME
+
+- class: [`Frosh\Rector\Rule\v65\MigrateRouteScopeToRouteDefaults`](../src/Rule/v65/MigrateRouteScopeToRouteDefaults.php)
+
+```diff
+ /**
+- * @RouteScope(scopes={"storefront"})
++ * @Route(defaults={"_routeScope"={"storefront"}})
+  */
+ class Controller
+ {
+ }
 ```
 
 <br>

@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use Frosh\Rector\Rule\v65\MigrateLoginRequiredAnnotationToRouteRector;
 use Frosh\Rector\Rule\v65\MigrateRouteScopeToRouteDefaults;
 use Rector\Config\RectorConfig;
 

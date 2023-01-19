@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Frosh\Rector\Rule\v65;
 
 use PhpParser\Builder\Class_;
