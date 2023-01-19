@@ -7,6 +7,7 @@ use Frosh\Rector\Rule\Class_\InterfaceReplacedWithAbstractClassRector;
 use Frosh\Rector\Rule\ClassConstructor\RemoveArgumentFromClassConstruct;
 use Frosh\Rector\Rule\ClassConstructor\RemoveArgumentFromClassConstructRector;
 use Frosh\Rector\Rule\v65\FakerPropertyToMethodCallRector;
+use Frosh\Rector\Rule\v65\MigrateCaptchaAnnotationToRouteRector;
 use Frosh\Rector\Rule\v65\MigrateLoginRequiredAnnotationToRouteRector;
 use Frosh\Rector\Rule\v65\RedisConnectionFactoryCreateRector;
 use Frosh\Rector\Rule\v65\ThemeCompilerPrefixRector;
@@ -69,6 +70,7 @@ return static function (RectorConfig $rectorConfig): void {
     );
 
     $rectorConfig->rule(MigrateLoginRequiredAnnotationToRouteRector::class);
+    $rectorConfig->rule(MigrateCaptchaAnnotationToRouteRector::class);
     $rectorConfig->rule(RedisConnectionFactoryCreateRector::class);
     $rectorConfig->rule(ThemeCompilerPrefixRector::class);
     $rectorConfig->rule(ThumbnailGenerateSingleToMultiGenerateRector::class);
