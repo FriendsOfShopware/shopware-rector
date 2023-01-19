@@ -3,3 +3,8 @@
 vendor
 
 .phpunit.result.cache
+
+# Devenv
+.devenv*
+devenv.local.nix
+
