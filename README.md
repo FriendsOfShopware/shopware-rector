@@ -7,12 +7,10 @@ See available [Shopware rules](/docs/rector_rules_overview.md)
 
 ## Install
 
-This package is already part of [rector/rector](http://github.com/rectorphp/rector) package, so it works out of the box.
-
-All you need to do is install the main package, and you're good to go:
+Make sure to install both `frosh/shopware-rector` as well as `rector/rector`.
 
 ```bash
-composer req frosh/shopware-rector --dev
+composer req rector/rector frosh/shopware-rector --dev
 ```
 
 ## Use Sets
