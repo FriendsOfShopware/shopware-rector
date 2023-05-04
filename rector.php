@@ -13,6 +13,7 @@ return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->importNames();
 
     $rectorConfig->sets([
-        ShopwareSetList::SHOPWARE_6_5_0
+        ShopwareSetList::SHOPWARE_6_5_0,
+        ShopwareSetList::SHOPWARE_6_6_0,
     ]);
 };
