@@ -15,7 +15,6 @@ return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->ruleWithConfiguration(
         RenameClassRector::class,
         [
-            'League\\Flysystem\\FilesystemOperator' => 'League\\Flysystem\\FilesystemOperator',
             'League\\Flysystem\\FilesystemInterface' => 'League\\Flysystem\\FilesystemOperator',
             'League\\Flysystem\\AdapterInterface' => 'League\\Flysystem\\FilesystemAdapter',
             'League\\Flysystem\\Memory\\MemoryAdapter' => 'League\\Flysystem\\InMemory\\InMemoryFilesystemAdapter',
