@@ -8,6 +8,7 @@ use PhpParser\Builder\Class_;
 use PhpParser\Node;
 use Rector\BetterPhpDocParser\PhpDoc\ArrayItemNode;
 use Rector\BetterPhpDocParser\PhpDoc\SpacelessPhpDocTagNode;
+use Rector\BetterPhpDocParser\PhpDoc\StringNode;
 use Rector\BetterPhpDocParser\PhpDocInfo\PhpDocInfo;
 use Rector\BetterPhpDocParser\PhpDocManipulator\PhpDocTagRemover;
 use Rector\BetterPhpDocParser\ValueObject\PhpDoc\DoctrineAnnotation\CurlyListNode;
@@ -99,7 +100,7 @@ class MigrateCaptchaAnnotationToRouteRector extends AbstractRector
             }
         }
 
-        $list->values[] = new ArrayItemNode('true', '_captcha', null, Node\Scalar\String_::KIND_DOUBLE_QUOTED);
+        $list->values[] = new ArrayItemNode('true', new StringNode('_captcha'));
         $list->markAsChanged();
 
         $this->phpDocTagRemover->removeByName($phpDocInfo, 'Captcha');

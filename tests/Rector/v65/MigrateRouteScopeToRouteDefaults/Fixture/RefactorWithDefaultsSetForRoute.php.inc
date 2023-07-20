@@ -18,7 +18,7 @@ namespace Frosh\Rector\Tests\Rector\v65\MigrateRouteScopeToRouteDefaults\Fixture
 use Shopware\Core\Framework\Routing\Annotation\RouteScope;
 
 /**
- * @Route(defaults={"_routeScope" = {"storefront", "api"}})
+ * @Route(defaults={"_routeScope"={"storefront", "api"}})
  */
 class Controller
 {

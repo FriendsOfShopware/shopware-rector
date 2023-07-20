@@ -26,7 +26,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class RefactorWithDefaultsSetForRoute
 {
     /**
-     * @Route("/form/contact", name="frontend.form.contact.send", methods={"POST"}, defaults={"XmlHttpRequest" = true, "_captcha" = true})
+     * @Route("/form/contact", name="frontend.form.contact.send", methods={"POST"}, defaults={"XmlHttpRequest"=true, "_captcha"=true})
      */
     public function sendContactForm()
     {

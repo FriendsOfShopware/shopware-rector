@@ -10,6 +10,7 @@ use PHPStan\PhpDocParser\Ast\Type\IdentifierTypeNode;
 use Rector\BetterPhpDocParser\PhpDoc\ArrayItemNode;
 use Rector\BetterPhpDocParser\PhpDoc\DoctrineAnnotationTagValueNode;
 use Rector\BetterPhpDocParser\PhpDoc\SpacelessPhpDocTagNode;
+use Rector\BetterPhpDocParser\PhpDoc\StringNode;
 use Rector\BetterPhpDocParser\PhpDocInfo\PhpDocInfo;
 use Rector\BetterPhpDocParser\PhpDocManipulator\PhpDocTagRemover;
 use Rector\BetterPhpDocParser\ValueObject\PhpDoc\DoctrineAnnotation\CurlyListNode;
@@ -95,7 +96,7 @@ class MigrateRouteScopeToRouteDefaults extends AbstractRector
             }
         }
 
-        $list->values[] = new ArrayItemNode($routeScope->value->values[0]->value, '_routeScope', null, Node\Scalar\String_::KIND_DOUBLE_QUOTED);
+        $list->values[] = new ArrayItemNode($routeScope->value->values[0]->value, new StringNode('_routeScope'));
         $list->markAsChanged();
 
         $this->phpDocTagRemover->removeByName($phpDocInfo, 'RouteScope');
