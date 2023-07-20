@@ -77,6 +77,9 @@ PHP,
         return null;
     }
 
+    /**
+     * @param InterfaceReplacedWithAbstractClass[] $configuration
+     */
     public function configure(array $configuration): void
     {
         $this->configuration = $configuration;

@@ -10,8 +10,6 @@ use Frosh\Rector\Rule\v65\FakerPropertyToMethodCallRector;
 use Frosh\Rector\Rule\v65\MigrateCaptchaAnnotationToRouteRector;
 use Frosh\Rector\Rule\v65\MigrateLoginRequiredAnnotationToRouteRector;
 use Frosh\Rector\Rule\v65\MigrateRouteScopeToRouteDefaults;
-use Frosh\Rector\Rule\v65\RedisConnectionFactoryCreateRector;
-use Frosh\Rector\Rule\v65\ThemeCompilerPrefixRector;
 use Frosh\Rector\Rule\v65\ThumbnailGenerateSingleToMultiGenerateRector;
 use Rector\Arguments\Rector\MethodCall\RemoveMethodCallParamRector;
 use Rector\Arguments\ValueObject\RemoveMethodCallParam;
@@ -73,8 +71,6 @@ return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->rule(MigrateLoginRequiredAnnotationToRouteRector::class);
     $rectorConfig->rule(MigrateCaptchaAnnotationToRouteRector::class);
     $rectorConfig->rule(MigrateRouteScopeToRouteDefaults::class);
-    $rectorConfig->rule(RedisConnectionFactoryCreateRector::class);
-    $rectorConfig->rule(ThemeCompilerPrefixRector::class);
     $rectorConfig->rule(ThumbnailGenerateSingleToMultiGenerateRector::class);
 
     $rectorConfig->ruleWithConfiguration(

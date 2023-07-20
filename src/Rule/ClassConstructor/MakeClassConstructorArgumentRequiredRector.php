@@ -66,6 +66,9 @@ PHP,
         return $this->rebuildNew($node);
     }
 
+    /**
+     * @param MakeClassConstructorArgumentRequired[] $configuration
+     */
     public function configure(array $configuration): void
     {
         $this->configuration = $configuration;
@@ -106,7 +109,7 @@ PHP,
         return null;
     }
 
-    private function rebuildNew(Node\Expr\New_ $node)
+    private function rebuildNew(Node\Expr\New_ $node): ?Node
     {
         $hasModified = false;
 
@@ -120,6 +123,7 @@ PHP,
             }
 
             if ($config->getDefault()) {
+                /** @var Node\Name $arg */
                 $arg = $this->staticTypeMapper->mapPHPStanTypeToPhpParserNode($config->getDefault(), TypeKind::ANY);
 
                 if ($config->getDefault() instanceof NullType) {

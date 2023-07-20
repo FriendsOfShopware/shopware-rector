@@ -17,12 +17,12 @@ class ThumbnailGenerateSingleToMultiGenerateRector extends AbstractRector
         return new RuleDefinition('Move single thumbnail generation call to batch', [
             new CodeSample(
                 <<<'PHP'
-$thumbnail->generateThumbnails($media, $context);
-PHP
+                    $thumbnail->generateThumbnails($media, $context);
+                    PHP
                 ,
                 <<<'PHP'
-$thumbnail->generate(new MediaCollection([$media]), $context);
-PHP
+                    $thumbnail->generate(new MediaCollection([$media]), $context);
+                    PHP
             ),
         ]);
     }
@@ -46,7 +46,6 @@ PHP
         if (!$this->isName($node->name, 'generateThumbnails')) {
             return null;
         }
-
 
         $node->name = new Node\Name('generate');
         $node->args[0] = new Node\Expr\New_(new Node\Name('Shopware\Core\Content\Media\MediaCollection'), [

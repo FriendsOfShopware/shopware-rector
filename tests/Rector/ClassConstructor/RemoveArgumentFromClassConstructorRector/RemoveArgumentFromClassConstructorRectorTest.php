@@ -6,6 +6,11 @@ namespace Frosh\Rector\Tests\Rector\ClassConstructor\RemoveArgumentFromClassCons
 
 use Frosh\Rector\Tests\Rector\AbstractFroshRectorTestCase;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 final class RemoveArgumentFromClassConstructorRectorTest extends AbstractFroshRectorTestCase
 {
 }

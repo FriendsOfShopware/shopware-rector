@@ -55,6 +55,7 @@ CODE_SAMPLE
         }
 
         $nodeFinder = new NodeFinder();
+        // phpstan-ignore-next-line they should add template support
         $methodNames = array_map(static function (Node\Stmt\ClassMethod $method) {
             return (string) $method->name;
         }, $nodeFinder->findInstanceOf([$node], Node\Stmt\ClassMethod::class));

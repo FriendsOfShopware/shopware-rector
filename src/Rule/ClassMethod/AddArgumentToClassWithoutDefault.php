@@ -18,6 +18,9 @@ class AddArgumentToClassWithoutDefault
     protected $type;
     protected string $name;
 
+    /**
+     * @param \PHPStan\Type\Type|null $type
+     */
     public function __construct(string $class, string $method, int $position, string $name, $type)
     {
         $this->class = $class;

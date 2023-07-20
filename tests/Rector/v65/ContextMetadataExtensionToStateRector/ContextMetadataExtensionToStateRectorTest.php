@@ -6,6 +6,11 @@ namespace Frosh\Rector\Tests\Rector\v65\ContextMetadataExtensionToStateRector;
 
 use Frosh\Rector\Tests\Rector\AbstractFroshRectorTestCase;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 final class ContextMetadataExtensionToStateRectorTest extends AbstractFroshRectorTestCase
 {
 }

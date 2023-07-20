@@ -101,13 +101,15 @@ CODE_SAMPLE
         return null;
     }
 
-
+    /**
+     * @param AddArgumentToClassWithoutDefault[] $configuration
+     */
     public function configure(array $configuration): void
     {
         $this->configuration = $configuration;
     }
 
-    private function isObjectTypeMatch($node, ObjectType $objectType): bool
+    private function isObjectTypeMatch(Node $node, ObjectType $objectType): bool
     {
         if ($node instanceof MethodCall) {
             return $this->isObjectType($node->var, $objectType);

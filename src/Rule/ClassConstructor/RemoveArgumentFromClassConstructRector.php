@@ -64,6 +64,10 @@ CODE_SAMPLE
         return $this->rebuildConstructor($node);
     }
 
+    /**
+     * @param AddArgumentToClassWithoutDefault[] $configuration
+     * @return void
+     */
     public function configure(array $configuration): void
     {
         $this->configuration = $configuration;

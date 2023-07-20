@@ -6,6 +6,11 @@ namespace Frosh\Rector\Tests\Rector\Class_\InterfaceReplacedWithAbstractClassRec
 
 use Frosh\Rector\Tests\Rector\AbstractFroshRectorTestCase;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 final class InterfaceReplacedWithAbstractClassRector extends AbstractFroshRectorTestCase
 {
 }

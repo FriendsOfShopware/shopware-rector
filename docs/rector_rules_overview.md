@@ -1,4 +1,4 @@
-# 13 Rules Overview
+# 11 Rules Overview
 
 ## AddArgumentToClassWithoutDefaultRector
 
@@ -9,13 +9,19 @@ This Rector adds new default arguments in calls of defined methods and class typ
 - class: [`Frosh\Rector\Rule\ClassMethod\AddArgumentToClassWithoutDefaultRector`](../src/Rule/ClassMethod/AddArgumentToClassWithoutDefaultRector.php)
 
 ```php
+<?php
+
+declare(strict_types=1);
+
 use Frosh\Rector\Rule\ClassMethod\AddArgumentToClassWithoutDefault;
 use Frosh\Rector\Rule\ClassMethod\AddArgumentToClassWithoutDefaultRector;
 use PHPStan\Type\ObjectType;
 use Rector\Config\RectorConfig;
 
 return static function (RectorConfig $rectorConfig): void {
-    $rectorConfig->ruleWithConfiguration(AddArgumentToClassWithoutDefaultRector::class, [new AddArgumentToClassWithoutDefault('SomeExampleClass', 'someMethod', 0, new ObjectType('SomeType'), 'someArgument')]);
+    $rectorConfig->ruleWithConfiguration(AddArgumentToClassWithoutDefaultRector::class, [
+        new AddArgumentToClassWithoutDefault('SomeExampleClass', 'someMethod', 0, new ObjectType('SomeType'), 'someArgument'),
+    ]);
 };
 ```
 
@@ -89,12 +95,18 @@ Replace UrlProviderInterface with AbstractClass
 - class: [`Frosh\Rector\Rule\Class_\InterfaceReplacedWithAbstractClassRector`](../src/Rule/Class_/InterfaceReplacedWithAbstractClassRector.php)
 
 ```php
+<?php
+
+declare(strict_types=1);
+
 use Frosh\Rector\Rule\Class_\InterfaceReplacedWithAbstractClass;
 use Frosh\Rector\Rule\Class_\InterfaceReplacedWithAbstractClassRector;
 use Rector\Config\RectorConfig;
 
 return static function (RectorConfig $rectorConfig): void {
-    $rectorConfig->ruleWithConfiguration(InterfaceReplacedWithAbstractClassRector::class, [new InterfaceReplacedWithAbstractClass('Foo', 'AbstractTest')]);
+    $rectorConfig->ruleWithConfiguration(InterfaceReplacedWithAbstractClassRector::class, [
+        new InterfaceReplacedWithAbstractClass('Foo', 'AbstractTest'),
+    ]);
 };
 ```
 
@@ -118,6 +130,10 @@ NAME
 - class: [`Frosh\Rector\Rule\ClassConstructor\MakeClassConstructorArgumentRequiredRector`](../src/Rule/ClassConstructor/MakeClassConstructorArgumentRequiredRector.php)
 
 ```php
+<?php
+
+declare(strict_types=1);
+
 use Frosh\Rector\Rule\ClassConstructor\MakeClassConstructorArgumentRequired;
 use Frosh\Rector\Rule\ClassConstructor\MakeClassConstructorArgumentRequiredRector;
 use PHPStan\Type\ArrayType;
@@ -125,7 +141,9 @@ use PHPStan\Type\StringType;
 use Rector\Config\RectorConfig;
 
 return static function (RectorConfig $rectorConfig): void {
-    $rectorConfig->ruleWithConfiguration(MakeClassConstructorArgumentRequiredRector::class, [new MakeClassConstructorArgumentRequired('Foo', 0, new ArrayType(new StringType(), new StringType()))]);
+    $rectorConfig->ruleWithConfiguration(MakeClassConstructorArgumentRequiredRector::class, [
+        new MakeClassConstructorArgumentRequired('Foo', 0, new ArrayType(new StringType(), new StringType())),
+    ]);
 };
 ```
 
@@ -198,20 +216,6 @@ NAME
 
 <br>
 
-## RedisConnectionFactoryCreateRector
-
-Migrate RedisCommection static call to create connection on object
-
-- class: [`Frosh\Rector\Rule\v65\RedisConnectionFactoryCreateRector`](../src/Rule/v65/RedisConnectionFactoryCreateRector.php)
-
-```diff
--RedisConnectionFactory::createConnection('redis://localhost');
-+$redisFactory = new RedisConnectionFactory;
-+$redisFactory->create('redis://localhost');
-```
-
-<br>
-
 ## RemoveArgumentFromClassConstructRector
 
 This Rector removes an argument in the defined class construct.
@@ -221,12 +225,18 @@ This Rector removes an argument in the defined class construct.
 - class: [`Frosh\Rector\Rule\ClassConstructor\RemoveArgumentFromClassConstructRector`](../src/Rule/ClassConstructor/RemoveArgumentFromClassConstructRector.php)
 
 ```php
+<?php
+
+declare(strict_types=1);
+
 use Frosh\Rector\Rule\ClassConstructor\RemoveArgumentFromClassConstruct;
 use Frosh\Rector\Rule\ClassConstructor\RemoveArgumentFromClassConstructRector;
 use Rector\Config\RectorConfig;
 
 return static function (RectorConfig $rectorConfig): void {
-    $rectorConfig->ruleWithConfiguration(RemoveArgumentFromClassConstructRector::class, [new RemoveArgumentFromClassConstruct('SomeExampleClass', 0)]);
+    $rectorConfig->ruleWithConfiguration(RemoveArgumentFromClassConstructRector::class, [
+        new RemoveArgumentFromClassConstruct('SomeExampleClass', 0),
+    ]);
 };
 ```
 
@@ -235,20 +245,6 @@ return static function (RectorConfig $rectorConfig): void {
 ```diff
 -$someObject = new SomeExampleClass($example);
 +$someObject = new SomeExampleClass();
-```
-
-<br>
-
-## ThemeCompilerPrefixRector
-
-Removes ThemeCompiler::getThemePrefix deprecation
-
-- class: [`Frosh\Rector\Rule\v65\ThemeCompilerPrefixRector`](../src/Rule/v65/ThemeCompilerPrefixRector.php)
-
-```diff
--\Shopware\Storefront\Theme\ThemeCompiler::getThemePrefix('bla');
-+$prefixBuilder = new \Shopware\Storefront\Theme\MD5ThemePathBuilder();
-+$prefixBuilder->assemblePath('bla');
 ```
 
 <br>
