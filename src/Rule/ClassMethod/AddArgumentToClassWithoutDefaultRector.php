@@ -65,33 +65,37 @@ class AddArgumentToClassWithoutDefaultRector extends AbstractRector implements C
     public function getNodeTypes(): array
     {
         return [
-            ClassMethod::class,
+            Class_::class,
         ];
     }
 
     /**
-     * @param ClassMethod $node
+     * @param Class_ $node
      */
     public function refactor(Node $node): ?Node
     {
         $hasChanged = false;
 
-        foreach ($this->configuration as $config) {
-            if (!$this->isObjectTypeMatch($node, $config->getObjectType())) {
-                continue;
-            }
-            if (!$this->isName($node->name, $config->getMethod())) {
-                continue;
-            }
+        foreach ($node as $method) {
+            if ($method instanceof ClassMethod) {
+                foreach ($this->configuration as $config) {
+                    if (!$this->isObjectType($node, $config->getObjectType())) {
+                        continue;
+                    }
+                    if (!$this->isName($method->name, $config->getMethod())) {
+                        continue;
+                    }
 
-            $param = new Param(new Variable($config->getName()));
+                    $param = new Param(new Variable($config->getName()));
 
-            if ($config->getType()) {
-                $param->type = $this->staticTypeMapper->mapPHPStanTypeToPhpParserNode($config->getType(), TypeKind::PARAM);
+                    if ($config->getType()) {
+                        $param->type = $this->staticTypeMapper->mapPHPStanTypeToPhpParserNode($config->getType(), TypeKind::PARAM);
+                    }
+
+                    $method->params[$config->getPosition()] = $param;
+                    $hasChanged = true;
+                }
             }
-
-            $node->params[$config->getPosition()] = $param;
-            $hasChanged = true;
         }
 
         if ($hasChanged) {
@@ -107,21 +111,5 @@ class AddArgumentToClassWithoutDefaultRector extends AbstractRector implements C
     public function configure(array $configuration): void
     {
         $this->configuration = $configuration;
-    }
-
-    private function isObjectTypeMatch(Node $node, ObjectType $objectType): bool
-    {
-        if ($node instanceof MethodCall) {
-            return $this->isObjectType($node->var, $objectType);
-        }
-        if ($node instanceof StaticCall) {
-            return $this->isObjectType($node->class, $objectType);
-        }
-        $classLike = $this->betterNodeFinder->findParentType($node, Class_::class);
-        if (!$classLike instanceof Class_) {
-            return false;
-        }
-
-        return $this->isObjectType($classLike, $objectType);
     }
 }
