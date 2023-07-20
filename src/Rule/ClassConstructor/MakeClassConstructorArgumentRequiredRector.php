@@ -49,7 +49,7 @@ class MakeClassConstructorArgumentRequiredRector extends AbstractRector implemen
     public function getNodeTypes(): array
     {
         return [
-            Node\Stmt\ClassMethod::class,
+            Node\Stmt\Class_::class,
             Node\Expr\New_::class,
         ];
     }
@@ -59,8 +59,19 @@ class MakeClassConstructorArgumentRequiredRector extends AbstractRector implemen
      */
     public function refactor(Node $node): ?Node
     {
-        if ($node instanceof Node\Stmt\ClassMethod) {
-            return $this->rebuildClassMethod($node);
+        if ($node instanceof Class_) {
+            $changes = false;
+            foreach ($node->stmts as $classMethod) {
+                if (($classMethod instanceof Node\Stmt\ClassMethod) && $this->rebuildClassMethod($node, $classMethod)) {
+                    $changes = true;
+                }
+            }
+
+            if ($changes) {
+                return $node;
+            }
+
+            return null;
         }
 
         return $this->rebuildNew($node);
@@ -74,16 +85,10 @@ class MakeClassConstructorArgumentRequiredRector extends AbstractRector implemen
         $this->configuration = $configuration;
     }
 
-    private function rebuildClassMethod(Node\Stmt\ClassMethod $node): ?Node
+    private function rebuildClassMethod(Class_ $class, Node\Stmt\ClassMethod $node): bool
     {
         if (!$this->isName($node, '__construct')) {
-            return null;
-        }
-
-        $class = $this->betterNodeFinder->findParentType($node, Class_::class);
-
-        if ($class === null) {
-            return null;
+            return false;
         }
 
         $hasModified = false;
@@ -103,10 +108,10 @@ class MakeClassConstructorArgumentRequiredRector extends AbstractRector implemen
         }
 
         if ($hasModified) {
-            return $node;
+            return true;
         }
 
-        return null;
+        return false;
     }
 
     private function rebuildNew(Node\Expr\New_ $node): ?Node
@@ -127,6 +132,10 @@ class MakeClassConstructorArgumentRequiredRector extends AbstractRector implemen
                 $arg = $this->staticTypeMapper->mapPHPStanTypeToPhpParserNode($config->getDefault(), TypeKind::ANY);
 
                 if ($config->getDefault() instanceof NullType) {
+                    if ($arg instanceof Node\Identifier) {
+                        $arg = new Node\Name($arg->name);
+                    }
+
                     $arg = new Node\Expr\ConstFetch($arg);
                 }
 

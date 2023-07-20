@@ -47,20 +47,31 @@ class RemoveArgumentFromClassConstructRector extends AbstractRector implements C
     {
         return [
             New_::class,
-            ClassMethod::class,
+            Class_::class,
         ];
     }
 
     /**
-     * @param New_|ClassMethod $node
+     * @param New_|Class_ $node
      */
-    public function refactor(Node $node)
+    public function refactor(Node $node): ?Node
     {
         if ($node instanceof New_) {
             return $this->rebuildNew($node);
         }
 
-        return $this->rebuildConstructor($node);
+        $changes = false;
+        foreach ($node->stmts as $stmt) {
+            if ($stmt instanceof ClassMethod && $this->rebuildConstructor($node, $stmt)) {
+                $changes = true;
+            }
+        }
+
+        if ($changes) {
+            return $node;
+        }
+
+        return null;
     }
 
     /**
@@ -97,16 +108,10 @@ class RemoveArgumentFromClassConstructRector extends AbstractRector implements C
         return null;
     }
 
-    private function rebuildConstructor(ClassMethod $node): ?Node
+    private function rebuildConstructor(Class_ $class, ClassMethod $node): bool
     {
         if (!$this->isName($node, '__construct')) {
-            return null;
-        }
-
-        $class = $this->betterNodeFinder->findParentType($node, Class_::class);
-
-        if ($class === null) {
-            return null;
+            return false;
         }
 
         $hasChanged = false;
@@ -127,9 +132,9 @@ class RemoveArgumentFromClassConstructRector extends AbstractRector implements C
         if ($hasChanged) {
             $node->params = \array_values($node->params);
 
-            return $node;
+            return true;
         }
 
-        return null;
+        return false;
     }
 }

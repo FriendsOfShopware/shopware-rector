@@ -72,7 +72,7 @@ class AddArgumentToClassWithoutDefaultRector extends AbstractRector implements C
     /**
      * @param ClassMethod $node
      */
-    public function refactor(Node $node)
+    public function refactor(Node $node): ?Node
     {
         $hasChanged = false;
 
