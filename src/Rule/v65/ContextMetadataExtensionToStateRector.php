@@ -15,19 +15,19 @@ class ContextMetadataExtensionToStateRector extends AbstractRector
 {
     private const ALLOWED_CONSTS = ['USE_INDEXING_QUEUE', 'DISABLE_INDEXING'];
 
-    public function getRuleDefinition(): \Symplify\RuleDocGenerator\ValueObject\RuleDefinition
+    public function getRuleDefinition(): RuleDefinition
     {
         return new RuleDefinition(
             'Migrate extension metadata to state rector',
             [
                 new CodeSample(
                     <<<'CODE_SAMPLE'
-$context->addExtension(EntityIndexerRegistry::USE_INDEXING_QUEUE, new ArrayEntity());
-CODE_SAMPLE
+                        $context->addExtension(EntityIndexerRegistry::USE_INDEXING_QUEUE, new ArrayEntity());
+                        CODE_SAMPLE
                     ,
                     <<<'CODE_SAMPLE'
-$context->addState(EntityIndexerRegistry::USE_INDEXING_QUEUE);
-CODE_SAMPLE
+                        $context->addState(EntityIndexerRegistry::USE_INDEXING_QUEUE);
+                        CODE_SAMPLE
                 ),
             ],
         );

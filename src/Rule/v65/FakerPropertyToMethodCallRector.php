@@ -17,11 +17,11 @@ class FakerPropertyToMethodCallRector extends AbstractRector
         return new RuleDefinition('Move faker property to method call', [
             new CodeSample(
                 <<<'PHP'
-$this->faker->randomDigit
-PHP,
+                    $this->faker->randomDigit
+                    PHP,
                 <<<'PHP'
-$this->faker->randomDigit()
-PHP
+                    $this->faker->randomDigit()
+                    PHP
             ),
         ]);
     }

@@ -18,7 +18,7 @@ return static function (RectorConfig $rectorConfig): void {
             'League\\Flysystem\\FilesystemInterface' => 'League\\Flysystem\\FilesystemOperator',
             'League\\Flysystem\\AdapterInterface' => 'League\\Flysystem\\FilesystemAdapter',
             'League\\Flysystem\\Memory\\MemoryAdapter' => 'League\\Flysystem\\InMemory\\InMemoryFilesystemAdapter',
-        ]
+        ],
     );
 
     $methodRenaming = [];

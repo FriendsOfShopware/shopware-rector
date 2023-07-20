@@ -33,7 +33,7 @@ return static function (RectorConfig $rectorConfig): void {
             new AddParamTypeDeclaration('Shopware\Core\Content\ProductStream\DataAbstractionLayer\ProductStreamIndexer', 'iterate', 0, new ArrayType(new StringType(), new StringType())),
             new AddParamTypeDeclaration('Shopware\Core\Content\Rule\DataAbstractionLayer\RuleIndexer', 'iterate', 0, new ArrayType(new StringType(), new StringType())),
             new AddParamTypeDeclaration('Shopware\\Storefront\\Page\\Product\\Review\\ReviewLoaderResult', 'setMatrix', 0, new ObjectType('Shopware\Core\Content\Product\SalesChannel\Review\RatingMatrix')),
-        ]
+        ],
     );
 
     $rectorConfig->ruleWithConfiguration(
@@ -43,7 +43,7 @@ return static function (RectorConfig $rectorConfig): void {
             new AddReturnTypeDeclaration('Shopware\Core\Content\Cms\DataResolver\CriteriaCollection', 'getIterator', new ObjectType('Traversable')),
             new AddReturnTypeDeclaration('Shopware\\Core\\Checkout\\Cart\\CartBehavior', 'hasPermission', new BooleanType()),
             new AddReturnTypeDeclaration('Shopware\\Storefront\\Page\\Product\\Review\\ReviewLoaderResult', 'getMatrix', new ObjectType('Shopware\Core\Content\Product\SalesChannel\Review\RatingMatrix')),
-        ]
+        ],
     );
 
     $rectorConfig->ruleWithConfiguration(
@@ -51,14 +51,14 @@ return static function (RectorConfig $rectorConfig): void {
         [
             new AddArgumentToClassWithoutDefault('Shopware\Storefront\Framework\Captcha\AbstractCaptcha', 'supports', 1, 'captchaConfig', new ArrayType(new StringType(), new StringType())),
             new AddArgumentToClassWithoutDefault('Shopware\Storefront\Framework\Cache\ReverseProxy\AbstractReverseProxyGateway', 'tag', 2, 'response', new ObjectType('Symfony\Component\HttpFoundation\Response')),
-        ]
+        ],
     );
 
     $rectorConfig->ruleWithConfiguration(
         ArgumentAdderRector::class,
         [
             new ArgumentAdder('Shopware\Core\Content\Media\Thumbnail\ThumbnailService', 'updateThumbnails', 2, 'strict', false, new BooleanType()),
-        ]
+        ],
     );
 
     $rectorConfig->rule(AddBanAllToReverseProxyRector::class);

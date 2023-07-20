@@ -27,21 +27,21 @@ class MakeClassConstructorArgumentRequiredRector extends AbstractRector implemen
         return new RuleDefinition('NAME', [
             new ConfiguredCodeSample(
                 <<<'PHP'
-class Foo {
-    public function __construct(array $foo = [])
-    {
-    }
-}
-PHP
+                    class Foo {
+                        public function __construct(array $foo = [])
+                        {
+                        }
+                    }
+                    PHP
                 ,
                 <<<'PHP'
-class Foo {
-    public function __construct(array $foo)
-    {
-    }
-}
-PHP,
-                [new MakeClassConstructorArgumentRequired('Foo', 0, new ArrayType(new StringType(), new StringType()))]
+                    class Foo {
+                        public function __construct(array $foo)
+                        {
+                        }
+                    }
+                    PHP,
+                [new MakeClassConstructorArgumentRequired('Foo', 0, new ArrayType(new StringType(), new StringType()))],
             ),
         ]);
     }

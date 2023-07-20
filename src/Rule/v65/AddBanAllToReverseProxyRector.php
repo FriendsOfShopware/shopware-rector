@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Frosh\Rector\Rule\v65;
 
-use function array_map;
-use function in_array;
 use PhpParser\BuilderFactory;
 use PhpParser\Node;
 use PhpParser\Node\Stmt\Class_;
@@ -22,18 +20,18 @@ class AddBanAllToReverseProxyRector extends AbstractRector
         return new RuleDefinition('Adds banAll method to reverse proxy', [
             new CodeSample(
                 <<<'CODE_SAMPLE'
-class Test extends \Shopware\Core\Framework\Cache\ReverseProxy\AbstractReverseProxyGateway {
+                    class Test extends \Shopware\Core\Framework\Cache\ReverseProxy\AbstractReverseProxyGateway {
 
-}
-CODE_SAMPLE
+                    }
+                    CODE_SAMPLE
                 ,
                 <<<'CODE_SAMPLE'
-class Test extends \Shopware\Core\Framework\Cache\ReverseProxy\AbstractReverseProxyGateway {
-    public function banAll(): void
-    {
-    }
-}
-CODE_SAMPLE
+                    class Test extends \Shopware\Core\Framework\Cache\ReverseProxy\AbstractReverseProxyGateway {
+                        public function banAll(): void
+                        {
+                        }
+                    }
+                    CODE_SAMPLE
             ),
         ]);
     }
@@ -56,20 +54,21 @@ CODE_SAMPLE
 
         $nodeFinder = new NodeFinder();
         // phpstan-ignore-next-line they should add template support
-        $methodNames = array_map(static function (Node\Stmt\ClassMethod $method) {
+        $methodNames = \array_map(static function (Node\Stmt\ClassMethod $method) {
             return (string) $method->name;
         }, $nodeFinder->findInstanceOf([$node], Node\Stmt\ClassMethod::class));
 
-        if (in_array('banAll', $methodNames, true)) {
+        if (\in_array('banAll', $methodNames, true)) {
             return null;
         }
 
         $builderFactory = new BuilderFactory();
-        $node->stmts[] = ($builderFactory)
+        $node->stmts[] = $builderFactory
             ->method('banAll')
             ->makePublic()
             ->addStmt($builderFactory->methodCall($builderFactory->var('this'), 'ban', $builderFactory->args([new Node\Expr\Array_([new Node\Scalar\String_('/')])])))
-            ->getNode();
+            ->getNode()
+        ;
 
         return $node;
     }

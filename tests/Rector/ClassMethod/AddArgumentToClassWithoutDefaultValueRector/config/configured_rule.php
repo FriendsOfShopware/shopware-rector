@@ -14,6 +14,6 @@ return static function (RectorConfig $rectorConfig): void {
         AddArgumentToClassWithoutDefaultRector::class,
         [
             new AddArgumentToClassWithoutDefault('AbstractCaptcha', 'supports', 1, 'captcha', new ArrayType(new StringType(), new StringType())),
-        ]
+        ],
     );
 };

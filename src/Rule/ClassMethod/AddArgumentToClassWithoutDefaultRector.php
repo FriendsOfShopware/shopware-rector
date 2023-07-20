@@ -32,33 +32,33 @@ class AddArgumentToClassWithoutDefaultRector extends AbstractRector implements C
             [
                 new ConfiguredCodeSample(
                     <<<'CODE_SAMPLE'
-$someObject = new SomeExampleClass;
-$someObject->someMethod();
+                        $someObject = new SomeExampleClass;
+                        $someObject->someMethod();
 
-class MyCustomClass extends SomeExampleClass
-{
-    public function someMethod()
-    {
-    }
-}
-CODE_SAMPLE
+                        class MyCustomClass extends SomeExampleClass
+                        {
+                            public function someMethod()
+                            {
+                            }
+                        }
+                        CODE_SAMPLE
                     ,
                     <<<'CODE_SAMPLE'
-$someObject = new SomeExampleClass;
-$someObject->someMethod(true);
+                        $someObject = new SomeExampleClass;
+                        $someObject->someMethod(true);
 
-class MyCustomClass extends SomeExampleClass
-{
-    public function someMethod($value)
-    {
-    }
-}
-CODE_SAMPLE
+                        class MyCustomClass extends SomeExampleClass
+                        {
+                            public function someMethod($value)
+                            {
+                            }
+                        }
+                        CODE_SAMPLE
                     ,
                     [
-                        new AddArgumentToClassWithoutDefault('SomeExampleClass', 'someMethod', 0, 'someArgument', new ObjectType('SomeType')), ]
+                        new AddArgumentToClassWithoutDefault('SomeExampleClass', 'someMethod', 0, 'someArgument', new ObjectType('SomeType')), ],
                 ),
-            ]
+            ],
         );
     }
 
@@ -121,6 +121,7 @@ CODE_SAMPLE
         if (!$classLike instanceof Class_) {
             return false;
         }
+
         return $this->isObjectType($classLike, $objectType);
     }
 }

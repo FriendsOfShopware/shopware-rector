@@ -29,29 +29,29 @@ class MigrateCaptchaAnnotationToRouteRector extends AbstractRector
         return new RuleDefinition('NAME', [
             new CodeSample(
                 <<<'CODE_SAMPLE'
-class Foo
-{
-    /**
-     * @Route("/form/contact", name="frontend.form.contact.send", methods={"POST"}, defaults={"XmlHttpRequest"=true})
-     * @Captcha
-     */
-    public function sendContactForm()
-    {
-    }
-}
-CODE_SAMPLE
+                    class Foo
+                    {
+                        /**
+                         * @Route("/form/contact", name="frontend.form.contact.send", methods={"POST"}, defaults={"XmlHttpRequest"=true})
+                         * @Captcha
+                         */
+                        public function sendContactForm()
+                        {
+                        }
+                    }
+                    CODE_SAMPLE
                 ,
                 <<<'PHP'
-class Foo
-{
-    /**
-     * @Route("/form/contact", name="frontend.form.contact.send", methods={"POST"}, defaults={"XmlHttpRequest"=true, "_captcha"=true})
-     */
-    public function sendContactForm(): Response
-    {
-    }
-}
-PHP
+                    class Foo
+                    {
+                        /**
+                         * @Route("/form/contact", name="frontend.form.contact.send", methods={"POST"}, defaults={"XmlHttpRequest"=true, "_captcha"=true})
+                         */
+                        public function sendContactForm(): Response
+                        {
+                        }
+                    }
+                    PHP
             ),
         ]);
     }
@@ -66,7 +66,6 @@ PHP
 
     /**
      * @param Node\Stmt\ClassMethod|Class_ $node
-     * @return null
      */
     public function refactor(Node $node)
     {

@@ -24,21 +24,20 @@ class MigrateLoginRequiredAnnotationToRouteRector extends AbstractRector
         $this->phpDocTagRemover = $phpDocTagRemover;
     }
 
-
     public function getRuleDefinition(): RuleDefinition
     {
         return new RuleDefinition('Migrates Annotations to Route annotation', [
             new CodeSample(
                 <<<'CODE_SAMPLE'
-@LoginRequired
-@Route("/store-api/product", name="store-api.product.search", methods={"GET", "POST"})
-public function myAction()
-CODE_SAMPLE
+                    @LoginRequired
+                    @Route("/store-api/product", name="store-api.product.search", methods={"GET", "POST"})
+                    public function myAction()
+                    CODE_SAMPLE
                 ,
                 <<<'CODE_SAMPLE'
-@Route("/store-api/product", name="store-api.product.search", methods={"GET", "POST"}, defaults={"_loginRequired"=true})
-public function myAction()
-CODE_SAMPLE
+                    @Route("/store-api/product", name="store-api.product.search", methods={"GET", "POST"}, defaults={"_loginRequired"=true})
+                    public function myAction()
+                    CODE_SAMPLE
             ),
         ]);
     }
@@ -53,7 +52,6 @@ CODE_SAMPLE
 
     /**
      * @param Node\Stmt\ClassMethod|Class_ $node
-     * @return null
      */
     public function refactor(Node $node)
     {

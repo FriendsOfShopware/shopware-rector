@@ -79,8 +79,8 @@ return static function (RectorConfig $rectorConfig): void {
             'Shopware\Core\Content\Flow\Dispatching\FlowState',
             'sequenceId',
             'getSequenceId',
-            null
-        )]
+            null,
+        )],
     );
 
     $rectorConfig->ruleWithConfiguration(
@@ -88,7 +88,7 @@ return static function (RectorConfig $rectorConfig): void {
         [
             new InterfaceReplacedWithAbstractClass('Shopware\Core\Checkout\Cart\CartPersisterInterface', 'Shopware\Core\Checkout\Cart\AbstractCartPersister'),
             new InterfaceReplacedWithAbstractClass('Shopware\Core\Content\Sitemap\Provider\UrlProviderInterface', 'Shopware\Core\Content\Sitemap\Provider\AbstractUrlProvider'),
-        ]
+        ],
     );
 
     $rectorConfig->rule(FakerPropertyToMethodCallRector::class);

@@ -22,17 +22,17 @@ class InterfaceReplacedWithAbstractClassRector extends AbstractRector implements
         return new RuleDefinition('Replace UrlProviderInterface with AbstractClass', [
             new ConfiguredCodeSample(
                 <<<'CODE_SAMPLE'
-class Foo implements Test {
+                    class Foo implements Test {
 
-}
-CODE_SAMPLE
+                    }
+                    CODE_SAMPLE
                 ,
                 <<<'PHP'
-class Foo extends AbstractTest {
+                    class Foo extends AbstractTest {
 
-}
-PHP,
-                [new InterfaceReplacedWithAbstractClass('Foo', 'AbstractTest')]
+                    }
+                    PHP,
+                [new InterfaceReplacedWithAbstractClass('Foo', 'AbstractTest')],
             ),
         ]);
     }

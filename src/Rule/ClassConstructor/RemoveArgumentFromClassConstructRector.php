@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Frosh\Rector\Rule\ClassConstructor;
 
-use function array_values;
 use Frosh\Rector\Rule\ClassMethod\AddArgumentToClassWithoutDefault;
 use PhpParser\Node;
 use PhpParser\Node\Expr\New_;
@@ -29,18 +28,18 @@ class RemoveArgumentFromClassConstructRector extends AbstractRector implements C
             [
                 new ConfiguredCodeSample(
                     <<<'CODE_SAMPLE'
-$someObject = new SomeExampleClass($example);
-CODE_SAMPLE
+                        $someObject = new SomeExampleClass($example);
+                        CODE_SAMPLE
                     ,
                     <<<'CODE_SAMPLE'
-$someObject = new SomeExampleClass();
-CODE_SAMPLE
+                        $someObject = new SomeExampleClass();
+                        CODE_SAMPLE
                     ,
                     [
                         new RemoveArgumentFromClassConstruct('SomeExampleClass', 0),
-                    ]
+                    ],
                 ),
-            ]
+            ],
         );
     }
 
@@ -66,7 +65,6 @@ CODE_SAMPLE
 
     /**
      * @param AddArgumentToClassWithoutDefault[] $configuration
-     * @return void
      */
     public function configure(array $configuration): void
     {
@@ -91,7 +89,7 @@ CODE_SAMPLE
         }
 
         if ($hasChanged) {
-            $node->args = array_values($node->args);
+            $node->args = \array_values($node->args);
 
             return $node;
         }
@@ -127,7 +125,7 @@ CODE_SAMPLE
         }
 
         if ($hasChanged) {
-            $node->params = array_values($node->params);
+            $node->params = \array_values($node->params);
 
             return $node;
         }

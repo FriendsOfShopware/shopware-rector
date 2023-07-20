@@ -25,27 +25,28 @@ class MigrateRouteScopeToRouteDefaults extends AbstractRector
     {
         $this->phpDocTagRemover = $phpDocTagRemover;
     }
+
     public function getRuleDefinition(): RuleDefinition
     {
         return new RuleDefinition('NAME', [
             new CodeSample(
                 <<<'CODE_SAMPLE'
-/**
- * @RouteScope(scopes={"storefront"})
- */
-class Controller
-{
-}
-CODE_SAMPLE
+                    /**
+                     * @RouteScope(scopes={"storefront"})
+                     */
+                    class Controller
+                    {
+                    }
+                    CODE_SAMPLE
                 ,
                 <<<'PHP'
-/**
- * @Route(defaults={"_routeScope"={"storefront"}})
- */
-class Controller
-{
-}
-PHP
+                    /**
+                     * @Route(defaults={"_routeScope"={"storefront"}})
+                     */
+                    class Controller
+                    {
+                    }
+                    PHP
             ),
         ]);
     }
@@ -60,7 +61,6 @@ PHP
 
     /**
      * @param Node\Stmt\ClassMethod|Class_ $node
-     * @return null
      */
     public function refactor(Node $node)
     {

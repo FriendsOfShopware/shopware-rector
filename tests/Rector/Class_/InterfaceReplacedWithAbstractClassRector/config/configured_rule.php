@@ -12,6 +12,6 @@ return static function (RectorConfig $rectorConfig): void {
         InterfaceReplacedWithAbstractClassRector::class,
         [
             new InterfaceReplacedWithAbstractClass('CartFoo', 'AbstractCartFoo'),
-        ]
+        ],
     );
 };
