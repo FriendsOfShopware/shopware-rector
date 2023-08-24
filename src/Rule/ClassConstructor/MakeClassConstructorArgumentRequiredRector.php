@@ -129,11 +129,15 @@ class MakeClassConstructorArgumentRequiredRector extends AbstractRector implemen
 
             if ($config->getDefault()) {
                 /** @var Node\Name $arg */
-                $arg = $this->staticTypeMapper->mapPHPStanTypeToPhpParserNode($config->getDefault(), TypeKind::ANY);
+                $arg = $this->staticTypeMapper->mapPHPStanTypeToPhpParserNode($config->getDefault(), TypeKind::PARAM);
 
                 if ($config->getDefault() instanceof NullType) {
                     if ($arg instanceof Node\Identifier) {
                         $arg = new Node\Name($arg->name);
+                    }
+
+                    if ($arg === null) {
+                        $arg = new Node\Name('null');
                     }
 
                     $arg = new Node\Expr\ConstFetch($arg);
