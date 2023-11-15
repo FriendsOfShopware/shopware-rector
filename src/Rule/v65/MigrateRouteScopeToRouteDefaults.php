@@ -11,7 +11,7 @@ use Rector\BetterPhpDocParser\PhpDoc\ArrayItemNode;
 use Rector\BetterPhpDocParser\PhpDoc\DoctrineAnnotationTagValueNode;
 use Rector\BetterPhpDocParser\PhpDoc\SpacelessPhpDocTagNode;
 use Rector\BetterPhpDocParser\PhpDoc\StringNode;
-use Rector\BetterPhpDocParser\PhpDocInfo\PhpDocInfo;
+use Rector\BetterPhpDocParser\PhpDocInfo\PhpDocInfoFactory;
 use Rector\BetterPhpDocParser\PhpDocManipulator\PhpDocTagRemover;
 use Rector\BetterPhpDocParser\ValueObject\PhpDoc\DoctrineAnnotation\CurlyListNode;
 use Rector\Core\Rector\AbstractRector;
@@ -20,11 +20,8 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 
 class MigrateRouteScopeToRouteDefaults extends AbstractRector
 {
-    protected PhpDocTagRemover $phpDocTagRemover;
-
-    public function __construct(PhpDocTagRemover $phpDocTagRemover)
+    public function __construct(private PhpDocTagRemover $phpDocTagRemover, private PhpDocInfoFactory $phpDocFactory)
     {
-        $this->phpDocTagRemover = $phpDocTagRemover;
     }
 
     public function getRuleDefinition(): RuleDefinition
@@ -65,8 +62,7 @@ class MigrateRouteScopeToRouteDefaults extends AbstractRector
      */
     public function refactor(Node $node)
     {
-        /** @var PhpDocInfo $phpDocInfo */
-        $phpDocInfo = $this->phpDocInfoFactory->createFromNodeOrEmpty($node);
+        $phpDocInfo = $this->phpDocFactory->createFromNodeOrEmpty($node);
 
         $routeScope = $phpDocInfo->getByName('RouteScope');
 

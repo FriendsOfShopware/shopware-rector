@@ -1,7 +1,7 @@
 <?php
 namespace Frosh\Rector\Tests\Rector\v65\MigrateCaptchaAnnotationToRoute\Fixture;
 
-use Shopware\Core\Framework\Routing\Annotation\LoginRequired;
+use Shopware\Storefront\Framework\Captcha\Annotation\Captcha;
 use Symfony\Component\Routing\Annotation\Route;
 
 class RefactorWithDefaultsSetForRoute
@@ -20,7 +20,7 @@ class RefactorWithDefaultsSetForRoute
 <?php
 namespace Frosh\Rector\Tests\Rector\v65\MigrateCaptchaAnnotationToRoute\Fixture;
 
-use Shopware\Core\Framework\Routing\Annotation\LoginRequired;
+use Shopware\Storefront\Framework\Captcha\Annotation\Captcha;
 use Symfony\Component\Routing\Annotation\Route;
 
 class RefactorWithDefaultsSetForRoute

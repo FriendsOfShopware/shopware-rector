@@ -12,11 +12,16 @@ use PHPStan\Type\StringType;
 use Rector\Core\Contract\Rector\ConfigurableRectorInterface;
 use Rector\Core\Rector\AbstractRector;
 use Rector\PHPStanStaticTypeMapper\Enum\TypeKind;
+use Rector\StaticTypeMapper\StaticTypeMapper;
 use Symplify\RuleDocGenerator\ValueObject\CodeSample\ConfiguredCodeSample;
 use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 
 class MakeClassConstructorArgumentRequiredRector extends AbstractRector implements ConfigurableRectorInterface
 {
+    public function __construct(private readonly StaticTypeMapper $typeMapper)
+    {
+    }
+
     /**
      * @var MakeClassConstructorArgumentRequired[]
      */
@@ -129,7 +134,7 @@ class MakeClassConstructorArgumentRequiredRector extends AbstractRector implemen
 
             if ($config->getDefault()) {
                 /** @var Node\Name $arg */
-                $arg = $this->staticTypeMapper->mapPHPStanTypeToPhpParserNode($config->getDefault(), TypeKind::PARAM);
+                $arg = $this->typeMapper->mapPHPStanTypeToPhpParserNode($config->getDefault(), TypeKind::PARAM);
 
                 if ($config->getDefault() instanceof NullType) {
                     if ($arg instanceof Node\Identifier) {
