@@ -12,13 +12,14 @@ use Rector\BetterPhpDocParser\PhpDoc\StringNode;
 use Rector\BetterPhpDocParser\PhpDocInfo\PhpDocInfoFactory;
 use Rector\BetterPhpDocParser\PhpDocManipulator\PhpDocTagRemover;
 use Rector\BetterPhpDocParser\ValueObject\PhpDoc\DoctrineAnnotation\CurlyListNode;
+use Rector\Comments\NodeDocBlock\DocBlockUpdater;
 use Rector\Core\Rector\AbstractRector;
 use Symplify\RuleDocGenerator\ValueObject\CodeSample\CodeSample;
 use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 
 class MigrateLoginRequiredAnnotationToRouteRector extends AbstractRector
 {
-    public function __construct(private PhpDocTagRemover $phpDocTagRemover, private PhpDocInfoFactory $phpDocFactory)
+    public function __construct(private PhpDocTagRemover $phpDocTagRemover, private PhpDocInfoFactory $phpDocFactory, private DocBlockUpdater $docBlockUpdater)
     {
     }
 
@@ -86,6 +87,8 @@ class MigrateLoginRequiredAnnotationToRouteRector extends AbstractRector
         $list->markAsChanged();
 
         $this->phpDocTagRemover->removeByName($phpDocInfo, 'LoginRequired');
+
+        $this->docBlockUpdater->updateRefactoredNodeWithPhpDocInfo($node);
 
         return $node;
     }
