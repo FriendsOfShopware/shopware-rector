@@ -88,6 +88,7 @@ return static function (RectorConfig $rectorConfig): void {
         [
             new InterfaceReplacedWithAbstractClass('Shopware\Core\Checkout\Cart\CartPersisterInterface', 'Shopware\Core\Checkout\Cart\AbstractCartPersister'),
             new InterfaceReplacedWithAbstractClass('Shopware\Core\Content\Sitemap\Provider\UrlProviderInterface', 'Shopware\Core\Content\Sitemap\Provider\AbstractUrlProvider'),
+            new InterfaceReplacedWithAbstractClass('Shopware\Core\System\Snippet\Files\SnippetFileInterface', 'Shopware\Core\System\Snippet\Files\GenericSnippetFile'),
         ],
     );
 
