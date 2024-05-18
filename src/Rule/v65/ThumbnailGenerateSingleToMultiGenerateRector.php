@@ -5,8 +5,13 @@ declare(strict_types=1);
 namespace Frosh\Rector\Rule\v65;
 
 use PhpParser\Node;
+use PhpParser\Node\Expr\Array_;
+use PhpParser\Node\Expr\MethodCall;
+use PhpParser\Node\Expr\New_;
+use PhpParser\Node\Name;
 use PHPStan\Type\ObjectType;
 use Rector\Rector\AbstractRector;
+use Shopware\Core\Content\Media\MediaCollection;
 use Symplify\RuleDocGenerator\ValueObject\CodeSample\CodeSample;
 use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 
@@ -30,12 +35,12 @@ class ThumbnailGenerateSingleToMultiGenerateRector extends AbstractRector
     public function getNodeTypes(): array
     {
         return [
-            Node\Expr\MethodCall::class,
+            MethodCall::class,
         ];
     }
 
     /**
-     * @param Node\Expr\MethodCall $node
+     * @param MethodCall $node
      */
     public function refactor(Node $node): ?Node
     {
@@ -47,9 +52,9 @@ class ThumbnailGenerateSingleToMultiGenerateRector extends AbstractRector
             return null;
         }
 
-        $node->name = new Node\Name('generate');
-        $node->args[0] = new Node\Expr\New_(new Node\Name('Shopware\Core\Content\Media\MediaCollection'), [
-            new Node\Expr\Array_([$node->args[0]]),
+        $node->name = new Name('generate');
+        $node->args[0] = new New_(new Name(MediaCollection::class), [
+            new Array_([$node->args[0]]),
         ]);
 
         return $node;

@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Frosh\Rector\Rule\v65;
 
 use PhpParser\Node;
+use PhpParser\Node\Expr\MethodCall;
+use PhpParser\Node\Expr\PropertyFetch;
 use PHPStan\Type\ObjectType;
 use Rector\Rector\AbstractRector;
 use Symplify\RuleDocGenerator\ValueObject\CodeSample\CodeSample;
@@ -29,19 +31,19 @@ class FakerPropertyToMethodCallRector extends AbstractRector
     public function getNodeTypes(): array
     {
         return [
-            Node\Expr\PropertyFetch::class,
+            PropertyFetch::class,
         ];
     }
 
     /**
-     * @param Node\Expr\PropertyFetch $node
+     * @param PropertyFetch $node
      */
-    public function refactor(Node $node): ?Node\Expr\MethodCall
+    public function refactor(Node $node): ?MethodCall
     {
         if (!$this->isObjectType($node->var, new ObjectType('Faker\Generator'))) {
             return null;
         }
 
-        return new Node\Expr\MethodCall($node->var, $node->name);
+        return new MethodCall($node->var, $node->name);
     }
 }
