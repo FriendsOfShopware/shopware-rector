@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Frosh\Rector\Rule\Class_;
 
 use PhpParser\Node;
+use PhpParser\Node\Name;
+use PhpParser\Node\Stmt\Class_;
 use Rector\Contract\Rector\ConfigurableRectorInterface;
 use Rector\Rector\AbstractRector;
 use Symplify\RuleDocGenerator\ValueObject\CodeSample\ConfiguredCodeSample;
@@ -40,12 +42,12 @@ class InterfaceReplacedWithAbstractClassRector extends AbstractRector implements
     public function getNodeTypes(): array
     {
         return [
-            Node\Stmt\Class_::class,
+            Class_::class,
         ];
     }
 
     /**
-     * @param Node\Stmt\Class_ $node
+     * @param Class_ $node
      */
     public function refactor(Node $node): ?Node
     {
@@ -65,7 +67,7 @@ class InterfaceReplacedWithAbstractClassRector extends AbstractRector implements
             }
 
             if ($foundIt) {
-                $node->extends = new Node\Name($config->getAbstractClass());
+                $node->extends = new Name($config->getAbstractClass());
                 $hasChanged = true;
             }
         }

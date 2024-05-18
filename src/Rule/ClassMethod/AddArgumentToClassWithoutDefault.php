@@ -5,29 +5,15 @@ declare(strict_types=1);
 namespace Frosh\Rector\Rule\ClassMethod;
 
 use PHPStan\Type\ObjectType;
+use PHPStan\Type\Type;
 
 class AddArgumentToClassWithoutDefault
 {
-    protected string $class;
-    protected string $method;
-    protected int $position;
-
     /**
-     * @var \PHPStan\Type\Type|null
+     * @param Type|null $type
      */
-    protected $type;
-    protected string $name;
-
-    /**
-     * @param \PHPStan\Type\Type|null $type
-     */
-    public function __construct(string $class, string $method, int $position, string $name, $type)
+    public function __construct(protected string $class, protected string $method, protected int $position, protected string $name, protected $type)
     {
-        $this->class = $class;
-        $this->method = $method;
-        $this->position = $position;
-        $this->type = $type;
-        $this->name = $name;
     }
 
     public function getObjectType(): ObjectType
@@ -50,7 +36,7 @@ class AddArgumentToClassWithoutDefault
         return $this->position;
     }
 
-    public function getType(): ?\PHPStan\Type\Type
+    public function getType(): ?Type
     {
         return $this->type;
     }

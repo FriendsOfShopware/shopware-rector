@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Frosh\Rector\Rule\v65;
 
 use PhpParser\Node;
+use PhpParser\Node\Expr\ClassConstFetch;
 use PhpParser\Node\Expr\MethodCall;
 use PHPStan\Type\ObjectType;
 use Rector\Rector\AbstractRector;
@@ -53,10 +54,10 @@ class ContextMetadataExtensionToStateRector extends AbstractRector
             return null;
         }
 
-        /** @var Node|Node\Expr\ClassConstFetch $arg1 */
+        /** @var Node|ClassConstFetch $arg1 */
         $arg1 = $node->args[0]->value;
 
-        if (!$arg1  instanceof Node\Expr\ClassConstFetch || !\in_array($arg1->name->toString(), self::ALLOWED_CONSTS, true)) {
+        if (!$arg1  instanceof ClassConstFetch || !\in_array($arg1->name->toString(), self::ALLOWED_CONSTS, true)) {
             return null;
         }
 

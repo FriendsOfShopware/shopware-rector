@@ -6,7 +6,10 @@ namespace Frosh\Rector\Rule\v65;
 
 use PhpParser\BuilderFactory;
 use PhpParser\Node;
+use PhpParser\Node\Expr\Array_;
+use PhpParser\Node\Scalar\String_;
 use PhpParser\Node\Stmt\Class_;
+use PhpParser\Node\Stmt\ClassMethod;
 use PhpParser\NodeFinder;
 use PHPStan\Type\ObjectType;
 use Rector\Rector\AbstractRector;
@@ -39,7 +42,7 @@ class AddBanAllToReverseProxyRector extends AbstractRector
     public function getNodeTypes(): array
     {
         return [
-            Node\Stmt\Class_::class,
+            Class_::class,
         ];
     }
 
@@ -54,9 +57,7 @@ class AddBanAllToReverseProxyRector extends AbstractRector
 
         $nodeFinder = new NodeFinder();
         // phpstan-ignore-next-line they should add template support
-        $methodNames = \array_map(static function (Node\Stmt\ClassMethod $method) {
-            return (string) $method->name;
-        }, $nodeFinder->findInstanceOf([$node], Node\Stmt\ClassMethod::class));
+        $methodNames = \array_map(static fn (ClassMethod $method) => (string) $method->name, $nodeFinder->findInstanceOf([$node], ClassMethod::class));
 
         if (\in_array('banAll', $methodNames, true)) {
             return null;
@@ -66,7 +67,7 @@ class AddBanAllToReverseProxyRector extends AbstractRector
         $node->stmts[] = $builderFactory
             ->method('banAll')
             ->makePublic()
-            ->addStmt($builderFactory->methodCall($builderFactory->var('this'), 'ban', $builderFactory->args([new Node\Expr\Array_([new Node\Scalar\String_('/')])])))
+            ->addStmt($builderFactory->methodCall($builderFactory->var('this'), 'ban', $builderFactory->args([new Array_([new String_('/')])])))
             ->getNode()
         ;
 

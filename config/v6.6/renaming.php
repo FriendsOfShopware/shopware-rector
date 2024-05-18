@@ -33,7 +33,7 @@ return static function (RectorConfig $rectorConfig): void {
         RenameClassRector::class,
         [
             'Shopware\\Core\\Framework\\DataAbstractionLayer\\Event\\BeforeDeleteEvent' => 'Shopware\\Core\\Framework\\DataAbstractionLayer\\Event\\EntityDeleteEvent',
-        ]
+        ],
     );
 
     $rectorConfig->ruleWithConfiguration(
@@ -44,6 +44,6 @@ return static function (RectorConfig $rectorConfig): void {
             new RenameClassAndConstFetch('Shopware\\Elasticsearch\\Product\\ElasticsearchProductDefinition', 'FLOAT_FIELD', 'Shopware\\Elasticsearch\\Framework\\AbstractElasticsearchDefinition', 'FLOAT_FIELD'),
             new RenameClassAndConstFetch('Shopware\\Elasticsearch\\Product\\ElasticsearchProductDefinition', 'INT_FIELD', 'Shopware\\Elasticsearch\\Framework\\AbstractElasticsearchDefinition', 'INT_FIELD'),
             new RenameClassAndConstFetch('Shopware\\Elasticsearch\\Product\\ElasticsearchProductDefinition', 'SEARCH_FIELD', 'Shopware\\Elasticsearch\\Framework\\AbstractElasticsearchDefinition', 'SEARCH_FIELD'),
-        ]
+        ],
     );
 };

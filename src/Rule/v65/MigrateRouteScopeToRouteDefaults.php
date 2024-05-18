@@ -6,6 +6,7 @@ namespace Frosh\Rector\Rule\v65;
 
 use PhpParser\Builder\Class_;
 use PhpParser\Node;
+use PhpParser\Node\Stmt\ClassMethod;
 use PHPStan\PhpDocParser\Ast\Type\IdentifierTypeNode;
 use Rector\BetterPhpDocParser\PhpDoc\ArrayItemNode;
 use Rector\BetterPhpDocParser\PhpDoc\DoctrineAnnotationTagValueNode;
@@ -21,7 +22,7 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 
 class MigrateRouteScopeToRouteDefaults extends AbstractRector
 {
-    public function __construct(private PhpDocTagRemover $phpDocTagRemover, private PhpDocInfoFactory $phpDocFactory, private DocBlockUpdater $docBlockUpdater)
+    public function __construct(private readonly PhpDocTagRemover $phpDocTagRemover, private readonly PhpDocInfoFactory $phpDocFactory, private readonly DocBlockUpdater $docBlockUpdater)
     {
     }
 
@@ -53,13 +54,13 @@ class MigrateRouteScopeToRouteDefaults extends AbstractRector
     public function getNodeTypes(): array
     {
         return [
-            Node\Stmt\ClassMethod::class,
+            ClassMethod::class,
             Node\Stmt\Class_::class,
         ];
     }
 
     /**
-     * @param Node\Stmt\ClassMethod|Class_ $node
+     * @param ClassMethod|Class_ $node
      */
     public function refactor(Node $node)
     {
