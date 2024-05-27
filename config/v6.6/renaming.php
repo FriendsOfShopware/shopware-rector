@@ -39,6 +39,7 @@ return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->ruleWithConfiguration(
         RenameClassConstFetchRector::class,
         [
+            new RenameClassAndConstFetch('Shopware\\Core\\Checkout\\Cart', 'CHECKOUT_ORDER_PLACED', 'Shopware\\Core\\Framework\\Event\\BusinessEvents', 'CHECKOUT_ORDER_PLACED'),
             new RenameClassAndConstFetch('Shopware\\Elasticsearch\\Product\\ElasticsearchProductDefinition', 'KEYWORD_FIELD', 'Shopware\\Elasticsearch\\Framework\\AbstractElasticsearchDefinition', 'KEYWORD_FIELD'),
             new RenameClassAndConstFetch('Shopware\\Elasticsearch\\Product\\ElasticsearchProductDefinition', 'BOOLEAN_FIELD', 'Shopware\\Elasticsearch\\Framework\\AbstractElasticsearchDefinition', 'BOOLEAN_FIELD'),
             new RenameClassAndConstFetch('Shopware\\Elasticsearch\\Product\\ElasticsearchProductDefinition', 'FLOAT_FIELD', 'Shopware\\Elasticsearch\\Framework\\AbstractElasticsearchDefinition', 'FLOAT_FIELD'),
