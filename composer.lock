@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0bbd64d1dc3fa83bb3c8951e8f3d462e",
+    "content-hash": "987318be041f8e6ca342d8574b2deda9",
     "packages": [],
     "packages-dev": [
         {
@@ -2036,66 +2036,6 @@
                 }
             ],
             "time": "2024-11-22T02:27:22+00:00"
-        },
-        {
-            "name": "rector/rector-php-parser",
-            "version": "dev-main",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/rectorphp/rector-php-parser.git",
-                "reference": "c389a27ad1735be08d5737b29313ddc84f36f2dc"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/rectorphp/rector-php-parser/zipball/c389a27ad1735be08d5737b29313ddc84f36f2dc",
-                "reference": "c389a27ad1735be08d5737b29313ddc84f36f2dc",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=8.2"
-            },
-            "conflict": {
-                "rector/rector": "<0.12"
-            },
-            "require-dev": {
-                "phpstan/extension-installer": "^1.1",
-                "phpstan/phpstan": "^2.0",
-                "phpstan/phpstan-webmozart-assert": "^2.0",
-                "phpunit/phpunit": "^10.0",
-                "rector/rector-src": "dev-main",
-                "symplify/easy-ci": "11.2.0.72",
-                "symplify/easy-coding-standard": "^11.1",
-                "symplify/vendor-patches": "^11.1"
-            },
-            "default-branch": true,
-            "type": "rector-extension",
-            "extra": {
-                "enable-patching": true,
-                "branch-alias": {
-                    "dev-main": "0.11-dev"
-                },
-                "rector": {
-                    "includes": [
-                        "config/config.php"
-                    ]
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Rector\\PhpParser\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "Rector upgrades rules for PHP-Parser",
-            "support": {
-                "issues": "https://github.com/rectorphp/rector-php-parser/issues",
-                "source": "https://github.com/rectorphp/rector-php-parser/tree/main"
-            },
-            "abandoned": true,
-            "time": "2024-11-21T07:40:51+00:00"
         },
         {
             "name": "sebastian/cli-parser",
@@ -4619,17 +4559,16 @@
     ],
     "minimum-stability": "stable",
     "stability-flags": {
-        "rector/rector": 20,
-        "rector/rector-php-parser": 20
+        "rector/rector": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": "^8.2"
+        "php": "^8.1"
     },
     "platform-dev": {},
     "platform-overrides": {
-        "php": "8.2.99"
+        "php": "8.1.99"
     },
     "plugin-api-version": "2.6.0"
 }
