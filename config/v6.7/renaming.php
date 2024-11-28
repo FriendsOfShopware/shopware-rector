@@ -14,6 +14,14 @@ return static function (RectorConfig $rectorConfig): void {
         [
             new RenameClassAndConstFetch('Shopware\\Core\\Content\\MailTemplate\\Subscriber\\MailSendSubscriberConfig', 'MAIL_CONFIG_EXTENSION', 'Shopware\\Core\\Content\\Flow\\Dispatching\\Action\\SendMailAction', 'MAIL_CONFIG_EXTENSION'),
             new RenameClassAndConstFetch('Shopware\\Core\\Content\\MailTemplate\\Subscriber\\MailSendSubscriberConfig', 'ACTION_NAME', 'Shopware\\Core\\Content\\Flow\\Dispatching\\Action\\SendMailAction', 'ACTION_NAME'),
+
+            new RenameClassAndConstFetch('Shopware\\Core\\Framework\\Adapter\\Cache\\Http\\CacheResponseSubscriber', 'STATE_LOGGED_IN', 'Shopware\\Core\\Framework\\Adapter\\Cache\\CacheStateSubscriber', 'STATE_LOGGED_IN'),
+            new RenameClassAndConstFetch('Shopware\\Core\\Framework\\Adapter\\Cache\\Http\\CacheResponseSubscriber', 'STATE_CART_FILLED', 'Shopware\\Core\\Framework\\Adapter\\Cache\\CacheStateSubscriber', 'STATE_CART_FILLED'),
+
+            new RenameClassAndConstFetch('Shopware\\Core\\Framework\\Adapter\\Cache\\Http\\CacheResponseSubscriber', 'CURRENCY_COOKIE', 'Shopware\\Core\\Framework\\Adapter\\Cache\\Http\\HttpCacheKeyGenerator', 'CURRENCY_COOKIE'),
+            new RenameClassAndConstFetch('Shopware\\Core\\Framework\\Adapter\\Cache\\Http\\CacheResponseSubscriber', 'CONTEXT_CACHE_COOKIE', 'Shopware\\Core\\Framework\\Adapter\\Cache\\Http\\HttpCacheKeyGenerator', 'CONTEXT_CACHE_COOKIE'),
+            new RenameClassAndConstFetch('Shopware\\Core\\Framework\\Adapter\\Cache\\Http\\CacheResponseSubscriber', 'SYSTEM_STATE_COOKIE', 'Shopware\\Core\\Framework\\Adapter\\Cache\\Http\\HttpCacheKeyGenerator', 'SYSTEM_STATE_COOKIE'),
+            new RenameClassAndConstFetch('Shopware\\Core\\Framework\\Adapter\\Cache\\Http\\CacheResponseSubscriber', 'INVALIDATION_STATES_HEADER', 'Shopware\\Core\\Framework\\Adapter\\Cache\\Http\\HttpCacheKeyGenerator', 'INVALIDATION_STATES_HEADER'),
         ],
     );
 };
