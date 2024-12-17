@@ -10,7 +10,7 @@ See available [Shopware rules](/docs/rector_rules_overview.md)
 Make sure to install both `frosh/shopware-rector` as well as `rector/rector`.
 
 ```bash
-composer req rector/rector frosh/shopware-rector --dev
+composer req frosh/shopware-rector --dev
 ```
 
 ## Use Sets
