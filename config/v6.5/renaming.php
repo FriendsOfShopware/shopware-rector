@@ -26,7 +26,7 @@ return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->ruleWithConfiguration(
         RenameMethodRector::class,
         [
-            new MethodCallRename('Shopware\\Core\\Framework\\Adapter\\Twig\\EntityTemplateLoader', 'clearInternalCache', 'reset'),
+            new MethodCallRename('Shopware\Core\Framework\Adapter\Twig\EntityTemplateLoader', 'clearInternalCache', 'reset'),
             new MethodCallRename('Shopware\Core\Content\ImportExport\Processing\Mapping\Mapping', 'getDefault', 'getDefaultValue'),
             new MethodCallRename('Shopware\Core\Content\ImportExport\Processing\Mapping\Mapping', 'getMappedDefault', 'getDefaultValue'),
         ],
@@ -35,33 +35,33 @@ return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->ruleWithConfiguration(
         RenameClassRector::class,
         [
-            'Shopware\\Core\\Framework\\Adapter\\Asset\\ThemeAssetPackage' => 'Shopware\\Storefront\\Theme\\ThemeAssetPackage',
-            'Maltyxx\\ImagesGenerator\\ImagesGeneratorProvider' => 'bheller\\ImagesGenerator\\ImagesGeneratorProvider',
-            'Shopware\\Core\\Framework\\Event\\BusinessEventInterface' => 'Shopware\\Core\\Framework\\Event\\FlowEventAware',
-            'Shopware\\Core\\Framework\\Event\\MailActionInterface' => 'Shopware\\Core\\Framework\\Event\\MailAware',
-            'Shopware\\Core\\Framework\\Log\\LogAwareBusinessEventInterface' => 'Shopware\\Core\\Framework\\Log\\LogAware',
-            'Shopware\\Storefront\\Event\\ProductExportContentTypeEvent' => 'Shopware\\Core\\Content\\ProductExport\\Event\\ProductExportContentTypeEvent',
-            'Shopware\\Storefront\\Page\\Product\\Review\\MatrixElement' => 'Shopware\\Core\\Content\\Product\\SalesChannel\\Review\\MatrixElement',
-            'Shopware\\Storefront\\Page\\Product\\Review\\RatingMatrix' => 'Shopware\\Core\\Content\\Product\\SalesChannel\\Review\\RatingMatrix',
-            'Shopware\\Storefront\\Page\\Address\\Listing\\AddressListingCriteriaEvent' => 'Shopware\\Core\\Checkout\\Customer\\Event\\AddressListingCriteriaEvent',
-            'Shopware\\Administration\\Service\\AdminOrderCartService' => 'Shopware\\Core\\Checkout\\Cart\\ApiOrderCartService',
-            'Shopware\\Core\\System\\User\\Service\\UserProvisioner' => 'Shopware\\Core\\Maintenance\\User\\Service\\UserProvisioner',
-            'Shopware\\Core\\Framework\\DataAbstractionLayer\\EntityRepositoryInterface' => 'Shopware\\Core\\Framework\\DataAbstractionLayer\\EntityRepository',
-            'Shopware\\Core\\System\\SalesChannel\\Entity\\SalesChannelRepositoryInterface' => 'Shopware\\Core\\System\\SalesChannel\\Entity\\SalesChannelRepository',
+            'Shopware\Core\Framework\Adapter\Asset\ThemeAssetPackage' => 'Shopware\Storefront\Theme\ThemeAssetPackage',
+            'Maltyxx\ImagesGenerator\ImagesGeneratorProvider' => 'bheller\ImagesGenerator\ImagesGeneratorProvider',
+            'Shopware\Core\Framework\Event\BusinessEventInterface' => 'Shopware\Core\Framework\Event\FlowEventAware',
+            'Shopware\Core\Framework\Event\MailActionInterface' => 'Shopware\Core\Framework\Event\MailAware',
+            'Shopware\Core\Framework\Log\LogAwareBusinessEventInterface' => 'Shopware\Core\Framework\Log\LogAware',
+            'Shopware\Storefront\Event\ProductExportContentTypeEvent' => 'Shopware\Core\Content\ProductExport\Event\ProductExportContentTypeEvent',
+            'Shopware\Storefront\Page\Product\Review\MatrixElement' => 'Shopware\Core\Content\Product\SalesChannel\Review\MatrixElement',
+            'Shopware\Storefront\Page\Product\Review\RatingMatrix' => 'Shopware\Core\Content\Product\SalesChannel\Review\RatingMatrix',
+            'Shopware\Storefront\Page\Address\Listing\AddressListingCriteriaEvent' => 'Shopware\Core\Checkout\Customer\Event\AddressListingCriteriaEvent',
+            'Shopware\Administration\Service\AdminOrderCartService' => 'Shopware\Core\Checkout\Cart\ApiOrderCartService',
+            'Shopware\Core\System\User\Service\UserProvisioner' => 'Shopware\Core\Maintenance\User\Service\UserProvisioner',
+            'Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface' => 'Shopware\Core\Framework\DataAbstractionLayer\EntityRepository',
+            'Shopware\Core\System\SalesChannel\Entity\SalesChannelRepositoryInterface' => 'Shopware\Core\System\SalesChannel\Entity\SalesChannelRepository',
         ],
     );
 
     $rectorConfig->ruleWithConfiguration(
         RemoveMethodCallParamRector::class,
         [
-            new RemoveMethodCallParam('Shopware\\Core\\Checkout\\Cart\\Tax\\Struct\\CalculatedTaxCollection', 'merge', 1),
+            new RemoveMethodCallParam('Shopware\Core\Checkout\Cart\Tax\Struct\CalculatedTaxCollection', 'merge', 1),
         ],
     );
 
     $rectorConfig->ruleWithConfiguration(
         RemoveArgumentFromClassConstructRector::class,
         [
-            new RemoveArgumentFromClassConstruct('Shopware\\Core\\Checkout\\Customer\\Exception\\DuplicateWishlistProductException', 0),
+            new RemoveArgumentFromClassConstruct('Shopware\Core\Checkout\Customer\Exception\DuplicateWishlistProductException', 0),
             new RemoveArgumentFromClassConstruct('Shopware\Core\Content\Newsletter\Exception\LanguageOfNewsletterDeleteException', 0),
             new RemoveArgumentFromClassConstruct('Shopware\Core\Content\Product\Events\ProductIndexerEvent', 1),
             new RemoveArgumentFromClassConstruct('Shopware\Core\Content\Product\Events\ProductIndexerEvent', 2),

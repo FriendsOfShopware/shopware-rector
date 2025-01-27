@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Frosh\Rector\Rule\v67\AddEntityNameToEntityExtension;
 use Rector\Config\RectorConfig;
 use Rector\Set\ValueObject\LevelSetList;
 use Rector\Symfony\Set\SymfonySetList;
@@ -14,6 +15,10 @@ return static function (RectorConfig $rectorConfig): void {
         SymfonySetList::SYMFONY_63,
         SymfonySetList::SYMFONY_64,
         LevelSetList::UP_TO_PHP_82,
+    ]);
+
+    $rectorConfig->ruleWithConfiguration(AddEntityNameToEntityExtension::class, [
+        'backwardsCompatible' => true,
     ]);
 
     $rectorConfig->importNames();

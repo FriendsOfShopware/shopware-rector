@@ -51,7 +51,7 @@ class AddBanAllToReverseProxyRector extends AbstractRector
      */
     public function refactor(Node $node)
     {
-        if (!$this->isObjectType($node, new ObjectType('Shopware\\Storefront\\Framework\\Cache\\ReverseProxy\\AbstractReverseProxyGateway'))) {
+        if (!$this->isObjectType($node, new ObjectType('Shopware\Storefront\Framework\Cache\ReverseProxy\AbstractReverseProxyGateway'))) {
             return null;
         }
 

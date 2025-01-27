@@ -32,19 +32,19 @@ return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->ruleWithConfiguration(
         RenameClassRector::class,
         [
-            'Shopware\\Core\\Framework\\DataAbstractionLayer\\Event\\BeforeDeleteEvent' => 'Shopware\\Core\\Framework\\DataAbstractionLayer\\Event\\EntityDeleteEvent',
+            'Shopware\Core\Framework\DataAbstractionLayer\Event\BeforeDeleteEvent' => 'Shopware\Core\Framework\DataAbstractionLayer\Event\EntityDeleteEvent',
         ],
     );
 
     $rectorConfig->ruleWithConfiguration(
         RenameClassConstFetchRector::class,
         [
-            new RenameClassAndConstFetch('Shopware\\Core\\Checkout\\Cart', 'CHECKOUT_ORDER_PLACED', 'Shopware\\Core\\Framework\\Event\\BusinessEvents', 'CHECKOUT_ORDER_PLACED'),
-            new RenameClassAndConstFetch('Shopware\\Elasticsearch\\Product\\ElasticsearchProductDefinition', 'KEYWORD_FIELD', 'Shopware\\Elasticsearch\\Framework\\AbstractElasticsearchDefinition', 'KEYWORD_FIELD'),
-            new RenameClassAndConstFetch('Shopware\\Elasticsearch\\Product\\ElasticsearchProductDefinition', 'BOOLEAN_FIELD', 'Shopware\\Elasticsearch\\Framework\\AbstractElasticsearchDefinition', 'BOOLEAN_FIELD'),
-            new RenameClassAndConstFetch('Shopware\\Elasticsearch\\Product\\ElasticsearchProductDefinition', 'FLOAT_FIELD', 'Shopware\\Elasticsearch\\Framework\\AbstractElasticsearchDefinition', 'FLOAT_FIELD'),
-            new RenameClassAndConstFetch('Shopware\\Elasticsearch\\Product\\ElasticsearchProductDefinition', 'INT_FIELD', 'Shopware\\Elasticsearch\\Framework\\AbstractElasticsearchDefinition', 'INT_FIELD'),
-            new RenameClassAndConstFetch('Shopware\\Elasticsearch\\Product\\ElasticsearchProductDefinition', 'SEARCH_FIELD', 'Shopware\\Elasticsearch\\Framework\\AbstractElasticsearchDefinition', 'SEARCH_FIELD'),
+            new RenameClassAndConstFetch('Shopware\Core\Checkout\Cart', 'CHECKOUT_ORDER_PLACED', 'Shopware\Core\Framework\Event\BusinessEvents', 'CHECKOUT_ORDER_PLACED'),
+            new RenameClassAndConstFetch('Shopware\Elasticsearch\Product\ElasticsearchProductDefinition', 'KEYWORD_FIELD', 'Shopware\Elasticsearch\Framework\AbstractElasticsearchDefinition', 'KEYWORD_FIELD'),
+            new RenameClassAndConstFetch('Shopware\Elasticsearch\Product\ElasticsearchProductDefinition', 'BOOLEAN_FIELD', 'Shopware\Elasticsearch\Framework\AbstractElasticsearchDefinition', 'BOOLEAN_FIELD'),
+            new RenameClassAndConstFetch('Shopware\Elasticsearch\Product\ElasticsearchProductDefinition', 'FLOAT_FIELD', 'Shopware\Elasticsearch\Framework\AbstractElasticsearchDefinition', 'FLOAT_FIELD'),
+            new RenameClassAndConstFetch('Shopware\Elasticsearch\Product\ElasticsearchProductDefinition', 'INT_FIELD', 'Shopware\Elasticsearch\Framework\AbstractElasticsearchDefinition', 'INT_FIELD'),
+            new RenameClassAndConstFetch('Shopware\Elasticsearch\Product\ElasticsearchProductDefinition', 'SEARCH_FIELD', 'Shopware\Elasticsearch\Framework\AbstractElasticsearchDefinition', 'SEARCH_FIELD'),
         ],
     );
 };

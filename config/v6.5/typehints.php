@@ -32,17 +32,17 @@ return static function (RectorConfig $rectorConfig): void {
             new AddParamTypeDeclaration('Shopware\Core\Content\LandingPage\DataAbstractionLayer\LandingPageIndexer', 'iterate', 0, new ArrayType(new StringType(), new StringType())),
             new AddParamTypeDeclaration('Shopware\Core\Content\ProductStream\DataAbstractionLayer\ProductStreamIndexer', 'iterate', 0, new ArrayType(new StringType(), new StringType())),
             new AddParamTypeDeclaration('Shopware\Core\Content\Rule\DataAbstractionLayer\RuleIndexer', 'iterate', 0, new ArrayType(new StringType(), new StringType())),
-            new AddParamTypeDeclaration('Shopware\\Storefront\\Page\\Product\\Review\\ReviewLoaderResult', 'setMatrix', 0, new ObjectType('Shopware\Core\Content\Product\SalesChannel\Review\RatingMatrix')),
+            new AddParamTypeDeclaration('Shopware\Storefront\Page\Product\Review\ReviewLoaderResult', 'setMatrix', 0, new ObjectType('Shopware\Core\Content\Product\SalesChannel\Review\RatingMatrix')),
         ],
     );
 
     $rectorConfig->ruleWithConfiguration(
         AddReturnTypeDeclarationRector::class,
         [
-            new AddReturnTypeDeclaration('Shopware\\Core\\Framework\\Adapter\\Twig\\TemplateIterator', 'getIterator', new ObjectType('Traversable')),
+            new AddReturnTypeDeclaration('Shopware\Core\Framework\Adapter\Twig\TemplateIterator', 'getIterator', new ObjectType('Traversable')),
             new AddReturnTypeDeclaration('Shopware\Core\Content\Cms\DataResolver\CriteriaCollection', 'getIterator', new ObjectType('Traversable')),
-            new AddReturnTypeDeclaration('Shopware\\Core\\Checkout\\Cart\\CartBehavior', 'hasPermission', new BooleanType()),
-            new AddReturnTypeDeclaration('Shopware\\Storefront\\Page\\Product\\Review\\ReviewLoaderResult', 'getMatrix', new ObjectType('Shopware\Core\Content\Product\SalesChannel\Review\RatingMatrix')),
+            new AddReturnTypeDeclaration('Shopware\Core\Checkout\Cart\CartBehavior', 'hasPermission', new BooleanType()),
+            new AddReturnTypeDeclaration('Shopware\Storefront\Page\Product\Review\ReviewLoaderResult', 'getMatrix', new ObjectType('Shopware\Core\Content\Product\SalesChannel\Review\RatingMatrix')),
         ],
     );
 

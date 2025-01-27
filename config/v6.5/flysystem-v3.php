@@ -15,9 +15,9 @@ return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->ruleWithConfiguration(
         RenameClassRector::class,
         [
-            'League\\Flysystem\\FilesystemInterface' => 'League\\Flysystem\\FilesystemOperator',
-            'League\\Flysystem\\AdapterInterface' => 'League\\Flysystem\\FilesystemAdapter',
-            'League\\Flysystem\\Memory\\MemoryAdapter' => 'League\\Flysystem\\InMemory\\InMemoryFilesystemAdapter',
+            'League\Flysystem\FilesystemInterface' => 'League\Flysystem\FilesystemOperator',
+            'League\Flysystem\AdapterInterface' => 'League\Flysystem\FilesystemAdapter',
+            'League\Flysystem\Memory\MemoryAdapter' => 'League\Flysystem\InMemory\InMemoryFilesystemAdapter',
         ],
     );
 
@@ -25,10 +25,10 @@ return static function (RectorConfig $rectorConfig): void {
     $classConstRenaming = [];
 
     $filesystemClasses = [
-        'League\\Flysystem\\FilesystemOperator',
-        'League\\Flysystem\\Filesystem',
-        'League\\Flysystem\\FilesystemInterface',
-        'League\\Flysystem\\FilesystemAdapter',
+        'League\Flysystem\FilesystemOperator',
+        'League\Flysystem\Filesystem',
+        'League\Flysystem\FilesystemInterface',
+        'League\Flysystem\FilesystemAdapter',
     ];
     foreach ($filesystemClasses as $class) {
         $methodRenaming += [
@@ -49,8 +49,8 @@ return static function (RectorConfig $rectorConfig): void {
             new MethodCallRename($class, 'getVisibility', 'visibility'),
         ];
 
-        $classConstRenaming[] = new RenameClassAndConstFetch($class, 'VISIBILITY_PUBLIC', 'League\\Flysystem\\Visibility', 'PUBLIC');
-        $classConstRenaming[] = new RenameClassAndConstFetch($class, 'VISIBILITY_PRIVATE', 'League\\Flysystem\\Visibility', 'PRIVATE');
+        $classConstRenaming[] = new RenameClassAndConstFetch($class, 'VISIBILITY_PUBLIC', 'League\Flysystem\Visibility', 'PUBLIC');
+        $classConstRenaming[] = new RenameClassAndConstFetch($class, 'VISIBILITY_PRIVATE', 'League\Flysystem\Visibility', 'PRIVATE');
     }
 
     $rectorConfig->ruleWithConfiguration(RenameMethodRector::class, $methodRenaming);
