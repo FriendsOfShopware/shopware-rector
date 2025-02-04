@@ -15,6 +15,8 @@ return static function (RectorConfig $rectorConfig): void {
             new RenameClassAndConstFetch('Shopware\Core\Content\MailTemplate\Subscriber\MailSendSubscriberConfig', 'MAIL_CONFIG_EXTENSION', 'Shopware\Core\Content\Flow\Dispatching\Action\SendMailAction', 'MAIL_CONFIG_EXTENSION'),
             new RenameClassAndConstFetch('Shopware\Core\Content\MailTemplate\Subscriber\MailSendSubscriberConfig', 'ACTION_NAME', 'Shopware\Core\Content\Flow\Dispatching\Action\SendMailAction', 'ACTION_NAME'),
 
+            new RenameClassAndConstFetch('Shopware\Core\Content\MailTemplate\MailTemplateActions', 'MAIL_TEMPLATE_MAIL_SEND_ACTION', 'Shopware\Core\Content\Flow\Dispatching\Action\SendMailAction', 'ACTION_NAME'),
+
             new RenameClassAndConstFetch('Shopware\Core\Framework\Adapter\Cache\Http\CacheResponseSubscriber', 'STATE_LOGGED_IN', 'Shopware\Core\Framework\Adapter\Cache\CacheStateSubscriber', 'STATE_LOGGED_IN'),
             new RenameClassAndConstFetch('Shopware\Core\Framework\Adapter\Cache\Http\CacheResponseSubscriber', 'STATE_CART_FILLED', 'Shopware\Core\Framework\Adapter\Cache\CacheStateSubscriber', 'STATE_CART_FILLED'),
 
