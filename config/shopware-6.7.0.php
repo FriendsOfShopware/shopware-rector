@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Frosh\Rector\Rule\v67\AddEntityNameToEntityExtension;
+use Frosh\Rector\Rule\v67\AddLoggerToScheduledTaskConstructorRector;
 use Rector\Config\RectorConfig;
 
 return static function (RectorConfig $rectorConfig): void {
@@ -11,6 +12,8 @@ return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->ruleWithConfiguration(AddEntityNameToEntityExtension::class, [
         'backwardsCompatible' => false,
     ]);
+
+    $rectorConfig->rule(AddLoggerToScheduledTaskConstructorRector::class);
 
     $rectorConfig->importNames();
     $rectorConfig->importShortClasses(false);
