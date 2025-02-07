@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Frosh\Rector\Rule\ClassMethod\ChangeReturnTypeOfClassMethod;
 use Frosh\Rector\Rule\ClassMethod\ChangeReturnTypeOfClassMethodRector;
 use Frosh\Rector\Rule\v67\AddEntityNameToEntityExtension;
+use PhpParser\Node\Name\FullyQualified;
 use Rector\Config\RectorConfig;
 
 return static function (RectorConfig $rectorConfig): void {
@@ -15,7 +16,7 @@ return static function (RectorConfig $rectorConfig): void {
     ]);
 
     $rectorConfig->ruleWithConfiguration(ChangeReturnTypeOfClassMethodRector::class, [
-        new ChangeReturnTypeOfClassMethod('\Shopware\Elasticsearch\Framework\AbstractElasticsearchDefinition', 'buildTermQuery', 'OpenSearchDSL\BuilderInterface'),
+        new ChangeReturnTypeOfClassMethod('\Shopware\Elasticsearch\Framework\AbstractElasticsearchDefinition', 'buildTermQuery', new FullyQualified('OpenSearchDSL\BuilderInterface')),
     ]);
 
     $rectorConfig->importNames();
