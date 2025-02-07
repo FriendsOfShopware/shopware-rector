@@ -67,7 +67,7 @@ class AddBanAllToReverseProxyRector extends AbstractRector
         $node->stmts[] = $builderFactory
             ->method('banAll')
             ->makePublic()
-            ->addStmt($builderFactory->methodCall($builderFactory->var('this'), 'ban', $builderFactory->args([new Array_([new String_('/')])])))
+            ->addStmt(new Node\Expr\MethodCall(new Node\Expr\Variable('this'), 'ban', [new Node\Arg(new Array_([]))]))
             ->getNode()
         ;
 

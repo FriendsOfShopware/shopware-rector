@@ -11,6 +11,6 @@ use Frosh\Rector\Tests\Rector\AbstractFroshRectorTestCase;
  *
  * @coversNothing
  */
-final class ThumbnailGenerateSingleToMultiGenerate extends AbstractFroshRectorTestCase
+final class ThumbnailGenerateSingleToMultiGenerateTest extends AbstractFroshRectorTestCase
 {
 }

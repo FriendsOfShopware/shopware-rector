@@ -13,11 +13,16 @@ use PHPStan\Type\ObjectType;
 use Rector\Contract\Rector\ConfigurableRectorInterface;
 use Rector\PHPStanStaticTypeMapper\Enum\TypeKind;
 use Rector\Rector\AbstractRector;
+use Rector\StaticTypeMapper\StaticTypeMapper;
 use Symplify\RuleDocGenerator\ValueObject\CodeSample\ConfiguredCodeSample;
 use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 
 class AddArgumentToClassWithoutDefaultRector extends AbstractRector implements ConfigurableRectorInterface
 {
+    public function __construct(private readonly StaticTypeMapper $staticTypeMapper)
+    {
+    }
+
     /**
      * @var AddArgumentToClassWithoutDefault[]
      */
@@ -74,7 +79,7 @@ class AddArgumentToClassWithoutDefaultRector extends AbstractRector implements C
     {
         $hasChanged = false;
 
-        foreach ($node as $method) {
+        foreach ($node->stmts as $method) {
             if ($method instanceof ClassMethod) {
                 foreach ($this->configuration as $config) {
                     if (!$this->isObjectType($node, $config->getObjectType())) {

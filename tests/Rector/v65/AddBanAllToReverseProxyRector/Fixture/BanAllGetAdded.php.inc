@@ -10,12 +10,11 @@ class Test extends \Shopware\Storefront\Framework\Cache\ReverseProxy\AbstractRev
 <?php
 namespace Frosh\Rector\Tests\Rector\v65\AddBanAllToReverseProxyRector\Fixture;
 
-use Shopware\Storefront\Framework\Cache\ReverseProxy\AbstractReverseProxyGateway;
-class Test extends AbstractReverseProxyGateway
+class Test extends \Shopware\Storefront\Framework\Cache\ReverseProxy\AbstractReverseProxyGateway
 {
     public function banAll()
     {
-        $this->ban(['/']);
+        $this->ban([]);
     }
 }
 ?>
