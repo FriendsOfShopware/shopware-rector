@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Frosh\Rector\Rule\v67\AddEntityNameToEntityExtension;
 use Rector\Config\RectorConfig;
 use Rector\Set\ValueObject\SetList;
 use Rector\Symfony\Set\SymfonySetList;
@@ -19,6 +20,10 @@ return static function (RectorConfig $rectorConfig): void {
         SetList::PHP_74,
         SetList::PHP_80,
         SetList::PHP_81,
+    ]);
+
+    $rectorConfig->ruleWithConfiguration(AddEntityNameToEntityExtension::class, [
+        'backwardsCompatible' => true,
     ]);
 
     $rectorConfig->importNames();
