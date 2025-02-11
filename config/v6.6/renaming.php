@@ -33,6 +33,7 @@ return static function (RectorConfig $rectorConfig): void {
         RenameClassRector::class,
         [
             'Shopware\Core\Framework\DataAbstractionLayer\Event\BeforeDeleteEvent' => 'Shopware\Core\Framework\DataAbstractionLayer\Event\EntityDeleteEvent',
+            'Shopware\Core\Framework\Api\Exception\ExceptionFailedException' => 'Shopware\Core\Framework\Api\Exception\ExpectationFailedException',
         ],
     );
 
