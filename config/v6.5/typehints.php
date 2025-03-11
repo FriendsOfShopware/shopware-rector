@@ -7,8 +7,10 @@ use Frosh\Rector\Rule\ClassMethod\AddArgumentToClassWithoutDefaultRector;
 use Frosh\Rector\Rule\v65\AddBanAllToReverseProxyRector;
 use PHPStan\Type\ArrayType;
 use PHPStan\Type\BooleanType;
+use PHPStan\Type\NullType;
 use PHPStan\Type\ObjectType;
 use PHPStan\Type\StringType;
+use PHPStan\Type\TypeCombinator;
 use Rector\Arguments\Rector\ClassMethod\ArgumentAdderRector;
 use Rector\Arguments\ValueObject\ArgumentAdder;
 use Rector\Config\RectorConfig;
@@ -20,18 +22,20 @@ use Rector\TypeDeclaration\ValueObject\AddReturnTypeDeclaration;
 return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->import(__DIR__ . '/../config.php');
 
+    $nullableStringArrayType = TypeCombinator::union(new ArrayType(new StringType(), new StringType()), new NullType());
+
     $rectorConfig->ruleWithConfiguration(
         AddParamTypeDeclarationRector::class,
         [
-            new AddParamTypeDeclaration('Shopware\Core\Framework\DataAbstractionLayer\Indexing\EntityIndexer', 'iterate', 0, new ArrayType(new StringType(), new StringType())),
-            new AddParamTypeDeclaration('Shopware\Storefront\Theme\DataAbstractionLayer\ThemeIndexer', 'iterate', 0, new ArrayType(new StringType(), new StringType())),
-            new AddParamTypeDeclaration('Shopware\Core\Content\Flow\Indexing\FlowIndexer', 'iterate', 0, new ArrayType(new StringType(), new StringType())),
-            new AddParamTypeDeclaration('Shopware\Core\Content\Media\DataAbstractionLayer\MediaFolderConfigurationIndexer', 'iterate', 0, new ArrayType(new StringType(), new StringType())),
-            new AddParamTypeDeclaration('Shopware\Core\Content\Media\DataAbstractionLayer\MediaFolderIndexer', 'iterate', 0, new ArrayType(new StringType(), new StringType())),
-            new AddParamTypeDeclaration('Shopware\Core\Content\Media\DataAbstractionLayer\MediaIndexer', 'iterate', 0, new ArrayType(new StringType(), new StringType())),
-            new AddParamTypeDeclaration('Shopware\Core\Content\LandingPage\DataAbstractionLayer\LandingPageIndexer', 'iterate', 0, new ArrayType(new StringType(), new StringType())),
-            new AddParamTypeDeclaration('Shopware\Core\Content\ProductStream\DataAbstractionLayer\ProductStreamIndexer', 'iterate', 0, new ArrayType(new StringType(), new StringType())),
-            new AddParamTypeDeclaration('Shopware\Core\Content\Rule\DataAbstractionLayer\RuleIndexer', 'iterate', 0, new ArrayType(new StringType(), new StringType())),
+            new AddParamTypeDeclaration('Shopware\Core\Framework\DataAbstractionLayer\Indexing\EntityIndexer', 'iterate', 0, $nullableStringArrayType),
+            new AddParamTypeDeclaration('Shopware\Storefront\Theme\DataAbstractionLayer\ThemeIndexer', 'iterate', 0, $nullableStringArrayType),
+            new AddParamTypeDeclaration('Shopware\Core\Content\Flow\Indexing\FlowIndexer', 'iterate', 0, $nullableStringArrayType),
+            new AddParamTypeDeclaration('Shopware\Core\Content\Media\DataAbstractionLayer\MediaFolderConfigurationIndexer', 'iterate', 0, $nullableStringArrayType),
+            new AddParamTypeDeclaration('Shopware\Core\Content\Media\DataAbstractionLayer\MediaFolderIndexer', 'iterate', 0, $nullableStringArrayType),
+            new AddParamTypeDeclaration('Shopware\Core\Content\Media\DataAbstractionLayer\MediaIndexer', 'iterate', 0, $nullableStringArrayType),
+            new AddParamTypeDeclaration('Shopware\Core\Content\LandingPage\DataAbstractionLayer\LandingPageIndexer', 'iterate', 0, $nullableStringArrayType),
+            new AddParamTypeDeclaration('Shopware\Core\Content\ProductStream\DataAbstractionLayer\ProductStreamIndexer', 'iterate', 0, $nullableStringArrayType),
+            new AddParamTypeDeclaration('Shopware\Core\Content\Rule\DataAbstractionLayer\RuleIndexer', 'iterate', 0, $nullableStringArrayType),
             new AddParamTypeDeclaration('Shopware\Storefront\Page\Product\Review\ReviewLoaderResult', 'setMatrix', 0, new ObjectType('Shopware\Core\Content\Product\SalesChannel\Review\RatingMatrix')),
         ],
     );
