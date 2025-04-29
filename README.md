@@ -22,7 +22,7 @@ use Frosh\Rector\Set\ShopwareSetList;
 
 return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->sets([
-        ShopwareSetList::SHOPWARE_6_5_0,
+        ShopwareSetList::SHOPWARE_6_7_0,
     ]);
 };
 ```
@@ -35,8 +35,8 @@ return static function (RectorConfig $rectorConfig): void {
 composer install
 
 # Dry Run
-./vendor/bin/rector process --config config/shopware-6.5.0.php --autoload-file [SHOPWARE]/vendor/autoload.php [SHOPWARE]/custom/plugins/MyPlugin --dry-run
+./vendor/bin/rector process --config config/shopware-6.7.0.php --autoload-file [SHOPWARE]/vendor/autoload.php [SHOPWARE]/custom/plugins/MyPlugin --dry-run
 
 # Normal Run
-./vendor/bin/rector process --config config/shopware-6.5.0.php --autoload-file [SHOPWARE]/vendor/autoload.php [SHOPWARE]/custom/plugins/MyPlugin
+./vendor/bin/rector process --config config/shopware-6.7.0.php --autoload-file [SHOPWARE]/vendor/autoload.php [SHOPWARE]/custom/plugins/MyPlugin
 ```
