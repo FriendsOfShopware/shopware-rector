@@ -13,4 +13,8 @@ use Frosh\Rector\Tests\Rector\AbstractFroshRectorTestCase;
  */
 final class InterfaceReplacedWithAbstractClassRectorTest extends AbstractFroshRectorTestCase
 {
+    public function provideData(): \Iterator
+    {
+        return self::yieldFilesFromDirectory(__DIR__ . '/Fixture');
+    }
 }
