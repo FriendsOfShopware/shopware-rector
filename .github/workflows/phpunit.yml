@@ -1,4 +1,4 @@
-name: PHPUnit
+name: PHP
 
 on:
   push:
@@ -10,19 +10,19 @@ permissions:
   contents: read
 
 jobs:
-  build:
-
+  unit:
+    name: PHPUnit
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - name: Validate composer.json and composer.lock
       run: composer validate --strict
 
     - name: Cache Composer packages
       id: composer-cache
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: vendor
         key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
@@ -34,3 +34,28 @@ jobs:
 
     - name: Run test suite
       run: ./vendor/bin/phpunit
+
+  cs:
+    name: PHP CS Fixer
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Validate composer.json and composer.lock
+      run: composer validate --strict
+
+    - name: Cache Composer packages
+      id: composer-cache
+      uses: actions/cache@v4
+      with:
+        path: vendor
+        key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-php-
+
+    - name: Install dependencies
+      run: composer install --prefer-dist --no-progress
+
+    - name: Run PHP CS Fixer
+      run: ./vendor/bin/php-cs-fixer fix --dry-run --diff
