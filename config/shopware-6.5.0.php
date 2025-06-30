@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Frosh\Rector\Rule\v65\AbstractMessageHandlerToMessageSubscriberRector;
 use Frosh\Rector\Rule\v67\AddEntityNameToEntityExtension;
 use Rector\Config\RectorConfig;
 use Rector\Set\ValueObject\SetList;
@@ -25,6 +26,8 @@ return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->ruleWithConfiguration(AddEntityNameToEntityExtension::class, [
         'backwardsCompatible' => true,
     ]);
+
+    $rectorConfig->rule(AbstractMessageHandlerToMessageSubscriberRector::class);
 
     $rectorConfig->importNames();
     $rectorConfig->importShortClasses(false);
