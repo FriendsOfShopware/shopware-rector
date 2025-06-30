@@ -1,6 +1,7 @@
 .idea
 *.iml
 vendor
+composer.lock
 
 .phpunit.result.cache
 .php-cs-fixer.cache
@@ -8,4 +9,3 @@ vendor
 # Devenv
 .devenv*
 devenv.local.nix
-

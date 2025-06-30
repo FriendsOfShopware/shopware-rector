@@ -8,6 +8,8 @@ use Frosh\Rector\Tests\Rector\AbstractFroshRectorTestCase;
 
 /**
  * @internal
+ *
+ * @coversNothing
  */
 final class InterfaceReplacedWithAbstractClassRectorTest extends AbstractFroshRectorTestCase
 {
