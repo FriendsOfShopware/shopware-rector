@@ -12,6 +12,7 @@ return static function (RectorConfig $rectorConfig): void {
         InterfaceReplacedWithAbstractClassRector::class,
         [
             new InterfaceReplacedWithAbstractClass('CartFoo', 'AbstractCartFoo'),
+            new InterfaceReplacedWithAbstractClass('Shopware\Core\Checkout\Cart\CartPersisterInterface', '\Shopware\Core\Checkout\Cart\AbstractCartPersister'),
         ],
     );
 };

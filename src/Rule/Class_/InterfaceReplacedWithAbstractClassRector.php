@@ -6,7 +6,9 @@ namespace Frosh\Rector\Rule\Class_;
 
 use PhpParser\Node;
 use PhpParser\Node\Name;
+use PhpParser\Node\Param;
 use PhpParser\Node\Stmt\Class_;
+use PhpParser\Node\Stmt\Property;
 use Rector\Contract\Rector\ConfigurableRectorInterface;
 use Rector\Rector\AbstractRector;
 use Symplify\RuleDocGenerator\ValueObject\CodeSample\ConfiguredCodeSample;
@@ -43,32 +45,43 @@ class InterfaceReplacedWithAbstractClassRector extends AbstractRector implements
     {
         return [
             Class_::class,
+            Property::class,
+            Param::class,
         ];
     }
 
-    /**
-     * @param Class_ $node
-     */
     public function refactor(Node $node): ?Node
     {
-        if ($node->implements === []) {
-            return null;
-        }
-
         $hasChanged = false;
 
         foreach ($this->configuration as $config) {
-            $foundIt = false;
-            foreach ($node->implements as $key => $implement) {
-                if ($this->isObjectType($implement, $config->getInterfaceObject())) {
-                    $foundIt = true;
-                    unset($node->implements[$key]);
+            if ($node instanceof Class_) {
+                if ($node->implements === []) {
+                    continue;
                 }
-            }
 
-            if ($foundIt) {
-                $node->extends = new Name($config->getAbstractClass());
-                $hasChanged = true;
+                $foundIt = false;
+                foreach ($node->implements as $key => $implement) {
+                    if ($this->isObjectType($implement, $config->getInterfaceObject())) {
+                        $foundIt = true;
+                        unset($node->implements[$key]);
+                    }
+                }
+
+                if ($foundIt) {
+                    $node->extends = new Name($config->getAbstractClass());
+                    $hasChanged = true;
+                }
+            } elseif ($node instanceof Property) {
+                if ($node->type instanceof Name && $this->isObjectType($node->type, $config->getInterfaceObject())) {
+                    $node->type = new Name($config->getAbstractClass());
+                    $hasChanged = true;
+                }
+            } elseif ($node instanceof Param) {
+                if ($node->type instanceof Name && $this->isObjectType($node->type, $config->getInterfaceObject())) {
+                    $node->type = new Name($config->getAbstractClass());
+                    $hasChanged = true;
+                }
             }
         }
 
