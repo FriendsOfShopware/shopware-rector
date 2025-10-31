@@ -32,8 +32,7 @@ class MigrateLoginRequiredAnnotationToRouteRector extends AbstractRector
                     @LoginRequired
                     @Route("/store-api/product", name="store-api.product.search", methods={"GET", "POST"})
                     public function myAction()
-                    CODE_SAMPLE
-                ,
+                    CODE_SAMPLE,
                 <<<'CODE_SAMPLE'
                     @Route("/store-api/product", name="store-api.product.search", methods={"GET", "POST"}, defaults={"_loginRequired"=true})
                     public function myAction()

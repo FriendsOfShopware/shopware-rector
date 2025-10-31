@@ -41,8 +41,7 @@ class MigrateCaptchaAnnotationToRouteRector extends AbstractRector
                         {
                         }
                     }
-                    CODE_SAMPLE
-                ,
+                    CODE_SAMPLE,
                 <<<'PHP'
                     class Foo
                     {

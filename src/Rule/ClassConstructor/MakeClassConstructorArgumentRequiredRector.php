@@ -43,8 +43,7 @@ class MakeClassConstructorArgumentRequiredRector extends AbstractRector implemen
                         {
                         }
                     }
-                    PHP
-                ,
+                    PHP,
                 <<<'PHP'
                     class Foo {
                         public function __construct(array $foo)

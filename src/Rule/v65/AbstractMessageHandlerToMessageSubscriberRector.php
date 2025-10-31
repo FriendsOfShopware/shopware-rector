@@ -29,8 +29,7 @@ final class AbstractMessageHandlerToMessageSubscriberRector extends AbstractRect
                                 // do something
                             }
                         }
-                        CODE_SAMPLE
-                    ,
+                        CODE_SAMPLE,
                     <<<'CODE_SAMPLE'
                         class MyMessageHandler implements MessageSubscriberInterface
                         {

@@ -24,8 +24,7 @@ class ContextMetadataExtensionToStateRector extends AbstractRector
                 new CodeSample(
                     <<<'CODE_SAMPLE'
                         $context->addExtension(EntityIndexerRegistry::USE_INDEXING_QUEUE, new ArrayEntity());
-                        CODE_SAMPLE
-                    ,
+                        CODE_SAMPLE,
                     <<<'CODE_SAMPLE'
                         $context->addState(EntityIndexerRegistry::USE_INDEXING_QUEUE);
                         CODE_SAMPLE
