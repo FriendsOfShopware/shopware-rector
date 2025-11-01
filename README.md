@@ -18,13 +18,13 @@ composer req frosh/shopware-rector --dev
 To add a set to your config, use `Frosh\Rector\Set\ShopwareSetList` class and pick one of constants:
 
 ```php
+use Rector\Config\RectorConfig;
 use Frosh\Rector\Set\ShopwareSetList;
 
-return static function (RectorConfig $rectorConfig): void {
-    $rectorConfig->sets([
+return RectorConfig::configure()
+    ->withSets([
         ShopwareSetList::SHOPWARE_6_7_0,
     ]);
-};
 ```
 
 ## Use directly the config
