@@ -25,8 +25,7 @@ class AddBanAllToReverseProxyRector extends AbstractRector
                     class Test extends \Shopware\Core\Framework\Cache\ReverseProxy\AbstractReverseProxyGateway {
 
                     }
-                    CODE_SAMPLE
-                ,
+                    CODE_SAMPLE,
                 <<<'CODE_SAMPLE'
                     class Test extends \Shopware\Core\Framework\Cache\ReverseProxy\AbstractReverseProxyGateway {
                         public function banAll(): void

@@ -29,8 +29,7 @@ class InterfaceReplacedWithAbstractClassRector extends AbstractRector implements
                     class Foo implements Test {
 
                     }
-                    CODE_SAMPLE
-                ,
+                    CODE_SAMPLE,
                 <<<'PHP'
                     class Foo extends AbstractTest {
 

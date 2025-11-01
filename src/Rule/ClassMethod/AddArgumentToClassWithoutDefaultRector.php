@@ -44,8 +44,7 @@ class AddArgumentToClassWithoutDefaultRector extends AbstractRector implements C
                             {
                             }
                         }
-                        CODE_SAMPLE
-                    ,
+                        CODE_SAMPLE,
                     <<<'CODE_SAMPLE'
                         $someObject = new SomeExampleClass;
                         $someObject->someMethod(true);
@@ -56,8 +55,7 @@ class AddArgumentToClassWithoutDefaultRector extends AbstractRector implements C
                             {
                             }
                         }
-                        CODE_SAMPLE
-                    ,
+                        CODE_SAMPLE,
                     [
                         new AddArgumentToClassWithoutDefault('SomeExampleClass', 'someMethod', 0, 'someArgument', new ObjectType('SomeType')), ],
                 ),

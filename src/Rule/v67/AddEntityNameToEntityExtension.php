@@ -24,8 +24,7 @@ class AddEntityNameToEntityExtension extends AbstractRector implements Configura
                             return ProductDefinition::class;
                         }
                     }
-                    PHP
-                ,
+                    PHP,
                 <<<'PHP'
                     class Foo extends EntityExtension {
                         public function getDefinitionClass() {

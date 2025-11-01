@@ -23,8 +23,7 @@ class ThumbnailGenerateSingleToMultiGenerateRector extends AbstractRector
             new CodeSample(
                 <<<'PHP'
                     $thumbnail->generateThumbnails($media, $context);
-                    PHP
-                ,
+                    PHP,
                 <<<'PHP'
                     $thumbnail->generate(new MediaCollection([$media]), $context);
                     PHP

@@ -37,8 +37,7 @@ class MigrateRouteScopeToRouteDefaults extends AbstractRector
                     class Controller
                     {
                     }
-                    CODE_SAMPLE
-                ,
+                    CODE_SAMPLE,
                 <<<'PHP'
                     /**
                      * @Route(defaults={"_routeScope"={"storefront"}})
