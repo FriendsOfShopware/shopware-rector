@@ -18,6 +18,6 @@ return static function (RectorConfig $rectorConfig): void {
         ShopwareSetList::SHOPWARE_6_6_4,
         ShopwareSetList::SHOPWARE_6_6_10,
         ShopwareSetList::SHOPWARE_6_7_0,
-        ShopwareSetList::SHOPWARE_6_7_8,
+        ShopwareSetList::SHOPWARE_6_8_0,
     ]);
 };
