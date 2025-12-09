@@ -6,6 +6,8 @@ use Frosh\Rector\Rule\Class_\InterfaceReplacedWithAbstractClass;
 use Frosh\Rector\Rule\Class_\InterfaceReplacedWithAbstractClassRector;
 use Frosh\Rector\Rule\ClassConstructor\RemoveArgumentFromClassConstruct;
 use Frosh\Rector\Rule\ClassConstructor\RemoveArgumentFromClassConstructRector;
+use Frosh\Rector\Rule\Transform\Rector\Assign\PropertyFetchToMethodCallRector;
+use Frosh\Rector\Rule\Transform\ValueObject\PropertyFetchToMethodCall;
 use Frosh\Rector\Rule\v65\FakerPropertyToMethodCallRector;
 use Frosh\Rector\Rule\v65\MigrateCaptchaAnnotationToRouteRector;
 use Frosh\Rector\Rule\v65\MigrateLoginRequiredAnnotationToRouteRector;
@@ -17,8 +19,6 @@ use Rector\Config\RectorConfig;
 use Rector\Renaming\Rector\MethodCall\RenameMethodRector;
 use Rector\Renaming\Rector\Name\RenameClassRector;
 use Rector\Renaming\ValueObject\MethodCallRename;
-use Rector\Transform\Rector\Assign\PropertyFetchToMethodCallRector;
-use Rector\Transform\ValueObject\PropertyFetchToMethodCall;
 
 return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->import(__DIR__ . '/../config.php');
