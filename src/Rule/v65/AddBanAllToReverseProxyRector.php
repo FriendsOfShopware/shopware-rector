@@ -32,7 +32,7 @@ class AddBanAllToReverseProxyRector extends AbstractRector
                         {
                         }
                     }
-                    CODE_SAMPLE
+                    CODE_SAMPLE,
             ),
         ]);
     }

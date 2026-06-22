@@ -29,14 +29,14 @@ final class ProductStreamBuilderBuildFiltersToEnrichCriteriaRector extends Abstr
             [
                 new CodeSample(
                     <<<'PHP'
-                    $filters = $this->productStreamBuilder->buildFilters($streamId, $context);
-                    $criteria->addFilter(...$filters);
-                    PHP,
+                        $filters = $this->productStreamBuilder->buildFilters($streamId, $context);
+                        $criteria->addFilter(...$filters);
+                        PHP,
                     <<<'PHP'
-                    $this->productStreamBuilder->enrichCriteria($criteria, $streamId, $context);
-                    PHP,
+                        $this->productStreamBuilder->enrichCriteria($criteria, $streamId, $context);
+                        PHP,
                 ),
-            ]
+            ],
         );
     }
 
@@ -67,6 +67,7 @@ final class ProductStreamBuilderBuildFiltersToEnrichCriteriaRector extends Abstr
 
     /**
      * @param Node\Stmt[] $stmts
+     *
      * @return array{Node\Stmt[], bool}
      */
     private function processStmts(array $stmts): array
@@ -75,7 +76,7 @@ final class ProductStreamBuilderBuildFiltersToEnrichCriteriaRector extends Abstr
         $changed = false;
         $count = count($stmts);
 
-        for ($i = 0; $i < $count; ++$i) {
+        for ($i = 0; $i < $count; $i++) {
             $stmt = $stmts[$i];
             $nextStmt = $stmts[$i + 1] ?? null;
 
@@ -83,7 +84,7 @@ final class ProductStreamBuilderBuildFiltersToEnrichCriteriaRector extends Abstr
             $enrichCriteriaCall = $this->matchAssignPlusAddFilter($stmt, $nextStmt);
             if ($enrichCriteriaCall !== null) {
                 $newStmts[] = new Expression($enrichCriteriaCall);
-                ++$i;
+                $i++;
                 $changed = true;
                 continue;
             }
@@ -155,7 +156,7 @@ final class ProductStreamBuilderBuildFiltersToEnrichCriteriaRector extends Abstr
                         new Arg($addFilterCall->var),
                         $buildFiltersCall->args[0],
                         $buildFiltersCall->args[1],
-                    ]
+                    ],
                 );
             }
         }
@@ -197,7 +198,7 @@ final class ProductStreamBuilderBuildFiltersToEnrichCriteriaRector extends Abstr
                     new Arg($addFilterCall->var),
                     $buildFiltersCall->args[0],
                     $buildFiltersCall->args[1],
-                ]
+                ],
             );
         }
 

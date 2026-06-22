@@ -11,6 +11,4 @@ use Frosh\Rector\Tests\Rector\AbstractFroshRectorTestCase;
  *
  * @covers \Frosh\Rector\Rule\v68\ProductStreamBuilderBuildFiltersToEnrichCriteriaRector
  */
-final class ProductStreamBuilderBuildFiltersToEnrichCriteriaRectorTest extends AbstractFroshRectorTestCase
-{
-}
+final class ProductStreamBuilderBuildFiltersToEnrichCriteriaRectorTest extends AbstractFroshRectorTestCase {}

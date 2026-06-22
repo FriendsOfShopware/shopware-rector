@@ -2,6 +2,4 @@
 
 namespace Shopware\Core\Content\Media;
 
-class MediaCollection
-{
-}
+class MediaCollection {}

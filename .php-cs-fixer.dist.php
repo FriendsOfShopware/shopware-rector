@@ -1,41 +1,36 @@
-<?php
+<?php declare(strict_types=1);
+
 /*
  * This document has been generated with
- * https://mlocati.github.io/php-cs-fixer-configurator/#version:3.14|configurator
+ * https://mlocati.github.io/php-cs-fixer-configurator/#version:3.68.3|configurator
  * you can change this configuration by importing this file.
  */
 return (new PhpCsFixer\Config())
     ->setRiskyAllowed(true)
     ->setRules([
-        '@PSR12' => true,
-        '@PSR12:risky' => true,
-        '@PHP80Migration:risky' => true,
-        '@PHP81Migration' => true,
         '@PhpCsFixer' => true,
         '@Symfony' => true,
         '@Symfony:risky' => true,
+        '@PHP81Migration' => true,
+        '@PHP80Migration:risky' => true,
+        '@PER-CS2.0' => true,
+        '@PER-CS2.0:risky' => true,
         // Ensure there is no code on the same line as the PHP open tag and it is followed by a blank line.
         'blank_line_after_opening_tag' => false,
         // Using `isset($var) &&` multiple times should be done in one call.
         'combine_consecutive_issets' => false,
         // Calling `unset` on multiple items should be done in one call.
         'combine_consecutive_unsets' => false,
-        // Concatenation should be spaced according configuration.
-        'concat_space' => ['spacing'=>'one'],
+        // Spaces should be properly placed in a function declaration.
+        'function_declaration' => ['closure_fn_spacing' => 'one'],
         // Pre- or post-increment and decrement operators should be used if possible.
-        'increment_style' => ['style'=>'post'],
+        'increment_style' => ['style' => 'post'],
         // Ensure there is no code on the same line as the PHP open tag.
         'linebreak_after_opening_tag' => false,
-        // Replace non multibyte-safe functions with corresponding mb function.
-        'mb_str_functions' => true,
         // Add leading `\` before function invocation to speed up resolving.
         'native_function_invocation' => false,
-        // Adds or removes `?` before type declarations for parameters with a default `null` value.
-        'nullable_type_declaration_for_default_null_value' => true,
-        // All items of the given phpdoc tags must be either left-aligned or (by default) aligned vertically.
-        'phpdoc_align' => ['align'=>'left'],
-        // PHPDoc summary should end in either a full stop, exclamation mark, or question mark.
-        'phpdoc_summary' => false,
+        // All items of the given PHPDoc tags must be either left-aligned or (by default) aligned vertically.
+        'phpdoc_align' => ['align' => 'left'],
         // Throwing exception must be done in single line.
         'single_line_throw' => false,
         // Comparisons should be strict.
@@ -46,14 +41,12 @@ return (new PhpCsFixer\Config())
         'use_arrow_functions' => false,
         // Write conditions in Yoda style (`true`), non-Yoda style (`['equal' => false, 'identical' => false, 'less_and_greater' => false]`) or ignore those conditions (`null`) based on configuration.
         'yoda_style' => false,
-        // Currently waiting for https://github.com/FriendsOfPHP/PHP-CS-Fixer/pull/5572 to be implemented to ignore @var (needed for LSP)
-        'phpdoc_to_comment' => false,
-        // Multi-line arrays, arguments list, parameters list and `match` expressions must have a trailing comma.
-        'trailing_comma_in_multiline' => ['elements' => ['arguments', 'arrays', 'match', 'parameters']],
+        // Docblocks should only be used on structural elements.
+        'phpdoc_to_comment' => ['ignored_tags' => ['deprecated', 'var']],
     ])
     ->setFinder(PhpCsFixer\Finder::create()
         ->exclude('vendor')
         ->exclude('stubs')
         ->in(__DIR__)
     )
-    ;
+;

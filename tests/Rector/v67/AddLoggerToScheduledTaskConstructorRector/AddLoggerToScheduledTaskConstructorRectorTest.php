@@ -9,6 +9,4 @@ use Frosh\Rector\Tests\Rector\AbstractFroshRectorTestCase;
  *
  * @covers \Frosh\Rector\Rule\v67\AddLoggerToScheduledTaskConstructorRector
  */
-class AddLoggerToScheduledTaskConstructorRectorTest extends AbstractFroshRectorTestCase
-{
-}
+class AddLoggerToScheduledTaskConstructorRectorTest extends AbstractFroshRectorTestCase {}

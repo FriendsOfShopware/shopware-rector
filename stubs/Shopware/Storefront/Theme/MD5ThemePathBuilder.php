@@ -2,6 +2,4 @@
 
 namespace Shopware\Storefront\Theme;
 
-class MD5ThemePathBuilder
-{
-}
+class MD5ThemePathBuilder {}

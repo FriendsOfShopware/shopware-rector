@@ -2,6 +2,4 @@
 
 namespace Shopware\Core\Framework\Adapter\Cache;
 
-class RedisConnectionFactory
-{
-}
+class RedisConnectionFactory {}

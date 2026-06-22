@@ -12,9 +12,7 @@ class AddArgumentToClassWithoutDefault
     /**
      * @param Type|null $type
      */
-    public function __construct(protected string $class, protected string $method, protected int $position, protected string $name, protected $type)
-    {
-    }
+    public function __construct(protected string $class, protected string $method, protected int $position, protected string $name, protected $type) {}
 
     public function getObjectType(): ObjectType
     {

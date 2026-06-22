@@ -23,7 +23,7 @@ class FakerPropertyToMethodCallRector extends AbstractRector
                     PHP,
                 <<<'PHP'
                     $this->faker->randomDigit()
-                    PHP
+                    PHP,
             ),
         ]);
     }

@@ -9,9 +9,7 @@ use PHPStan\Type\Type;
 
 class MakeClassConstructorArgumentRequired
 {
-    public function __construct(protected string $class, protected int $position, protected ?Type $default = null)
-    {
-    }
+    public function __construct(protected string $class, protected int $position, protected ?Type $default = null) {}
 
     public function getClass(): string
     {

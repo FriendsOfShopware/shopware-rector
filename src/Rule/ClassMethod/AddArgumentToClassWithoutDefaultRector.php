@@ -19,9 +19,7 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 
 class AddArgumentToClassWithoutDefaultRector extends AbstractRector implements ConfigurableRectorInterface
 {
-    public function __construct(private readonly StaticTypeMapper $staticTypeMapper)
-    {
-    }
+    public function __construct(private readonly StaticTypeMapper $staticTypeMapper) {}
 
     /**
      * @var AddArgumentToClassWithoutDefault[]

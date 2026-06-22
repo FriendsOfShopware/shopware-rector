@@ -9,6 +9,4 @@ use Frosh\Rector\Tests\Rector\AbstractFroshRectorTestCase;
  *
  * @coversNothing
  */
-class ChangeReturnTypeOfClassMethodRectorTest extends AbstractFroshRectorTestCase
-{
-}
+class ChangeReturnTypeOfClassMethodRectorTest extends AbstractFroshRectorTestCase {}

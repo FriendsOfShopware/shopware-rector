@@ -9,6 +9,4 @@ use Frosh\Rector\Tests\Rector\AbstractFroshRectorTestCase;
  *
  * @coversNothing
  */
-final class AbstractMessageHandlerToMessageSubscriberRectorTest extends AbstractFroshRectorTestCase
-{
-}
+final class AbstractMessageHandlerToMessageSubscriberRectorTest extends AbstractFroshRectorTestCase {}
