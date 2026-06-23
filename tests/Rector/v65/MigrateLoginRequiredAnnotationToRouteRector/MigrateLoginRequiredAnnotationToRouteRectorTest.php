@@ -11,6 +11,4 @@ use Frosh\Rector\Tests\Rector\AbstractFroshRectorTestCase;
  *
  * @coversNothing
  */
-final class MigrateLoginRequiredAnnotationToRouteRectorTest extends AbstractFroshRectorTestCase
-{
-}
+final class MigrateLoginRequiredAnnotationToRouteRectorTest extends AbstractFroshRectorTestCase {}

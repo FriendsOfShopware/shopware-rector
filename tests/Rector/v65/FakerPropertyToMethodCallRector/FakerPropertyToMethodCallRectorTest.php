@@ -11,6 +11,4 @@ use Frosh\Rector\Tests\Rector\AbstractFroshRectorTestCase;
  *
  * @coversNothing
  */
-class FakerPropertyToMethodCallRectorTest extends AbstractFroshRectorTestCase
-{
-}
+class FakerPropertyToMethodCallRectorTest extends AbstractFroshRectorTestCase {}

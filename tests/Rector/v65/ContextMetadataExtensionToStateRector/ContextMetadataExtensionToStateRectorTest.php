@@ -11,6 +11,4 @@ use Frosh\Rector\Tests\Rector\AbstractFroshRectorTestCase;
  *
  * @coversNothing
  */
-final class ContextMetadataExtensionToStateRectorTest extends AbstractFroshRectorTestCase
-{
-}
+final class ContextMetadataExtensionToStateRectorTest extends AbstractFroshRectorTestCase {}

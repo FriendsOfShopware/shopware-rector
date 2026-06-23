@@ -2,6 +2,4 @@
 
 namespace Frosh\Rector\Tests\Rector\v65\AbstractMessageHandlerToMessageSubscriberRector\Source;
 
-abstract class AbstractMessageHandler
-{
-}
+abstract class AbstractMessageHandler {}

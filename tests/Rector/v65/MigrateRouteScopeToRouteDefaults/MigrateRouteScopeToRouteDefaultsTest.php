@@ -11,6 +11,4 @@ use Frosh\Rector\Tests\Rector\AbstractFroshRectorTestCase;
  *
  * @coversNothing
  */
-final class MigrateRouteScopeToRouteDefaultsTest extends AbstractFroshRectorTestCase
-{
-}
+final class MigrateRouteScopeToRouteDefaultsTest extends AbstractFroshRectorTestCase {}

@@ -35,7 +35,7 @@ class AddEntityNameToEntityExtension extends AbstractRector implements Configura
                             return ProductDefinition::ENTITY_NAME;
                         }
                     }
-                    PHP
+                    PHP,
             ),
         ]);
     }
@@ -79,7 +79,7 @@ class AddEntityNameToEntityExtension extends AbstractRector implements Configura
 
         if (!$this->backwardsCompatible) {
             // remove getDefinitionClass method
-            $node->stmts = array_filter($node->stmts, function ($stmt) {
+            $node->stmts = array_filter($node->stmts, static function ($stmt) {
                 return (string) $stmt->name !== 'getDefinitionClass';
             });
         }

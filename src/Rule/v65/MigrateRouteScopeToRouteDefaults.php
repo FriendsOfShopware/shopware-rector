@@ -22,9 +22,7 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 
 class MigrateRouteScopeToRouteDefaults extends AbstractRector
 {
-    public function __construct(private readonly PhpDocTagRemover $phpDocTagRemover, private readonly PhpDocInfoFactory $phpDocFactory, private readonly DocBlockUpdater $docBlockUpdater)
-    {
-    }
+    public function __construct(private readonly PhpDocTagRemover $phpDocTagRemover, private readonly PhpDocInfoFactory $phpDocFactory, private readonly DocBlockUpdater $docBlockUpdater) {}
 
     public function getRuleDefinition(): RuleDefinition
     {
@@ -45,7 +43,7 @@ class MigrateRouteScopeToRouteDefaults extends AbstractRector
                     class Controller
                     {
                     }
-                    PHP
+                    PHP,
             ),
         ]);
     }

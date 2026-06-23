@@ -11,6 +11,4 @@ use Frosh\Rector\Tests\Rector\AbstractFroshRectorTestCase;
  *
  * @coversNothing
  */
-final class MigrateCaptchaAnnotationToRouteTest extends AbstractFroshRectorTestCase
-{
-}
+final class MigrateCaptchaAnnotationToRouteTest extends AbstractFroshRectorTestCase {}

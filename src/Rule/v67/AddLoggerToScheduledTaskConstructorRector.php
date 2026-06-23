@@ -30,7 +30,7 @@ final class AddLoggerToScheduledTaskConstructorRector extends AbstractRector
                             parent::__construct($scheduledTaskRepository, $exceptionLogger);
                         }
                     }
-                    PHP
+                    PHP,
             ),
         ]);
     }

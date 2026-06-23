@@ -8,9 +8,7 @@ use PHPStan\Type\ObjectType;
 
 class InterfaceReplacedWithAbstractClass
 {
-    public function __construct(protected string $interface, protected string $abstractClass)
-    {
-    }
+    public function __construct(protected string $interface, protected string $abstractClass) {}
 
     public function getInterface(): string
     {

@@ -24,9 +24,7 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 
 class MakeClassConstructorArgumentRequiredRector extends AbstractRector implements ConfigurableRectorInterface
 {
-    public function __construct(private readonly StaticTypeMapper $typeMapper)
-    {
-    }
+    public function __construct(private readonly StaticTypeMapper $typeMapper) {}
 
     /**
      * @var MakeClassConstructorArgumentRequired[]

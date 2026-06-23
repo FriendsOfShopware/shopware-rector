@@ -11,6 +11,4 @@ use Frosh\Rector\Tests\Rector\AbstractFroshRectorTestCase;
  *
  * @coversNothing
  */
-final class AddBanAllToReverseProxyRectorTest extends AbstractFroshRectorTestCase
-{
-}
+final class AddBanAllToReverseProxyRectorTest extends AbstractFroshRectorTestCase {}

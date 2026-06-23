@@ -6,7 +6,5 @@ use PhpParser\Node\Name;
 
 class ChangeReturnTypeOfClassMethod
 {
-    public function __construct(public readonly string $class, public readonly string $method, public readonly Name $returnType)
-    {
-    }
+    public function __construct(public readonly string $class, public readonly string $method, public readonly Name $returnType) {}
 }

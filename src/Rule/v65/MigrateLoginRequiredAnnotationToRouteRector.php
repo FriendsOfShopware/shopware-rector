@@ -20,9 +20,7 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 
 class MigrateLoginRequiredAnnotationToRouteRector extends AbstractRector
 {
-    public function __construct(private readonly PhpDocTagRemover $phpDocTagRemover, private readonly PhpDocInfoFactory $phpDocFactory, private readonly DocBlockUpdater $docBlockUpdater)
-    {
-    }
+    public function __construct(private readonly PhpDocTagRemover $phpDocTagRemover, private readonly PhpDocInfoFactory $phpDocFactory, private readonly DocBlockUpdater $docBlockUpdater) {}
 
     public function getRuleDefinition(): RuleDefinition
     {
@@ -36,7 +34,7 @@ class MigrateLoginRequiredAnnotationToRouteRector extends AbstractRector
                 <<<'CODE_SAMPLE'
                     @Route("/store-api/product", name="store-api.product.search", methods={"GET", "POST"}, defaults={"_loginRequired"=true})
                     public function myAction()
-                    CODE_SAMPLE
+                    CODE_SAMPLE,
             ),
         ]);
     }

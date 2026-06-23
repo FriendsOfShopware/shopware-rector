@@ -11,6 +11,4 @@ use Frosh\Rector\Tests\Rector\AbstractFroshRectorTestCase;
  *
  * @coversNothing
  */
-final class RemoveArgumentFromClassConstructorRectorTest extends AbstractFroshRectorTestCase
-{
-}
+final class RemoveArgumentFromClassConstructorRectorTest extends AbstractFroshRectorTestCase {}

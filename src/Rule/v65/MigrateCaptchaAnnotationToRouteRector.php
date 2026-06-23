@@ -21,10 +21,10 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 class MigrateCaptchaAnnotationToRouteRector extends AbstractRector
 {
     public function __construct(
-        private readonly PhpDocTagRemover $phpDocTagRemover, private readonly PhpDocInfoFactory $phpDocFactory,
+        private readonly PhpDocTagRemover $phpDocTagRemover,
+        private readonly PhpDocInfoFactory $phpDocFactory,
         private readonly DocBlockUpdater $docBlockUpdater,
-    ) {
-    }
+    ) {}
 
     public function getRuleDefinition(): RuleDefinition
     {
@@ -52,7 +52,7 @@ class MigrateCaptchaAnnotationToRouteRector extends AbstractRector
                         {
                         }
                     }
-                    PHP
+                    PHP,
             ),
         ]);
     }
