@@ -8,6 +8,7 @@ use Frosh\Rector\Rule\v68\EntitySearchResultGetEntitiesRector;
 use Frosh\Rector\Rule\v68\ProductStreamBuilderBuildFiltersToEnrichCriteriaRector;
 use Rector\Config\RectorConfig;
 use Rector\Renaming\Rector\ClassConstFetch\RenameClassConstFetchRector;
+use Rector\Renaming\Rector\Name\RenameClassRector;
 use Rector\Renaming\ValueObject\RenameClassAndConstFetch;
 
 return static function (RectorConfig $rectorConfig): void {
@@ -23,6 +24,13 @@ return static function (RectorConfig $rectorConfig): void {
                 'Shopware\Core\Content\ProductStream\Service\ProductStreamBuilderInterface',
                 '\Shopware\Core\Content\ProductStream\Service\AbstractProductStreamBuilder',
             ),
+        ],
+    );
+
+    $rectorConfig->ruleWithConfiguration(
+        RenameClassRector::class,
+        [
+            'Shopware\Core\Framework\Adapter\Console\ShopwareStyle' => 'Symfony\Component\Console\Style\SymfonyStyle',
         ],
     );
 

@@ -34,6 +34,7 @@ return static function (RectorConfig $rectorConfig): void {
         [
             'Shopware\Core\Framework\DataAbstractionLayer\Event\BeforeDeleteEvent' => 'Shopware\Core\Framework\DataAbstractionLayer\Event\EntityDeleteEvent',
             'Shopware\Core\Framework\Api\Exception\ExceptionFailedException' => 'Shopware\Core\Framework\Api\Exception\ExpectationFailedException',
+            'Shopware\Core\Framework\Adapter\Console\ShopwareStyle' => 'Symfony\Component\Console\Style\SymfonyStyle',
         ],
     );
 
