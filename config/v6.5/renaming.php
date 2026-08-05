@@ -48,6 +48,7 @@ return static function (RectorConfig $rectorConfig): void {
             'Shopware\Core\System\User\Service\UserProvisioner' => 'Shopware\Core\Maintenance\User\Service\UserProvisioner',
             'Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface' => 'Shopware\Core\Framework\DataAbstractionLayer\EntityRepository',
             'Shopware\Core\System\SalesChannel\Entity\SalesChannelRepositoryInterface' => 'Shopware\Core\System\SalesChannel\Entity\SalesChannelRepository',
+            'Shopware\Core\Framework\Adapter\Console\ShopwareStyle' => 'Symfony\Component\Console\Style\SymfonyStyle',
         ],
     );
 
