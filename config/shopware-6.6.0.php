@@ -12,9 +12,7 @@ return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->import(__DIR__ . '/v6.6/exceptions.php');
 
     $rectorConfig->sets([
-        SymfonySetList::SYMFONY_63,
-        SymfonySetList::SYMFONY_64,
-        SymfonySetList::SYMFONY_70,
+        SymfonySetList::COMPOSER_BASED,
         LevelSetList::UP_TO_PHP_82,
     ]);
 
