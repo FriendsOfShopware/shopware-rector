@@ -23,7 +23,13 @@ final class ShopwareConfigSymfonySetCompatibilityTest extends TestCase
      */
     public static function provideShopwareConfigFiles(): iterable
     {
-        foreach (glob(__DIR__ . '/../../config/shopware-*.php') ?: [] as $file) {
+        $files = glob(__DIR__ . '/../../config/shopware-*.php') ?: [];
+
+        if ($files === []) {
+            throw new \RuntimeException('No Shopware config files found for compatibility test.');
+        }
+
+        foreach ($files as $file) {
             yield [$file];
         }
     }
