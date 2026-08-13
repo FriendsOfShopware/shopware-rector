@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace Frosh\Rector\Rule\v65;
 
-use PhpParser\Builder\Class_;
 use PhpParser\Node;
+use PhpParser\Node\Stmt\Class_;
 use PhpParser\Node\Stmt\ClassMethod;
+use PHPStan\PhpDocParser\Ast\PhpDoc\PhpDocTagNode;
 use PHPStan\PhpDocParser\Ast\Type\IdentifierTypeNode;
 use Rector\BetterPhpDocParser\PhpDoc\ArrayItemNode;
 use Rector\BetterPhpDocParser\PhpDoc\DoctrineAnnotationTagValueNode;
@@ -52,46 +53,62 @@ class MigrateRouteScopeToRouteDefaults extends AbstractRector
     {
         return [
             ClassMethod::class,
-            Node\Stmt\Class_::class,
+            Class_::class,
         ];
     }
 
-    /**
-     * @param ClassMethod|Class_ $node
-     */
-    public function refactor(Node $node)
+    public function refactor(Node $node): ?Node
     {
-        $phpDocInfo = $this->phpDocFactory->createFromNodeOrEmpty($node);
-
-        $routeScope = $phpDocInfo->getByName('RouteScope');
-
-        if ($routeScope === null) {
+        if (!$node instanceof ClassMethod && !$node instanceof Class_) {
             return null;
         }
 
-        /** @var SpacelessPhpDocTagNode|null $route */
-        $route = $phpDocInfo->getByName('Route');
+        $phpDocInfo = $this->phpDocFactory->createFromNodeOrEmpty($node);
 
-        if ($route === null) {
+        $routeScope = $phpDocInfo->getByName('RouteScope');
+        if (!$routeScope instanceof PhpDocTagNode) {
+            return null;
+        }
+
+        $routeScopeValue = $routeScope->value;
+        if (!$routeScopeValue instanceof DoctrineAnnotationTagValueNode) {
+            return null;
+        }
+
+        $route = $phpDocInfo->getByName('Route');
+        if (!$route instanceof PhpDocTagNode) {
             $route = new SpacelessPhpDocTagNode('@Route', new DoctrineAnnotationTagValueNode(new IdentifierTypeNode('@Route')));
             $phpDocInfo->addPhpDocTagNode($route);
         }
 
-        if (!$route->value->getValue('defaults')) {
-            $route->value->values[] = new ArrayItemNode(new CurlyListNode([]), 'defaults');
+        $routeValue = $route->value;
+        if (!$routeValue instanceof DoctrineAnnotationTagValueNode) {
+            return null;
         }
 
-        /** @var CurlyListNode $list */
-        $list = $route->value->getValue('defaults')->value;
+        if ($routeValue->getValue('defaults') === null) {
+            $routeValue->values[] = new ArrayItemNode(new CurlyListNode([]), 'defaults');
+        }
 
-        /** @var ArrayItemNode $item */
+        $defaults = $routeValue->getValue('defaults');
+        if (!$defaults instanceof ArrayItemNode || !$defaults->value instanceof CurlyListNode) {
+            return null;
+        }
+
+        $list = $defaults->value;
+
         foreach ($list->values as $item) {
-            if ($item->key === '_routeScope') {
+            if ($item instanceof ArrayItemNode && $item->key === '_routeScope') {
                 return null;
             }
         }
 
-        $list->values[] = new ArrayItemNode($routeScope->value->values[0]->value, new StringNode('_routeScope'));
+        $scopeItem = $routeScopeValue->values[0] ?? null;
+        if (!$scopeItem instanceof ArrayItemNode) {
+            return null;
+        }
+
+        $list->values[] = new ArrayItemNode($scopeItem->value, new StringNode('_routeScope'));
         $list->markAsChanged();
 
         $this->phpDocTagRemover->removeByName($phpDocInfo, 'RouteScope');

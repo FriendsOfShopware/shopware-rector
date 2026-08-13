@@ -72,12 +72,12 @@ final class PropertyFetchToMethodCallRector extends AbstractRector implements Co
     }
 
     /**
-     * @param mixed[] $configuration
+     * @param PropertyFetchToMethodCall[] $configuration
      */
     public function configure(array $configuration): void
     {
-        Assert::allIsAOf($configuration, PropertyFetchToMethodCall::class);
-        $this->propertiesToMethodCalls = $configuration;
+        Assert::allIsInstanceOf($configuration, PropertyFetchToMethodCall::class);
+        $this->propertiesToMethodCalls = array_values($configuration);
     }
 
     private function processSetter(Assign $assign): ?Node

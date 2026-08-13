@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Frosh\Rector\Rule\v65;
 
-use PhpParser\Builder\Class_;
 use PhpParser\Node;
+use PhpParser\Node\Stmt\Class_;
 use PhpParser\Node\Stmt\ClassMethod;
+use PHPStan\PhpDocParser\Ast\PhpDoc\PhpDocTagNode;
 use Rector\BetterPhpDocParser\PhpDoc\ArrayItemNode;
-use Rector\BetterPhpDocParser\PhpDoc\SpacelessPhpDocTagNode;
+use Rector\BetterPhpDocParser\PhpDoc\DoctrineAnnotationTagValueNode;
 use Rector\BetterPhpDocParser\PhpDoc\StringNode;
 use Rector\BetterPhpDocParser\PhpDocInfo\PhpDocInfoFactory;
 use Rector\BetterPhpDocParser\PhpDocManipulator\PhpDocTagRemover;
@@ -43,15 +44,16 @@ class MigrateLoginRequiredAnnotationToRouteRector extends AbstractRector
     {
         return [
             ClassMethod::class,
-            Node\Stmt\Class_::class,
+            Class_::class,
         ];
     }
 
-    /**
-     * @param ClassMethod|Class_ $node
-     */
-    public function refactor(Node $node)
+    public function refactor(Node $node): ?Node
     {
+        if (!$node instanceof ClassMethod && !$node instanceof Class_) {
+            return null;
+        }
+
         $phpDocInfo = $this->phpDocFactory->createFromNodeOrEmpty($node);
 
         $loginRequired = $phpDocInfo->getByName('LoginRequired');
@@ -60,23 +62,29 @@ class MigrateLoginRequiredAnnotationToRouteRector extends AbstractRector
             return null;
         }
 
-        /** @var SpacelessPhpDocTagNode|null $route */
         $route = $phpDocInfo->getByName('Route');
-
-        if ($route === null) {
+        if (!$route instanceof PhpDocTagNode) {
             return null;
         }
 
-        if (!$route->value->getValue('defaults')) {
-            $route->value->values[] = new ArrayItemNode(new CurlyListNode([]), 'defaults');
+        $routeValue = $route->value;
+        if (!$routeValue instanceof DoctrineAnnotationTagValueNode) {
+            return null;
         }
 
-        /** @var CurlyListNode $list */
-        $list = $route->value->getValue('defaults')->value;
+        if ($routeValue->getValue('defaults') === null) {
+            $routeValue->values[] = new ArrayItemNode(new CurlyListNode([]), 'defaults');
+        }
 
-        /** @var ArrayItemNode $item */
+        $defaults = $routeValue->getValue('defaults');
+        if (!$defaults instanceof ArrayItemNode || !$defaults->value instanceof CurlyListNode) {
+            return null;
+        }
+
+        $list = $defaults->value;
+
         foreach ($list->values as $item) {
-            if ($item->key === '_loginRequired') {
+            if ($item instanceof ArrayItemNode && $item->key === '_loginRequired') {
                 return null;
             }
         }
