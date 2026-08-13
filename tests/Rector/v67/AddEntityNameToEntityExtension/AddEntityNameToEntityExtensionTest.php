@@ -2,11 +2,11 @@
 
 namespace Frosh\Rector\Tests\Rector\v67\AddEntityNameToEntityExtension;
 
+use PHPUnit\Framework\Attributes\CoversNothing;
 use Frosh\Rector\Tests\Rector\AbstractFroshRectorTestCase;
 
 /**
  * @internal
- *
- * @coversNothing
  */
+#[CoversNothing]
 class AddEntityNameToEntityExtensionTest extends AbstractFroshRectorTestCase {}

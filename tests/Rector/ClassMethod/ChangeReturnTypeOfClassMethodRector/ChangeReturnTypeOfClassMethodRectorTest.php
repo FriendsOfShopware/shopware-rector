@@ -2,11 +2,11 @@
 
 namespace Frosh\Rector\Tests\Rector\ClassMethod\ChangeReturnTypeOfClassMethodRector;
 
+use PHPUnit\Framework\Attributes\CoversNothing;
 use Frosh\Rector\Tests\Rector\AbstractFroshRectorTestCase;
 
 /**
  * @internal
- *
- * @coversNothing
  */
+#[CoversNothing]
 class ChangeReturnTypeOfClassMethodRectorTest extends AbstractFroshRectorTestCase {}

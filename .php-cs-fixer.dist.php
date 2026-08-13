@@ -2,7 +2,7 @@
 
 /*
  * This document has been generated with
- * https://mlocati.github.io/php-cs-fixer-configurator/#version:3.68.3|configurator
+ * https://mlocati.github.io/php-cs-fixer-configurator/#version:3.95.18|configurator
  * you can change this configuration by importing this file.
  */
 return (new PhpCsFixer\Config())
@@ -11,7 +11,7 @@ return (new PhpCsFixer\Config())
         '@PhpCsFixer' => true,
         '@Symfony' => true,
         '@Symfony:risky' => true,
-        '@PHP81Migration' => true,
+        '@PHP82Migration' => true,
         '@PHP80Migration:risky' => true,
         '@PER-CS2.0' => true,
         '@PER-CS2.0:risky' => true,
