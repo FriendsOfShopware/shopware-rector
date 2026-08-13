@@ -51,9 +51,14 @@ class ThumbnailGenerateSingleToMultiGenerateRector extends AbstractRector
             return null;
         }
 
+        $firstArg = $node->getArgs()[0] ?? null;
+        if (!$firstArg instanceof Node\Arg) {
+            return null;
+        }
+
         $node->name = new Node\Identifier('generate');
         $node->args[0] = new Node\Arg(new New_(new Name\FullyQualified(MediaCollection::class), [
-            new Node\Arg(new Array_([new Node\Expr\ArrayItem($node->args[0]->value)])),
+            new Node\Arg(new Array_([new Node\Expr\ArrayItem($firstArg->value)])),
         ]));
 
         return $node;

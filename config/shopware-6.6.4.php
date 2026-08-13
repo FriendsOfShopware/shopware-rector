@@ -7,6 +7,6 @@ use Rector\Symfony\Set\SymfonySetList;
 
 return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->sets([
-        SymfonySetList::SYMFONY_71,
+        SymfonySetList::COMPOSER_BASED,
     ]);
 };

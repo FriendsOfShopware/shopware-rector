@@ -14,10 +14,7 @@ return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->import(__DIR__ . '/v6.5/typehints.php');
 
     $rectorConfig->sets([
-        SymfonySetList::SYMFONY_54,
-        SymfonySetList::SYMFONY_60,
-        SymfonySetList::SYMFONY_61,
-        SymfonySetList::SYMFONY_62,
+        SymfonySetList::COMPOSER_BASED,
         SetList::PHP_74,
         SetList::PHP_80,
         SetList::PHP_81,

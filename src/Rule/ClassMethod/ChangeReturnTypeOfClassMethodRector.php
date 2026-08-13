@@ -21,20 +21,28 @@ class ChangeReturnTypeOfClassMethodRector extends AbstractRector implements Conf
         ];
     }
 
-    public function refactor(Node $node)
+    public function refactor(Node $node): ?Node
     {
+        if (!$node instanceof Node\Stmt\Class_) {
+            return null;
+        }
+
+        $hasChanged = false;
+
         foreach ($this->configuration as $config) {
             if (!$this->isObjectType($node, new ObjectType($config->class))) {
                 return null;
             }
 
-            /** @var Node\Stmt\ClassMethod $stmt */
             foreach ($node->stmts as $stmt) {
-                if ($stmt instanceof Node\Stmt\ClassMethod && $stmt->name->name === $config->method) {
+                if ($stmt instanceof Node\Stmt\ClassMethod && $stmt->name->toString() === $config->method) {
                     $stmt->returnType = new Node\Name\FullyQualified($config->returnType);
+                    $hasChanged = true;
                 }
             }
         }
+
+        return $hasChanged ? $node : null;
     }
 
     /**

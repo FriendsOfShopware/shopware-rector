@@ -14,8 +14,7 @@ return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->import(__DIR__ . '/v6.7/renaming.php');
 
     $rectorConfig->sets([
-        SymfonySetList::SYMFONY_71,
-        SymfonySetList::SYMFONY_72,
+        SymfonySetList::COMPOSER_BASED,
     ]);
 
     $rectorConfig->ruleWithConfiguration(AddEntityNameToEntityExtension::class, [

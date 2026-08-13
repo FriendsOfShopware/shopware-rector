@@ -49,17 +49,20 @@ class ContextMetadataExtensionToStateRector extends AbstractRector
             return null;
         }
 
-        if ((string) $node->name !== 'addExtension') {
+        if (!$this->isName($node->name, 'addExtension')) {
             return null;
         }
 
-        /** @var Node|ClassConstFetch $arg1 */
-        $arg1 = $node->args[0]->value;
-
-        if (!$arg1  instanceof ClassConstFetch || !\in_array($arg1->name->toString(), self::ALLOWED_CONSTS, true)) {
+        $firstArg = $node->getArgs()[0] ?? null;
+        if (!$firstArg instanceof Node\Arg) {
             return null;
         }
 
-        return new MethodCall($node->var, 'addState', [$node->args[0]]);
+        $arg1 = $firstArg->value;
+        if (!$arg1 instanceof ClassConstFetch || !$arg1->name instanceof Node\Identifier || !\in_array($arg1->name->toString(), self::ALLOWED_CONSTS, true)) {
+            return null;
+        }
+
+        return new MethodCall($node->var, 'addState', [$firstArg]);
     }
 }
