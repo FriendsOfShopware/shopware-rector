@@ -8,7 +8,7 @@ use PhpParser\Node;
 use PHPStan\Type\ObjectType;
 use Rector\Rector\AbstractRector;
 use Rector\ValueObject\MethodName;
-use Symplify\RuleDocGenerator\ValueObject\CodeSample;
+use Symplify\RuleDocGenerator\ValueObject\CodeSample\CodeSample;
 use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 
 final class AddLoggerToScheduledTaskConstructorRector extends AbstractRector
@@ -42,12 +42,16 @@ final class AddLoggerToScheduledTaskConstructorRector extends AbstractRector
 
     public function refactor(Node $node): ?Node
     {
+        if (!$node instanceof Node\Stmt\Class_) {
+            return null;
+        }
+
         if (!$this->isObjectType($node, new ObjectType('Shopware\Core\Framework\MessageQueue\ScheduledTask\ScheduledTaskHandler'))) {
             return null;
         }
 
         $constructor = $node->getMethod(MethodName::CONSTRUCT);
-        if (!$constructor instanceof Node\Stmt\ClassMethod) {
+        if (!$constructor instanceof Node\Stmt\ClassMethod || $constructor->stmts === null) {
             return null;
         }
 

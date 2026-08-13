@@ -47,11 +47,12 @@ class AddEntityNameToEntityExtension extends AbstractRector implements Configura
         ];
     }
 
-    /**
-     * @param Node\Stmt\Class_ $node
-     */
     public function refactor(Node $node): ?Node
     {
+        if (!$node instanceof Node\Stmt\Class_) {
+            return null;
+        }
+
         if (!$this->isObjectType($node, new ObjectType('Shopware\Core\Framework\DataAbstractionLayer\EntityExtension'))) {
             return null;
         }
@@ -59,13 +60,16 @@ class AddEntityNameToEntityExtension extends AbstractRector implements Configura
         $foundGetEntityName = false;
         $targetDefinitionClass = null;
 
-        /** @var Node\Stmt\ClassMethod $stmt */
         foreach ($node->stmts as $stmt) {
-            if ((string) $stmt->name === 'getEntityName') {
+            if (!$stmt instanceof Node\Stmt\ClassMethod) {
+                continue;
+            }
+
+            if ($stmt->name->toString() === 'getEntityName') {
                 $foundGetEntityName = true;
             }
 
-            if ((string) $stmt->name === 'getDefinitionClass') {
+            if ($stmt->name->toString() === 'getDefinitionClass' && $stmt->stmts !== null) {
                 foreach ($stmt->stmts as $methodStmts) {
                     if ($methodStmts instanceof Node\Stmt\Return_) {
                         if ($methodStmts->expr instanceof Node\Expr\ClassConstFetch) {
@@ -79,9 +83,9 @@ class AddEntityNameToEntityExtension extends AbstractRector implements Configura
 
         if (!$this->backwardsCompatible) {
             // remove getDefinitionClass method
-            $node->stmts = array_filter($node->stmts, static function ($stmt) {
-                return (string) $stmt->name !== 'getDefinitionClass';
-            });
+            $node->stmts = array_values(array_filter($node->stmts, static function (Node\Stmt $stmt): bool {
+                return !$stmt instanceof Node\Stmt\ClassMethod || $stmt->name->toString() !== 'getDefinitionClass';
+            }));
         }
 
         if (!$foundGetEntityName) {

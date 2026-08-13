@@ -6,15 +6,15 @@ namespace Frosh\Rector\Rule\ClassConstructor;
 
 use PhpParser\Node;
 use PhpParser\Node\Arg;
+use PhpParser\Node\Expr;
 use PhpParser\Node\Expr\ConstFetch;
 use PhpParser\Node\Expr\New_;
-use PhpParser\Node\Identifier;
 use PhpParser\Node\Name;
 use PhpParser\Node\Stmt\Class_;
 use PhpParser\Node\Stmt\ClassMethod;
 use PHPStan\Type\ArrayType;
-use PHPStan\Type\NullType;
 use PHPStan\Type\StringType;
+use PHPStan\Type\Type;
 use Rector\Contract\Rector\ConfigurableRectorInterface;
 use Rector\PHPStanStaticTypeMapper\Enum\TypeKind;
 use Rector\Rector\AbstractRector;
@@ -62,9 +62,6 @@ class MakeClassConstructorArgumentRequiredRector extends AbstractRector implemen
         ];
     }
 
-    /**
-     * @param ClassMethod|New_ $node
-     */
     public function refactor(Node $node): ?Node
     {
         if ($node instanceof Class_) {
@@ -79,6 +76,10 @@ class MakeClassConstructorArgumentRequiredRector extends AbstractRector implemen
                 return $node;
             }
 
+            return null;
+        }
+
+        if (!$node instanceof New_) {
             return null;
         }
 
@@ -135,23 +136,9 @@ class MakeClassConstructorArgumentRequiredRector extends AbstractRector implemen
                 continue;
             }
 
-            if ($config->getDefault()) {
-                /** @var Name $arg */
-                $arg = $this->typeMapper->mapPHPStanTypeToPhpParserNode($config->getDefault(), TypeKind::PARAM);
-
-                if ($config->getDefault() instanceof NullType) {
-                    if ($arg instanceof Identifier) {
-                        $arg = new Name($arg->name);
-                    }
-
-                    if ($arg === null) {
-                        $arg = new Name('null');
-                    }
-
-                    $arg = new ConstFetch($arg);
-                }
-
-                $node->args[$config->getPosition()] = new Arg($arg);
+            $defaultExpr = $this->createDefaultExpr($config->getDefault());
+            if ($defaultExpr instanceof Expr) {
+                $node->args[$config->getPosition()] = new Arg($defaultExpr);
             }
 
             $hasModified = true;
@@ -162,5 +149,20 @@ class MakeClassConstructorArgumentRequiredRector extends AbstractRector implemen
         }
 
         return null;
+    }
+
+    private function createDefaultExpr(?Type $defaultType): ?Expr
+    {
+        if ($defaultType === null) {
+            return null;
+        }
+
+        if ($defaultType->isNull()->yes()) {
+            return new ConstFetch(new Name('null'));
+        }
+
+        $mapped = $this->typeMapper->mapPHPStanTypeToPhpParserNode($defaultType, TypeKind::PARAM);
+
+        return $mapped instanceof Expr ? $mapped : null;
     }
 }

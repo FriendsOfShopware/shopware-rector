@@ -1,0 +1,11 @@
+parameters:
+    level: 8
+    paths:
+        - src
+        - config
+    phpVersion: 80100
+    treatPhpDocTypesAsCertain: false
+    bootstrapFiles:
+        - vendor/rector/rector/bootstrap.php
+    scanDirectories:
+        - stubs
