@@ -41,6 +41,10 @@ final class CartBehaviorIsRecalculationRector extends AbstractRector
 
     public function refactor(Node $node): ?Node
     {
+        if (!$node instanceof MethodCall && !$node instanceof NullsafeMethodCall) {
+            return null;
+        }
+
         if (!$node->name instanceof Node\Identifier || $node->name->toString() !== 'isRecalculation' || $node->args !== []) {
             return null;
         }
