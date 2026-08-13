@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Frosh\Rector\Rule\Class_\InterfaceReplacedWithAbstractClass;
 use Frosh\Rector\Rule\Class_\InterfaceReplacedWithAbstractClassRector;
+use Frosh\Rector\Rule\v68\CartBehaviorIsRecalculationRector;
 use Frosh\Rector\Rule\v68\EntitySearchResultGetEntitiesRector;
 use Frosh\Rector\Rule\v68\ProductStreamBuilderBuildFiltersToEnrichCriteriaRector;
 use Rector\Config\RectorConfig;
@@ -14,6 +15,7 @@ use Rector\Renaming\ValueObject\RenameClassAndConstFetch;
 return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->import(__DIR__ . '/../config.php');
 
+    $rectorConfig->rule(CartBehaviorIsRecalculationRector::class);
     $rectorConfig->rule(EntitySearchResultGetEntitiesRector::class);
     $rectorConfig->rule(ProductStreamBuilderBuildFiltersToEnrichCriteriaRector::class);
 
