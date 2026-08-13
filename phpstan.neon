@@ -3,7 +3,7 @@ parameters:
     paths:
         - src
         - config
-    phpVersion: 80100
+    phpVersion: 80200
     treatPhpDocTypesAsCertain: false
     bootstrapFiles:
         - vendor/rector/rector/bootstrap.php
