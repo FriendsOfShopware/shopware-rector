@@ -8,7 +8,7 @@ use PHPStan\Type\ObjectType;
 
 final class RemoveArgumentFromClassConstruct
 {
-    public function __construct(protected string $class, protected int $position) {}
+    public function __construct(private string $class, private int $position) {}
 
     public function getObjectType(): ObjectType
     {
