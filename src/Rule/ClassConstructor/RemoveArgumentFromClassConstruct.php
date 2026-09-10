@@ -6,7 +6,7 @@ namespace Frosh\Rector\Rule\ClassConstructor;
 
 use PHPStan\Type\ObjectType;
 
-class RemoveArgumentFromClassConstruct
+final class RemoveArgumentFromClassConstruct
 {
     public function __construct(protected string $class, protected int $position) {}
 

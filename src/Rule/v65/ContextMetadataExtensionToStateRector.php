@@ -12,7 +12,7 @@ use Rector\Rector\AbstractRector;
 use Symplify\RuleDocGenerator\ValueObject\CodeSample\CodeSample;
 use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 
-class ContextMetadataExtensionToStateRector extends AbstractRector
+final class ContextMetadataExtensionToStateRector extends AbstractRector
 {
     private const ALLOWED_CONSTS = ['USE_INDEXING_QUEUE', 'DISABLE_INDEXING'];
 

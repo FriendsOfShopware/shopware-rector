@@ -9,4 +9,4 @@ use Frosh\Rector\Tests\Rector\AbstractFroshRectorTestCase;
  * @internal
  */
 #[CoversNothing]
-class AddEntityNameToEntityExtensionTest extends AbstractFroshRectorTestCase {}
+final class AddEntityNameToEntityExtensionTest extends AbstractFroshRectorTestCase {}

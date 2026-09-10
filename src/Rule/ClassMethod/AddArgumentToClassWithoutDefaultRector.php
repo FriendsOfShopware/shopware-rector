@@ -17,7 +17,7 @@ use Rector\StaticTypeMapper\StaticTypeMapper;
 use Symplify\RuleDocGenerator\ValueObject\CodeSample\ConfiguredCodeSample;
 use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 
-class AddArgumentToClassWithoutDefaultRector extends AbstractRector implements ConfigurableRectorInterface
+final class AddArgumentToClassWithoutDefaultRector extends AbstractRector implements ConfigurableRectorInterface
 {
     public function __construct(private readonly StaticTypeMapper $staticTypeMapper) {}
 

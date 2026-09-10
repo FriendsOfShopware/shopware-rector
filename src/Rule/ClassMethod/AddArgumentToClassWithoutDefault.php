@@ -7,7 +7,7 @@ namespace Frosh\Rector\Rule\ClassMethod;
 use PHPStan\Type\ObjectType;
 use PHPStan\Type\Type;
 
-class AddArgumentToClassWithoutDefault
+final class AddArgumentToClassWithoutDefault
 {
     /**
      * @param Type|null $type

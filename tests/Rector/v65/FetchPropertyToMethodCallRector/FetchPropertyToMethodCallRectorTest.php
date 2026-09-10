@@ -11,4 +11,4 @@ use Frosh\Rector\Tests\Rector\AbstractFroshRectorTestCase;
  * @internal
  */
 #[CoversNothing]
-class FetchPropertyToMethodCallRectorTest extends AbstractFroshRectorTestCase {}
+final class FetchPropertyToMethodCallRectorTest extends AbstractFroshRectorTestCase {}

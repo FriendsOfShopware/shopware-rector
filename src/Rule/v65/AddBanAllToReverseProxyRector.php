@@ -15,7 +15,7 @@ use Rector\Rector\AbstractRector;
 use Symplify\RuleDocGenerator\ValueObject\CodeSample\CodeSample;
 use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 
-class AddBanAllToReverseProxyRector extends AbstractRector
+final class AddBanAllToReverseProxyRector extends AbstractRector
 {
     public function getRuleDefinition(): RuleDefinition
     {
