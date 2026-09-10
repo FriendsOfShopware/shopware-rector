@@ -12,7 +12,7 @@ use Rector\Rector\AbstractRector;
 use Symplify\RuleDocGenerator\ValueObject\CodeSample\CodeSample;
 use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 
-class FakerPropertyToMethodCallRector extends AbstractRector
+final class FakerPropertyToMethodCallRector extends AbstractRector
 {
     public function getRuleDefinition(): RuleDefinition
     {

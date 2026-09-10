@@ -22,7 +22,7 @@ use Rector\StaticTypeMapper\StaticTypeMapper;
 use Symplify\RuleDocGenerator\ValueObject\CodeSample\ConfiguredCodeSample;
 use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 
-class MakeClassConstructorArgumentRequiredRector extends AbstractRector implements ConfigurableRectorInterface
+final class MakeClassConstructorArgumentRequiredRector extends AbstractRector implements ConfigurableRectorInterface
 {
     public function __construct(private readonly StaticTypeMapper $typeMapper) {}
 

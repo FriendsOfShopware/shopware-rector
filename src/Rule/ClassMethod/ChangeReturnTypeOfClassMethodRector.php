@@ -7,7 +7,7 @@ use PHPStan\Type\ObjectType;
 use Rector\Contract\Rector\ConfigurableRectorInterface;
 use Rector\Rector\AbstractRector;
 
-class ChangeReturnTypeOfClassMethodRector extends AbstractRector implements ConfigurableRectorInterface
+final class ChangeReturnTypeOfClassMethodRector extends AbstractRector implements ConfigurableRectorInterface
 {
     /**
      * @var ChangeReturnTypeOfClassMethod[]

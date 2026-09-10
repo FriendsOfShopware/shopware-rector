@@ -15,7 +15,7 @@ use Shopware\Core\Content\Media\MediaCollection;
 use Symplify\RuleDocGenerator\ValueObject\CodeSample\CodeSample;
 use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 
-class ThumbnailGenerateSingleToMultiGenerateRector extends AbstractRector
+final class ThumbnailGenerateSingleToMultiGenerateRector extends AbstractRector
 {
     public function getRuleDefinition(): RuleDefinition
     {

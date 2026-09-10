@@ -15,7 +15,7 @@ use Rector\Rector\AbstractRector;
 use Symplify\RuleDocGenerator\ValueObject\CodeSample\CodeSample;
 use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 
-class AddBanAllToReverseProxyRector extends AbstractRector
+final class AddBanAllToReverseProxyRector extends AbstractRector
 {
     public function getRuleDefinition(): RuleDefinition
     {
@@ -47,7 +47,7 @@ class AddBanAllToReverseProxyRector extends AbstractRector
     /**
      * @param Class_ $node
      */
-    public function refactor(Node $node)
+    public function refactor(Node $node): ?Node
     {
         if (!$this->isObjectType($node, new ObjectType('Shopware\Storefront\Framework\Cache\ReverseProxy\AbstractReverseProxyGateway'))) {
             return null;

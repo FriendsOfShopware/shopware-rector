@@ -19,7 +19,7 @@ use Rector\Rector\AbstractRector;
 use Symplify\RuleDocGenerator\ValueObject\CodeSample\CodeSample;
 use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 
-class MigrateCaptchaAnnotationToRouteRector extends AbstractRector
+final class MigrateCaptchaAnnotationToRouteRector extends AbstractRector
 {
     public function __construct(
         private readonly PhpDocTagRemover $phpDocTagRemover,

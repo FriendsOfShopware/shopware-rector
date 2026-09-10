@@ -9,4 +9,4 @@ use Frosh\Rector\Tests\Rector\AbstractFroshRectorTestCase;
  * @internal
  */
 #[CoversNothing]
-class AddArgumentToClassWithoutDefaultValueRectorTest extends AbstractFroshRectorTestCase {}
+final class AddArgumentToClassWithoutDefaultValueRectorTest extends AbstractFroshRectorTestCase {}

@@ -6,9 +6,9 @@ namespace Frosh\Rector\Rule\Class_;
 
 use PHPStan\Type\ObjectType;
 
-class InterfaceReplacedWithAbstractClass
+final class InterfaceReplacedWithAbstractClass
 {
-    public function __construct(protected string $interface, protected string $abstractClass) {}
+    public function __construct(private string $interface, private string $abstractClass) {}
 
     public function getInterface(): string
     {

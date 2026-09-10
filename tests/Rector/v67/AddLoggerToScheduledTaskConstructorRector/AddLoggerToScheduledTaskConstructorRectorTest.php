@@ -10,4 +10,4 @@ use Frosh\Rector\Tests\Rector\AbstractFroshRectorTestCase;
  * @internal
  */
 #[CoversClass(AddLoggerToScheduledTaskConstructorRector::class)]
-class AddLoggerToScheduledTaskConstructorRectorTest extends AbstractFroshRectorTestCase {}
+final class AddLoggerToScheduledTaskConstructorRectorTest extends AbstractFroshRectorTestCase {}

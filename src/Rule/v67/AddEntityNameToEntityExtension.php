@@ -10,7 +10,7 @@ use Rector\Rector\AbstractRector;
 use Symplify\RuleDocGenerator\ValueObject\CodeSample\CodeSample;
 use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 
-class AddEntityNameToEntityExtension extends AbstractRector implements ConfigurableRectorInterface
+final class AddEntityNameToEntityExtension extends AbstractRector implements ConfigurableRectorInterface
 {
     private bool $backwardsCompatible = true;
 

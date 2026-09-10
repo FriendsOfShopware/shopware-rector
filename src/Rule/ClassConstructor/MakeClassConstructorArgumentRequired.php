@@ -7,9 +7,9 @@ namespace Frosh\Rector\Rule\ClassConstructor;
 use PHPStan\Type\ObjectType;
 use PHPStan\Type\Type;
 
-class MakeClassConstructorArgumentRequired
+final class MakeClassConstructorArgumentRequired
 {
-    public function __construct(protected string $class, protected int $position, protected ?Type $default = null) {}
+    public function __construct(private string $class, private int $position, private ?Type $default = null) {}
 
     public function getClass(): string
     {

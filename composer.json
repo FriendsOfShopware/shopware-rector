@@ -9,6 +9,7 @@
     "webmozart/assert": "^1 || ^2"
   },
   "require-dev": {
+    "boundwize/structarmed": "^0.17.2",
     "friendsofphp/php-cs-fixer": "^3.95",
     "phpstan/phpstan": "^2.0",
     "phpunit/phpunit": "^11.5",

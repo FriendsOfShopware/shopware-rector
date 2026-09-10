@@ -7,12 +7,12 @@ namespace Frosh\Rector\Rule\ClassMethod;
 use PHPStan\Type\ObjectType;
 use PHPStan\Type\Type;
 
-class AddArgumentToClassWithoutDefault
+final class AddArgumentToClassWithoutDefault
 {
     /**
      * @param Type|null $type
      */
-    public function __construct(protected string $class, protected string $method, protected int $position, protected string $name, protected $type) {}
+    public function __construct(private string $class, private string $method, private int $position, private string $name, private $type) {}
 
     public function getObjectType(): ObjectType
     {
