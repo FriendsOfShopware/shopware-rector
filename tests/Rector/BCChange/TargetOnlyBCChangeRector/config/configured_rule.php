@@ -47,6 +47,15 @@ return static function (RectorConfig $rectorConfig): void {
                 'type' => 'object',
             ],
             [
+                'version' => 'v6.8.0',
+                'kind' => BCChangeRector::EXPLICIT_CURRENT_DEFAULT,
+                'class' => TargetCoreClass::class,
+                'method' => 'enabled',
+                'position' => 0,
+                'parameter' => 'enabled',
+                'default' => false,
+            ],
+            [
                 'version' => 'v6.9.0',
                 'kind' => BCChangeRector::RENAME_PARAMETER,
                 'class' => TargetCoreClass::class,

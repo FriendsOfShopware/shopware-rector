@@ -7,6 +7,6 @@ use Rector\Config\RectorConfig;
 
 return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->ruleWithConfiguration(AddEntityNameToEntityExtension::class, [
-        'backwardsCompatible' => false,
+        'minimumVersion' => '6.7.0',
     ]);
 };

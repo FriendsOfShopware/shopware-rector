@@ -11,7 +11,7 @@ return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->import(__DIR__ . '/v6.5/renaming.php');
     $rectorConfig->import(__DIR__ . '/v6.5/typehints.php');
     $rectorConfig->import(__DIR__ . '/v6.5/rules.php');
-    $rectorConfig->import(__DIR__ . '/v6.7/entity-extension-bridge.php');
+    $rectorConfig->import(__DIR__ . '/v6.7/entity-extension-additive.php');
 
     $rectorConfig->sets([
         SymfonySetList::COMPOSER_BASED,

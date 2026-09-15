@@ -14,17 +14,21 @@ return Architecture::define()
     ->layer('ClassMethod', 'src/Rule/ClassMethod/')
     ->layer('BCChange', 'src/Rule/BCChange/')
     ->layer('Generator', 'src/Generator/')
+    ->layer('Migration', 'src/Migration/')
     ->layer('Transform', 'src/Rule/Transform/')
     ->layerPattern('Version', '#^Frosh\\\Rector\\\Rule\\\v\d+\\\#')
+    ->layer('VersionSupport', 'src/Version/')
     ->layer('Set', 'src/Set/')
     ->ruleset([
         'Class_' => [],
         'ClassConstructor' => ['+ClassMethod'],
         'ClassMethod' => [],
-        'BCChange' => [],
+        'BCChange' => ['+VersionSupport'],
         'Generator' => ['+BCChange'],
+        'Migration' => ['+Class_', '+VersionSupport'],
         'Transform' => [],
-        'Version' => [],
-        'Set' => ['+BCChange'],
+        'Version' => ['+VersionSupport'],
+        'VersionSupport' => [],
+        'Set' => ['+BCChange', '+Migration', '+Version', '+VersionSupport'],
     ])
 ;

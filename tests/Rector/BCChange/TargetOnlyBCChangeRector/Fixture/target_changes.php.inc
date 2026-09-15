@@ -10,6 +10,8 @@ class TargetCoreClass
 
     public function required(string $id, object $context): void {}
 
+    public function enabled(bool $enabled = true): void {}
+
     public function bridgeRename(?string $oldName = null): void {}
 }
 
@@ -53,6 +55,7 @@ $core = new TargetCoreClass();
 $core->rename(oldName: 'value');
 $core->remove('id', 'obsolete');
 $core->remove('id', createAuditEntry());
+$core->enabled();
 $core->bridgeRename(oldName: 'bridge');
 
 ?>
@@ -68,6 +71,8 @@ class TargetCoreClass
     public function removeUsed(string $id): void {}
 
     public function required(string $id, object $context): void {}
+
+    public function enabled(bool $enabled = true): void {}
 
     public function bridgeRename(?string $oldName = null): void {}
 }
@@ -110,6 +115,7 @@ $core = new TargetCoreClass();
 $core->rename(newName: 'value');
 $core->remove('id');
 $core->remove('id', createAuditEntry());
+$core->enabled(enabled: false);
 $core->bridgeRename('bridge');
 
 ?>

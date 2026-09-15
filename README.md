@@ -28,10 +28,10 @@ return ShopwareSet::forVersionRange(
 );
 ```
 
-Handwritten migrations use the same range: target-only rules run once their effective version is
-included in the minimum, while verified bridge rules may run earlier when their replacement API is
-available in every supported version. The existing `ShopwareSetList::SHOPWARE_6_X` constants remain
-available for their original one-version behavior.
+Handwritten migrations declare the earliest supported minimum version for which they are safe and
+the target version that makes them relevant. Rules that can simplify code after the minimum is
+raised inspect the configured range directly. The existing `ShopwareSetList::SHOPWARE_6_X`
+constants remain available for their original one-version behavior.
 
 ## Use directly the config
 
@@ -67,9 +67,9 @@ return RectorConfig::configure()
     );
 ```
 
-Changes newer than the target are ignored. Changes newer than the minimum use a transformation
-that remains compatible with both Shopware versions. Changes included in the minimum use the
-target-only migration, allowing obsolete compatibility code to be removed.
+Changes newer than the target are ignored. Each transformation uses the actual version range:
+forward-compatible changes run once the target includes them, destructive changes wait for the
+minimum, and parameter renames become direct once the minimum includes the changed signature.
 
 Regenerate one version from an optimized Shopware Composer class map:
 
@@ -79,7 +79,7 @@ composer dump-autoload --optimize
 ```
 
 The generator replaces only entries for the requested version, preserving older changes for later
-target-only migrations. It covers `NewOptionalParameter`, `NewRequiredParameter`,
+runs after the minimum version is raised. It covers `NewOptionalParameter`, `NewRequiredParameter`,
 `ParameterDefaultValueChange`, `ParameterNameChange`, `ParameterRemoval`,
 `ParameterTypeWidening`, and `ReturnTypeNarrowing`. Other attributes remain diagnostics until their
 migration can be expressed without guessing application behavior.

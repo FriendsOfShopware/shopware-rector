@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Frosh\Rector\Rule\BCChange;
 
+use Frosh\Rector\Version\ShopwareVersionRange;
 use PhpParser\BuilderHelpers;
 use PhpParser\Node;
 use PhpParser\Node\Arg;
@@ -48,11 +49,10 @@ final class BCChangeRector extends AbstractRector implements ConfigurableRectorI
     public const RENAME_PARAMETER = 'rename_parameter';
     public const REMOVE_PARAMETER = 'remove_parameter';
 
-    private const BRIDGE = 'bridge';
-    private const TARGET_ONLY = 'target_only';
-
     /** @var list<array<string, mixed>> */
     private array $changes = [];
+
+    private ShopwareVersionRange $versions;
 
     public function getRuleDefinition(): RuleDefinition
     {
@@ -92,24 +92,15 @@ final class BCChangeRector extends AbstractRector implements ConfigurableRectorI
      */
     public function configure(array $configuration): void
     {
-        $minimumVersion = ltrim($configuration['minimumVersion'], 'v');
-        $targetVersion = ltrim($configuration['targetVersion'], 'v');
-
-        if (version_compare($minimumVersion, $targetVersion, '>')) {
-            throw new \InvalidArgumentException('The minimum Shopware version cannot be newer than the target version.');
-        }
-
+        $this->versions = new ShopwareVersionRange($configuration['minimumVersion'], $configuration['targetVersion']);
         $this->changes = [];
 
         foreach ($configuration['changes'] as $change) {
             $changeVersion = ltrim((string) $change['version'], 'v');
-            if (version_compare($changeVersion, $targetVersion, '>')) {
+            if (!$this->versions->targetIsAtLeast($changeVersion)) {
                 continue;
             }
 
-            $change['strategy'] = version_compare($minimumVersion, $changeVersion, '>=')
-                ? self::TARGET_ONLY
-                : self::BRIDGE;
             $this->changes[] = $change;
         }
     }
@@ -142,7 +133,7 @@ final class BCChangeRector extends AbstractRector implements ConfigurableRectorI
             return true;
         }
 
-        return $change['strategy'] === self::TARGET_ONLY
+        return $this->minimumIncludes($change)
             && in_array($change['kind'], [self::ADD_REQUIRED_PARAMETER, self::REMOVE_PARAMETER, self::RENAME_PARAMETER], true);
     }
 
@@ -350,9 +341,9 @@ final class BCChangeRector extends AbstractRector implements ConfigurableRectorI
             }
 
             $changed = match ($change['kind']) {
-                self::EXPLICIT_CURRENT_DEFAULT => $change['strategy'] === self::BRIDGE && $this->makeCurrentDefaultExplicit($node, $change),
+                self::EXPLICIT_CURRENT_DEFAULT => $this->makeCurrentDefaultExplicit($node, $change),
                 self::RENAME_PARAMETER => $this->renameCallArgument($node, $change),
-                self::REMOVE_PARAMETER => $change['strategy'] === self::TARGET_ONLY && $this->removeCallArgument($node, $change),
+                self::REMOVE_PARAMETER => $this->minimumIncludes($change) && $this->removeCallArgument($node, $change),
                 default => false,
             };
 
@@ -389,7 +380,7 @@ final class BCChangeRector extends AbstractRector implements ConfigurableRectorI
                 continue;
             }
 
-            if ($change['strategy'] === self::TARGET_ONLY) {
+            if ($this->minimumIncludes($change)) {
                 $argument->name = new Identifier($change['newName']);
 
                 return true;
@@ -426,6 +417,12 @@ final class BCChangeRector extends AbstractRector implements ConfigurableRectorI
         }
 
         return false;
+    }
+
+    /** @param array<string, mixed> $change */
+    private function minimumIncludes(array $change): bool
+    {
+        return $this->versions->minimumIsAtLeast(ltrim((string) $change['version'], 'v'));
     }
 
     /** @param array<string, mixed> $change */

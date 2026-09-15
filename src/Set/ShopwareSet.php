@@ -4,55 +4,43 @@ declare(strict_types=1);
 
 namespace Frosh\Rector\Set;
 
+use Frosh\Rector\Migration\v65\Shopware65Migration;
+use Frosh\Rector\Migration\v66\Shopware66Migration;
+use Frosh\Rector\Migration\v67\Shopware67Migration;
+use Frosh\Rector\Migration\v68\CheckoutPermissionsMigration;
+use Frosh\Rector\Migration\v68\ProductStreamBuilderInterfaceMigration;
+use Frosh\Rector\Migration\v68\Shopware68Migration;
 use Frosh\Rector\Rule\BCChange\BCChangeRector;
+use Frosh\Rector\Rule\v67\AddEntityNameToEntityExtension;
+use Frosh\Rector\Rule\v67\AddLoggerToScheduledTaskConstructorRector;
+use Frosh\Rector\Rule\v68\CartBehaviorIsRecalculationRector;
+use Frosh\Rector\Rule\v68\EntitySearchResultGetEntitiesRector;
+use Frosh\Rector\Rule\v68\ProductStreamBuilderBuildFiltersToEnrichCriteriaRector;
+use Frosh\Rector\Version\ShopwareVersionRange;
+use Frosh\Rector\Version\VersionAwareMigrationInterface;
+use Frosh\Rector\Version\VersionAwareRectorInterface;
 use Rector\Configuration\RectorConfigBuilder;
+use Rector\Contract\Rector\ConfigurableRectorInterface;
 
 final class ShopwareSet
 {
-    /** @var array<string, list<string>> */
-    private const TARGET_ONLY_SETS = [
-        '6.5.0' => [
-            __DIR__ . '/../../config/v6.5/flysystem-v3.php',
-            __DIR__ . '/../../config/v6.5/renaming.php',
-            __DIR__ . '/../../config/v6.5/typehints.php',
-            __DIR__ . '/../../config/v6.5/rules.php',
-        ],
-        '6.6.0' => [
-            __DIR__ . '/../../config/v6.6/renaming.php',
-            __DIR__ . '/../../config/v6.6/exceptions.php',
-        ],
-        '6.7.0' => [
-            __DIR__ . '/../../config/v6.7/renaming.php',
-            __DIR__ . '/../../config/v6.7/return-types.php',
-            __DIR__ . '/../../config/v6.7/scheduled-task-logger.php',
-        ],
-        '6.8.0' => [
-            __DIR__ . '/../../config/v6.8/renaming.php',
-        ],
+    /** @var list<class-string<VersionAwareRectorInterface>> */
+    private const VERSION_AWARE_RECTORS = [
+        AddEntityNameToEntityExtension::class,
+        AddLoggerToScheduledTaskConstructorRector::class,
+        EntitySearchResultGetEntitiesRector::class,
+        CartBehaviorIsRecalculationRector::class,
+        ProductStreamBuilderBuildFiltersToEnrichCriteriaRector::class,
     ];
 
-    /** @var list<array{effectiveVersion: string, availableFrom: string, set: string}> */
-    private const BRIDGE_SETS = [
-        [
-            'effectiveVersion' => '6.7.0',
-            'availableFrom' => '6.6.0',
-            'set' => __DIR__ . '/../../config/v6.7/scheduled-task-logger.php',
-        ],
-        [
-            'effectiveVersion' => '6.8.0',
-            'availableFrom' => '6.7.0',
-            'set' => __DIR__ . '/../../config/v6.8/bridge-6.7.0.php',
-        ],
-        [
-            'effectiveVersion' => '6.8.0',
-            'availableFrom' => '6.7.2',
-            'set' => __DIR__ . '/../../config/v6.8/bridge-6.7.2.php',
-        ],
-        [
-            'effectiveVersion' => '6.8.0',
-            'availableFrom' => '6.7.13',
-            'set' => __DIR__ . '/../../config/v6.8/bridge-6.7.13.php',
-        ],
+    /** @var list<class-string<VersionAwareMigrationInterface>> */
+    private const VERSION_AWARE_MIGRATIONS = [
+        Shopware65Migration::class,
+        Shopware66Migration::class,
+        Shopware67Migration::class,
+        Shopware68Migration::class,
+        CheckoutPermissionsMigration::class,
+        ProductStreamBuilderInterfaceMigration::class,
     ];
 
     public static function forVersionRange(
@@ -60,37 +48,34 @@ final class ShopwareSet
         string $minimumVersion,
         string $targetVersion,
     ): RectorConfigBuilder {
-        $minimumVersion = ltrim($minimumVersion, 'v');
-        $targetVersion = ltrim($targetVersion, 'v');
-        $bcChanges = BCChangeSet::forVersionRange($minimumVersion, $targetVersion);
-        $sets = [];
-
-        foreach (self::TARGET_ONLY_SETS as $effectiveVersion => $targetOnlySets) {
-            if (version_compare($minimumVersion, $effectiveVersion, '>=')) {
-                array_push($sets, ...$targetOnlySets);
-            }
-        }
-
-        foreach (self::BRIDGE_SETS as $bridgeSet) {
-            if (version_compare($minimumVersion, $bridgeSet['effectiveVersion'], '<')
-                && version_compare($targetVersion, $bridgeSet['effectiveVersion'], '>=')
-                && version_compare($minimumVersion, $bridgeSet['availableFrom'], '>=')
-            ) {
-                $sets[] = $bridgeSet['set'];
-            }
-        }
+        $versions = new ShopwareVersionRange($minimumVersion, $targetVersion);
+        $bcChanges = BCChangeSet::forVersionRange($versions->minimum, $versions->target);
 
         $rectorConfig
-            ->withSets($sets)
             ->withConfiguredRule(BCChangeRector::class, $bcChanges)
         ;
 
-        if (version_compare($targetVersion, '6.7.0', '>=') && version_compare($minimumVersion, '6.5.0', '>=')) {
-            $rectorConfig->withSets([
-                version_compare($minimumVersion, '6.7.0', '<')
-                    ? __DIR__ . '/../../config/v6.7/entity-extension-bridge.php'
-                    : __DIR__ . '/../../config/v6.7/entity-extension-target.php',
-            ]);
+        foreach (self::VERSION_AWARE_RECTORS as $versionAwareRector) {
+            if (!$versionAwareRector::isActive($versions)) {
+                continue;
+            }
+
+            $configuration = $versionAwareRector::configuration($versions);
+            if ($configuration === []) {
+                $rectorConfig->withRules([$versionAwareRector]);
+            } else {
+                if (!is_a($versionAwareRector, ConfigurableRectorInterface::class, true)) {
+                    throw new \LogicException(sprintf('Version-aware Rector "%s" returns configuration but is not configurable.', $versionAwareRector));
+                }
+
+                $rectorConfig->withConfiguredRule($versionAwareRector, $configuration);
+            }
+        }
+
+        foreach (self::VERSION_AWARE_MIGRATIONS as $versionAwareMigration) {
+            if ($versionAwareMigration::isActive($versions)) {
+                $versionAwareMigration::register($rectorConfig);
+            }
         }
 
         return $rectorConfig;
