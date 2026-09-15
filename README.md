@@ -40,3 +40,17 @@ composer install
 # Normal Run
 ./vendor/bin/rector process --config config/shopware-6.7.0.php --autoload-file [SHOPWARE]/vendor/autoload.php [SHOPWARE]/custom/plugins/MyPlugin
 ```
+
+## Generate BC-change migrations
+
+The Shopware 6.8 set contains forward-compatible declaration and call-site changes generated from
+Shopware's BC-change attributes. Regenerate them from an optimized Shopware Composer class map:
+
+```bash
+composer dump-autoload --optimize
+./bin/generate-bc-change-config.php [SHOPWARE]/vendor/autoload.php v6.8.0 config/v6.8/bc-changes.php
+```
+
+The generator currently covers `NewOptionalParameter`, `ParameterDefaultValueChange`,
+`ParameterTypeWidening`, and `ReturnTypeNarrowing`. Other attributes remain diagnostics until their
+migration can be expressed without guessing application behavior.
