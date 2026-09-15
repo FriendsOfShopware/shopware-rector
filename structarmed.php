@@ -25,6 +25,6 @@ return Architecture::define()
         'Generator' => ['+BCChange'],
         'Transform' => [],
         'Version' => [],
-        'Set' => [],
+        'Set' => ['+BCChange'],
     ])
 ;

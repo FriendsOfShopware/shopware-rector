@@ -15,17 +15,23 @@ composer req frosh/shopware-rector --dev
 
 ## Use Sets
 
-To add a set to your config, use `Frosh\Rector\Set\ShopwareSetList` class and pick one of constants:
+Configure the minimum Shopware version supported by the project and the version it is preparing for:
 
 ```php
 use Rector\Config\RectorConfig;
-use Frosh\Rector\Set\ShopwareSetList;
+use Frosh\Rector\Set\ShopwareSet;
 
-return RectorConfig::configure()
-    ->withSets([
-        ShopwareSetList::SHOPWARE_6_7_0,
-    ]);
+return ShopwareSet::forVersionRange(
+    RectorConfig::configure(),
+    minimumVersion: '6.7.0',
+    targetVersion: '6.8.0',
+);
 ```
+
+Handwritten migrations use the same range: target-only rules run once their effective version is
+included in the minimum, while verified bridge rules may run earlier when their replacement API is
+available in every supported version. The existing `ShopwareSetList::SHOPWARE_6_X` constants remain
+available for their original one-version behavior.
 
 ## Use directly the config
 
@@ -43,8 +49,8 @@ composer install
 
 ## Generate BC-change migrations
 
-Shopware's BC-change attributes are available as a generated, historical manifest. Configure the
-minimum Shopware version supported by the project and the version it is preparing for:
+Shopware's BC-change attributes are stored in a generated, historical manifest and are included by
+the version-range set above. They can also be configured directly:
 
 ```php
 use Frosh\Rector\Rule\BCChange\BCChangeRector;
