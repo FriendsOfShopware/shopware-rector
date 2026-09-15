@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Frosh\Rector\Generator;
 
-use Frosh\Rector\Rule\BCChange\FutureCompatibleBCChangeRector;
+use Frosh\Rector\Rule\BCChange\BCChangeRector;
 
 final class BCChangeConfigGenerator
 {
@@ -43,17 +43,7 @@ final class BCChangeConfigGenerator
             }
         }
 
-        usort($changes, static fn (array $left, array $right): int => [
-            $left['class'],
-            $left['method'],
-            $left['kind'],
-            $left['parameter'] ?? '',
-        ] <=> [
-            $right['class'],
-            $right['method'],
-            $right['kind'],
-            $right['parameter'] ?? '',
-        ]);
+        $this->sort($changes);
 
         return $changes;
     }
@@ -63,24 +53,35 @@ final class BCChangeConfigGenerator
      */
     public function render(array $changes): string
     {
-        $configuration = $this->exportArray($changes, 2);
+        $configuration = $this->exportArray($changes, 0);
 
         return <<<PHP
             <?php
 
             declare(strict_types=1);
 
-            use Frosh\\Rector\\Rule\\BCChange\\FutureCompatibleBCChangeRector;
-            use Rector\\Config\\RectorConfig;
-
-            return static function (RectorConfig \$rectorConfig): void {
-                \$rectorConfig->ruleWithConfiguration(
-                    FutureCompatibleBCChangeRector::class,
-                    {$configuration},
-                );
-            };
+            return {$configuration};
 
             PHP;
+    }
+
+    /**
+     * @param list<array<string, mixed>> $existingChanges
+     * @param list<array<string, mixed>> $newChanges
+     *
+     * @return list<array<string, mixed>>
+     */
+    public function replaceVersion(array $existingChanges, array $newChanges, string $version): array
+    {
+        $changes = array_values(array_filter(
+            $existingChanges,
+            static fn (array $change): bool => ($change['version'] ?? null) !== $version,
+        ));
+
+        $changes = array_merge($changes, $newChanges);
+        $this->sort($changes);
+
+        return $changes;
     }
 
     /**
@@ -91,13 +92,14 @@ final class BCChangeConfigGenerator
     private function change(string $class, \ReflectionMethod $method, string $attribute, array $arguments): ?array
     {
         $change = [
+            'version' => $this->stringArgument($arguments, 'version', 0),
             'class' => $class,
             'method' => $method->getName(),
         ];
 
         if ($attribute === $this->attributeNamespace . 'NewOptionalParameter') {
             return $change + [
-                'kind' => FutureCompatibleBCChangeRector::ADD_OPTIONAL_PARAMETER,
+                'kind' => BCChangeRector::ADD_OPTIONAL_PARAMETER,
                 'position' => count($method->getParameters()),
                 'parameter' => $this->stringArgument($arguments, 'parameterName', 1),
                 'type' => $this->stringArgument($arguments, 'parameterType', 2),
@@ -110,7 +112,7 @@ final class BCChangeConfigGenerator
             $parameter = $this->parameter($method, $parameterName);
 
             return $change + [
-                'kind' => FutureCompatibleBCChangeRector::WIDEN_PARAMETER_TYPE,
+                'kind' => BCChangeRector::WIDEN_PARAMETER_TYPE,
                 'parameter' => $parameterName,
                 'currentType' => $parameter->getType() === null ? null : (string) $parameter->getType(),
                 'type' => $this->stringArgument($arguments, 'newType', 2),
@@ -119,9 +121,42 @@ final class BCChangeConfigGenerator
 
         if ($attribute === $this->attributeNamespace . 'ReturnTypeNarrowing') {
             return $change + [
-                'kind' => FutureCompatibleBCChangeRector::NARROW_RETURN_TYPE,
+                'kind' => BCChangeRector::NARROW_RETURN_TYPE,
                 'currentType' => $method->getReturnType() === null ? null : (string) $method->getReturnType(),
                 'type' => $this->stringArgument($arguments, 'newType', 1),
+            ];
+        }
+
+        if ($attribute === $this->attributeNamespace . 'ParameterNameChange') {
+            $parameterName = $this->stringArgument($arguments, 'parameterName', 1);
+            $parameter = $this->parameter($method, $parameterName);
+
+            return $change + [
+                'kind' => BCChangeRector::RENAME_PARAMETER,
+                'position' => $parameter->getPosition(),
+                'parameter' => $parameterName,
+                'newName' => $this->stringArgument($arguments, 'newName', 2),
+                'parametersBefore' => $this->parametersBefore($method, $parameter->getPosition()),
+            ];
+        }
+
+        if ($attribute === $this->attributeNamespace . 'ParameterRemoval') {
+            $parameterName = $this->stringArgument($arguments, 'parameterName', 1);
+            $parameter = $this->parameter($method, $parameterName);
+
+            return $change + [
+                'kind' => BCChangeRector::REMOVE_PARAMETER,
+                'position' => $parameter->getPosition(),
+                'parameter' => $parameterName,
+            ];
+        }
+
+        if ($attribute === $this->attributeNamespace . 'NewRequiredParameter') {
+            return $change + [
+                'kind' => BCChangeRector::ADD_REQUIRED_PARAMETER,
+                'position' => count($method->getParameters()),
+                'parameter' => $this->stringArgument($arguments, 'parameterName', 1),
+                'type' => $this->stringArgument($arguments, 'parameterType', 2),
             ];
         }
 
@@ -137,11 +172,31 @@ final class BCChangeConfigGenerator
         }
 
         return $change + [
-            'kind' => FutureCompatibleBCChangeRector::EXPLICIT_CURRENT_DEFAULT,
+            'kind' => BCChangeRector::EXPLICIT_CURRENT_DEFAULT,
             'position' => $parameter->getPosition(),
             'parameter' => $parameterName,
             'default' => $parameter->getDefaultValue(),
         ];
+    }
+
+    /** @return list<array{name: string, hasDefault: bool, default?: mixed}> */
+    private function parametersBefore(\ReflectionMethod $method, int $position): array
+    {
+        $parameters = [];
+
+        foreach (array_slice($method->getParameters(), 0, $position) as $parameter) {
+            $item = [
+                'name' => $parameter->getName(),
+                'hasDefault' => $parameter->isDefaultValueAvailable(),
+            ];
+            if ($parameter->isDefaultValueAvailable()) {
+                $item['default'] = $parameter->getDefaultValue();
+            }
+
+            $parameters[] = $item;
+        }
+
+        return $parameters;
     }
 
     /** @param array<int|string, mixed> $arguments */
@@ -164,6 +219,24 @@ final class BCChangeConfigGenerator
         }
 
         throw new \RuntimeException(sprintf('Cannot resolve parameter %s::%s($%s).', $method->getDeclaringClass()->getName(), $method->getName(), $parameterName));
+    }
+
+    /** @param list<array<string, mixed>> $changes */
+    private function sort(array &$changes): void
+    {
+        usort($changes, static fn (array $left, array $right): int => [
+            $left['version'],
+            $left['class'],
+            $left['method'],
+            $left['kind'],
+            $left['parameter'] ?? '',
+        ] <=> [
+            $right['version'],
+            $right['class'],
+            $right['method'],
+            $right['kind'],
+            $right['parameter'] ?? '',
+        ]);
     }
 
     /** @param array<array-key, mixed> $values */

@@ -43,14 +43,37 @@ composer install
 
 ## Generate BC-change migrations
 
-The Shopware 6.8 set contains forward-compatible declaration and call-site changes generated from
-Shopware's BC-change attributes. Regenerate them from an optimized Shopware Composer class map:
+Shopware's BC-change attributes are available as a generated, historical manifest. Configure the
+minimum Shopware version supported by the project and the version it is preparing for:
+
+```php
+use Frosh\Rector\Rule\BCChange\BCChangeRector;
+use Frosh\Rector\Set\BCChangeSet;
+use Rector\Config\RectorConfig;
+
+return RectorConfig::configure()
+    ->withConfiguredRule(
+        BCChangeRector::class,
+        BCChangeSet::forVersionRange(
+            minimumVersion: '6.7.0',
+            targetVersion: '6.8.0',
+        ),
+    );
+```
+
+Changes newer than the target are ignored. Changes newer than the minimum use a transformation
+that remains compatible with both Shopware versions. Changes included in the minimum use the
+target-only migration, allowing obsolete compatibility code to be removed.
+
+Regenerate one version from an optimized Shopware Composer class map:
 
 ```bash
 composer dump-autoload --optimize
-./bin/generate-bc-change-config.php [SHOPWARE]/vendor/autoload.php v6.8.0 config/v6.8/bc-changes.php
+./bin/generate-bc-change-config.php [SHOPWARE]/vendor/autoload.php v6.8.0 config/bc-changes.php
 ```
 
-The generator currently covers `NewOptionalParameter`, `ParameterDefaultValueChange`,
+The generator replaces only entries for the requested version, preserving older changes for later
+target-only migrations. It covers `NewOptionalParameter`, `NewRequiredParameter`,
+`ParameterDefaultValueChange`, `ParameterNameChange`, `ParameterRemoval`,
 `ParameterTypeWidening`, and `ReturnTypeNarrowing`. Other attributes remain diagnostics until their
 migration can be expressed without guessing application behavior.

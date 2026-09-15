@@ -23,7 +23,15 @@ if (!is_file($classMapFile)) {
 /** @var array<class-string, string> $classMap */
 $classMap = require $classMapFile;
 $shopwareSource = dirname($autoloadFile, 2) . '/src/';
-$supportedAttributes = ['NewOptionalParameter', 'ParameterDefaultValueChange', 'ParameterTypeWidening', 'ReturnTypeNarrowing'];
+$supportedAttributes = [
+    'NewOptionalParameter',
+    'NewRequiredParameter',
+    'ParameterDefaultValueChange',
+    'ParameterNameChange',
+    'ParameterRemoval',
+    'ParameterTypeWidening',
+    'ReturnTypeNarrowing',
+];
 $classes = array_keys(array_filter(
     $classMap,
     static function (string $file, string $class) use ($shopwareSource, $supportedAttributes, $version): bool {
@@ -51,7 +59,13 @@ $classes = array_keys(array_filter(
 ));
 
 $generator = new BCChangeConfigGenerator();
-$configuration = $generator->render($generator->collect($classes, $version));
+$existingChanges = is_file($outputFile) ? require $outputFile : [];
+if (!is_array($existingChanges)) {
+    throw new RuntimeException(sprintf('Existing manifest "%s" must return an array.', $outputFile));
+}
+
+$changes = $generator->replaceVersion($existingChanges, $generator->collect($classes, $version), $version);
+$configuration = $generator->render($changes);
 
 if (file_put_contents($outputFile, $configuration) === false) {
     throw new RuntimeException(sprintf('Could not write generated configuration "%s".', $outputFile));
