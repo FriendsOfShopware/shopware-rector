@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Frosh\Rector\Rule\v68;
 
+use Frosh\Rector\Version\ShopwareVersionRange;
+use Frosh\Rector\Version\VersionAwareRectorInterface;
 use PhpParser\Node;
 use PhpParser\Node\Expr\MethodCall;
 use PhpParser\Node\Expr\NullsafeMethodCall;
@@ -13,9 +15,19 @@ use Rector\Rector\AbstractRector;
 use Symplify\RuleDocGenerator\ValueObject\CodeSample\CodeSample;
 use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 
-final class CartBehaviorIsRecalculationRector extends AbstractRector
+final class CartBehaviorIsRecalculationRector extends AbstractRector implements VersionAwareRectorInterface
 {
     private const CART_BEHAVIOR = 'Shopware\Core\Checkout\Cart\CartBehavior';
+
+    public static function isActive(ShopwareVersionRange $versions): bool
+    {
+        return $versions->minimumIsAtLeast('6.7.2') && $versions->targetIsAtLeast('6.8.0');
+    }
+
+    public static function configuration(ShopwareVersionRange $versions): array
+    {
+        return [];
+    }
 
     public function getRuleDefinition(): RuleDefinition
     {

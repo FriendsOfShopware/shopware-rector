@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Frosh\Rector\Rule\v68;
 
+use Frosh\Rector\Version\ShopwareVersionRange;
+use Frosh\Rector\Version\VersionAwareRectorInterface;
 use PhpParser\Node;
 use PhpParser\Node\Arg;
 use PhpParser\Node\Expr\FuncCall;
@@ -21,9 +23,19 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  * Rewrites usages of the EntitySearchResult methods that are deprecated for Shopware 6.8 to the
  * getEntities() delegation their deprecation messages prescribe.
  */
-final class EntitySearchResultGetEntitiesRector extends AbstractRector
+final class EntitySearchResultGetEntitiesRector extends AbstractRector implements VersionAwareRectorInterface
 {
     private const ENTITY_SEARCH_RESULT = 'Shopware\Core\Framework\DataAbstractionLayer\Search\EntitySearchResult';
+
+    public static function isActive(ShopwareVersionRange $versions): bool
+    {
+        return $versions->minimumIsAtLeast('6.7.0') && $versions->targetIsAtLeast('6.8.0');
+    }
+
+    public static function configuration(ShopwareVersionRange $versions): array
+    {
+        return [];
+    }
 
     /**
      * Methods deprecated with a "Use getEntities()->x() instead" replacement. Deprecated methods

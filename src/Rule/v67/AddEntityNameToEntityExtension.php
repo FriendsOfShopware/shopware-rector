@@ -2,6 +2,8 @@
 
 namespace Frosh\Rector\Rule\v67;
 
+use Frosh\Rector\Version\ShopwareVersionRange;
+use Frosh\Rector\Version\VersionAwareRectorInterface;
 use PhpParser\Modifiers;
 use PhpParser\Node;
 use PHPStan\Type\ObjectType;
@@ -10,9 +12,19 @@ use Rector\Rector\AbstractRector;
 use Symplify\RuleDocGenerator\ValueObject\CodeSample\CodeSample;
 use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 
-final class AddEntityNameToEntityExtension extends AbstractRector implements ConfigurableRectorInterface
+final class AddEntityNameToEntityExtension extends AbstractRector implements ConfigurableRectorInterface, VersionAwareRectorInterface
 {
-    private bool $backwardsCompatible = true;
+    private bool $removeDefinitionClass = false;
+
+    public static function isActive(ShopwareVersionRange $versions): bool
+    {
+        return $versions->minimumIsAtLeast('6.5.0') && $versions->targetIsAtLeast('6.7.0');
+    }
+
+    public static function configuration(ShopwareVersionRange $versions): array
+    {
+        return ['minimumVersion' => $versions->minimum];
+    }
 
     public function getRuleDefinition(): RuleDefinition
     {
@@ -81,7 +93,7 @@ final class AddEntityNameToEntityExtension extends AbstractRector implements Con
             }
         }
 
-        if (!$this->backwardsCompatible) {
+        if ($this->removeDefinitionClass) {
             // remove getDefinitionClass method
             $node->stmts = array_values(array_filter($node->stmts, static function (Node\Stmt $stmt): bool {
                 return !$stmt instanceof Node\Stmt\ClassMethod || $stmt->name->toString() !== 'getDefinitionClass';
@@ -107,6 +119,7 @@ final class AddEntityNameToEntityExtension extends AbstractRector implements Con
 
     public function configure(array $configuration): void
     {
-        $this->backwardsCompatible = $configuration['backwardsCompatible'] ?? true;
+        $minimumVersion = (string) ($configuration['minimumVersion'] ?? '6.5.0');
+        $this->removeDefinitionClass = version_compare($minimumVersion, '6.7.0', '>=');
     }
 }

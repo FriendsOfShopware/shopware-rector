@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Frosh\Rector\Rule\v67;
 
+use Frosh\Rector\Version\ShopwareVersionRange;
+use Frosh\Rector\Version\VersionAwareRectorInterface;
 use PhpParser\Node;
 use PHPStan\Type\ObjectType;
 use Rector\Rector\AbstractRector;
@@ -11,8 +13,18 @@ use Rector\ValueObject\MethodName;
 use Symplify\RuleDocGenerator\ValueObject\CodeSample\CodeSample;
 use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 
-final class AddLoggerToScheduledTaskConstructorRector extends AbstractRector
+final class AddLoggerToScheduledTaskConstructorRector extends AbstractRector implements VersionAwareRectorInterface
 {
+    public static function isActive(ShopwareVersionRange $versions): bool
+    {
+        return $versions->minimumIsAtLeast('6.6.0') && $versions->targetIsAtLeast('6.7.0');
+    }
+
+    public static function configuration(ShopwareVersionRange $versions): array
+    {
+        return [];
+    }
+
     public function getRuleDefinition(): RuleDefinition
     {
         return new RuleDefinition('Ensure that the parent constructor is called with a Psr\Log\LoggerInterface as second argument.', [

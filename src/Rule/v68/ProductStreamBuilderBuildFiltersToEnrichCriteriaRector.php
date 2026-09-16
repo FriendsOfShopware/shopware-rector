@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Frosh\Rector\Rule\v68;
 
+use Frosh\Rector\Version\ShopwareVersionRange;
+use Frosh\Rector\Version\VersionAwareRectorInterface;
 use PhpParser\Comment;
 use PhpParser\Node;
 use PhpParser\Node\Arg;
@@ -18,9 +20,19 @@ use Rector\Rector\AbstractRector;
 use Symplify\RuleDocGenerator\ValueObject\CodeSample\CodeSample;
 use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 
-final class ProductStreamBuilderBuildFiltersToEnrichCriteriaRector extends AbstractRector
+final class ProductStreamBuilderBuildFiltersToEnrichCriteriaRector extends AbstractRector implements VersionAwareRectorInterface
 {
     private const INTERFACE = 'Shopware\Core\Content\ProductStream\Service\ProductStreamBuilderInterface';
+
+    public static function isActive(ShopwareVersionRange $versions): bool
+    {
+        return $versions->minimumIsAtLeast('6.7.13') && $versions->targetIsAtLeast('6.8.0');
+    }
+
+    public static function configuration(ShopwareVersionRange $versions): array
+    {
+        return [];
+    }
 
     public function getRuleDefinition(): RuleDefinition
     {
