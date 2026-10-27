@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use Frosh\Rector\Rule\Arguments\Rector\MethodCall\RemoveMethodCallParamRector;
+use Frosh\Rector\Rule\Arguments\ValueObject\RemoveMethodCallParam;
 use Frosh\Rector\Rule\Class_\InterfaceReplacedWithAbstractClass;
 use Frosh\Rector\Rule\Class_\InterfaceReplacedWithAbstractClassRector;
 use Frosh\Rector\Rule\ClassConstructor\RemoveArgumentFromClassConstruct;
@@ -13,8 +15,6 @@ use Frosh\Rector\Rule\v65\MigrateCaptchaAnnotationToRouteRector;
 use Frosh\Rector\Rule\v65\MigrateLoginRequiredAnnotationToRouteRector;
 use Frosh\Rector\Rule\v65\MigrateRouteScopeToRouteDefaults;
 use Frosh\Rector\Rule\v65\ThumbnailGenerateSingleToMultiGenerateRector;
-use Rector\Arguments\Rector\MethodCall\RemoveMethodCallParamRector;
-use Rector\Arguments\ValueObject\RemoveMethodCallParam;
 use Rector\Config\RectorConfig;
 use Rector\Renaming\Rector\MethodCall\RenameMethodRector;
 use Rector\Renaming\Rector\Name\RenameClassRector;
