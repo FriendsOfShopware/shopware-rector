@@ -4,6 +4,9 @@ This project extends Rector with multiple Rules for Shopware specific.
 
 See available [Shopware rules](/docs/rector_rules_overview.md)
 
+For Shopware 6.8, use `ShopwareSetList::SHOPWARE_6_8_0`.
+See the [6.8 migration coverage and manual steps](docs/shopware-6.8.md).
+
 
 ## Install
 

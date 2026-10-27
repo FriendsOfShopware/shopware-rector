@@ -1,4 +1,6 @@
-# 11 Rules Overview
+# Rules Overview
+
+For Shopware 6.8, see the [migration coverage and manual steps](shopware-6.8.md).
 
 ## AddArgumentToClassWithoutDefaultRector
 
@@ -261,3 +263,30 @@ Move single thumbnail generation call to batch
 ```
 
 <br>
+
+## Shopware 6.8 rules
+
+Enable these rules together with `ShopwareSetList::SHOPWARE_6_8_0`.
+The set also configures Rector's class, method, constant and property renaming rules.
+
+- [CacheRouteStatesRector](../src/Rule/v68/CacheRouteStatesRector.php)
+- [ConstraintOptionsToNamedArgumentsRector](../src/Rule/v68/ConstraintOptionsToNamedArgumentsRector.php)
+- [CustomerEmailConstraintContextRector](../src/Rule/v68/CustomerEmailConstraintContextRector.php)
+- [EntityDefinitionParentConstructorRector](../src/Rule/v68/EntityDefinitionParentConstructorRector.php)
+- [EntitySearchResultGetEntitiesRector](../src/Rule/v68/EntitySearchResultGetEntitiesRector.php)
+- [FilterablePriceDefinitionRector](../src/Rule/v68/FilterablePriceDefinitionRector.php)
+- [MailFlowCriteriaEventRector](../src/Rule/v68/MailFlowCriteriaEventRector.php)
+- [PrimaryOrderAssociationRector](../src/Rule/v68/PrimaryOrderAssociationRector.php)
+- [ProductStreamBuilderBuildFiltersToEnrichCriteriaRector](../src/Rule/v68/ProductStreamBuilderBuildFiltersToEnrichCriteriaRector.php)
+- [ReflectionHelperToNativeReflectionRector](../src/Rule/v68/ReflectionHelperToNativeReflectionRector.php)
+- [RemoteThumbnailMediaRector](../src/Rule/v68/RemoteThumbnailMediaRector.php)
+- [RemovedTraitHelpersRector](../src/Rule/v68/RemovedTraitHelpersRector.php)
+- [RuleContainerUnserializeRector](../src/Rule/v68/RuleContainerUnserializeRector.php)
+- [Shopware68ConstructorRector](../src/Rule/v68/Shopware68ConstructorRector.php)
+- [Shopware68DecoratorRector](../src/Rule/v68/Shopware68DecoratorRector.php)
+- [Shopware68ExceptionRector](../src/Rule/v68/Shopware68ExceptionRector.php)
+- [Shopware68MethodCallRector](../src/Rule/v68/Shopware68MethodCallRector.php)
+- [Shopware68PropertyReadRector](../src/Rule/v68/Shopware68PropertyReadRector.php)
+- [Shopware68SignatureRector](../src/Rule/v68/Shopware68SignatureRector.php)
+- [Shopware68TypeRector](../src/Rule/v68/Shopware68TypeRector.php)
+- [TranslationLoaderLocaleRector](../src/Rule/v68/TranslationLoaderLocaleRector.php)

@@ -2,6 +2,12 @@
 
 namespace Shopware\Core\Content\Product\SalesChannel\Listing;
 
-use Shopware\Core\Framework\DataAbstractionLayer\Search\EntitySearchResult;
+use Shopware\Core\Framework\DataAbstractionLayer\EntityCollection;
 
-class ProductListingResult extends EntitySearchResult {}
+class ProductListingResult
+{
+    public function getEntities(): EntityCollection
+    {
+        return new EntityCollection();
+    }
+}

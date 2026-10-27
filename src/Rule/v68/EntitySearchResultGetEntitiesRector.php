@@ -6,9 +6,11 @@ namespace Frosh\Rector\Rule\v68;
 
 use PhpParser\Node;
 use PhpParser\Node\Arg;
+use PhpParser\Node\ArrayItem;
 use PhpParser\Node\Expr\FuncCall;
 use PhpParser\Node\Expr\MethodCall;
 use PhpParser\Node\Expr\NullsafeMethodCall;
+use PhpParser\Node\Expr\YieldFrom;
 use PhpParser\Node\Identifier;
 use PhpParser\Node\Name;
 use PhpParser\Node\Stmt\Foreach_;
@@ -27,11 +29,13 @@ final class EntitySearchResultGetEntitiesRector extends AbstractRector
 
     /**
      * Methods deprecated with a "Use getEntities()->x() instead" replacement. Deprecated methods
-     * without such a replacement (add(), clear(), setEntity(), ...) have no mechanical rewrite
+     * without such a replacement (setEntity(), setPage(), ...) have no mechanical rewrite
      * and stay out of scope.
      */
     private const DELEGATED_METHODS = [
         'count',
+        'add',
+        'clear',
         'fill',
         'filter',
         'filterAndReduceByProperty',
@@ -49,6 +53,7 @@ final class EntitySearchResultGetEntitiesRector extends AbstractRector
         'getIds',
         'getKeys',
         'getList',
+        'getIterator',
         'has',
         'insert',
         'isEmpty',
@@ -71,6 +76,7 @@ final class EntitySearchResultGetEntitiesRector extends AbstractRector
     private const DELEGATED_FUNCTIONS = [
         'count',
         'iterator_count',
+        'iterator_apply',
         'iterator_to_array',
         'sizeof',
     ];
@@ -98,11 +104,22 @@ final class EntitySearchResultGetEntitiesRector extends AbstractRector
 
     public function getNodeTypes(): array
     {
-        return [MethodCall::class, NullsafeMethodCall::class, Foreach_::class, FuncCall::class];
+        return [MethodCall::class, NullsafeMethodCall::class, Foreach_::class, FuncCall::class, YieldFrom::class, Arg::class, ArrayItem::class];
     }
 
     public function refactor(Node $node): ?Node
     {
+        if ($node instanceof YieldFrom && $this->isSearchResult($node->expr)) {
+            $node->expr = new MethodCall($node->expr, 'getEntities');
+
+            return $node;
+        }
+        if (($node instanceof Arg || $node instanceof ArrayItem) && $node->unpack && $this->isSearchResult($node->value)) {
+            $node->value = new MethodCall($node->value, 'getEntities');
+
+            return $node;
+        }
+
         return match (true) {
             $node instanceof MethodCall, $node instanceof NullsafeMethodCall => $this->refactorMethodCall($node),
             $node instanceof Foreach_ => $this->refactorForeach($node),
@@ -148,7 +165,7 @@ final class EntitySearchResultGetEntitiesRector extends AbstractRector
         }
 
         $firstArg = $call->args[0] ?? null;
-        if (!$firstArg instanceof Arg || !$this->isSearchResult($firstArg->value)) {
+        if (!$firstArg instanceof Arg || $firstArg->unpack || !$this->isSearchResult($firstArg->value)) {
             return null;
         }
 
@@ -159,6 +176,12 @@ final class EntitySearchResultGetEntitiesRector extends AbstractRector
 
     private function isSearchResult(Node $node): bool
     {
-        return $this->isObjectType($node, new ObjectType(self::ENTITY_SEARCH_RESULT));
+        foreach ([self::ENTITY_SEARCH_RESULT, 'Shopware\Core\Content\Product\SalesChannel\Listing\ProductListingResult', 'Shopware\Core\Content\Product\SalesChannel\Review\ProductReviewResult'] as $class) {
+            if ($this->isObjectType($node, new ObjectType($class))) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

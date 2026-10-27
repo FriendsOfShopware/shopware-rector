@@ -55,7 +55,7 @@ final class InterfaceReplacedWithAbstractClassRector extends AbstractRector impl
 
         foreach ($this->configuration as $config) {
             if ($node instanceof Class_) {
-                if ($node->implements === []) {
+                if ($node->implements === [] || $node->extends !== null) {
                     continue;
                 }
 
