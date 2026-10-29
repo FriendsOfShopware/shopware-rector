@@ -4,6 +4,8 @@ This project extends Rector with multiple Rules for Shopware specific.
 
 See available [Shopware rules](/docs/rector_rules_overview.md)
 
+For migrations already supported on Shopware 6.7.0.0, see the [6.7 forward compatibility guide](docs/shopware-6.7.md).
+
 
 ## Install
 

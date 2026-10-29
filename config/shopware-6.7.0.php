@@ -12,6 +12,7 @@ use Rector\Symfony\Set\SymfonySetList;
 
 return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->import(__DIR__ . '/v6.7/renaming.php');
+    $rectorConfig->import(__DIR__ . '/v6.7/migrations.php');
 
     $rectorConfig->sets([
         SymfonySetList::COMPOSER_BASED,
