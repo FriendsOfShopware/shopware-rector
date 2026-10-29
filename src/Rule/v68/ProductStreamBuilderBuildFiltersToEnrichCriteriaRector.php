@@ -8,6 +8,7 @@ use PhpParser\Comment;
 use PhpParser\Node;
 use PhpParser\Node\Arg;
 use PhpParser\Node\Expr\Assign;
+use PhpParser\Node\Expr\Closure;
 use PhpParser\Node\Expr\MethodCall;
 use PhpParser\Node\Expr\Variable;
 use PhpParser\Node\Stmt\ClassMethod;
@@ -15,12 +16,15 @@ use PhpParser\Node\Stmt\Expression;
 use PhpParser\Node\Stmt\Function_;
 use PHPStan\Type\ObjectType;
 use Rector\Rector\AbstractRector;
+use Rector\PhpParser\Node\BetterNodeFinder;
 use Symplify\RuleDocGenerator\ValueObject\CodeSample\CodeSample;
 use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 
 final class ProductStreamBuilderBuildFiltersToEnrichCriteriaRector extends AbstractRector
 {
     private const INTERFACE = 'Shopware\Core\Content\ProductStream\Service\ProductStreamBuilderInterface';
+
+    public function __construct(private readonly BetterNodeFinder $betterNodeFinder) {}
 
     public function getRuleDefinition(): RuleDefinition
     {
@@ -42,11 +46,11 @@ final class ProductStreamBuilderBuildFiltersToEnrichCriteriaRector extends Abstr
 
     public function getNodeTypes(): array
     {
-        return [ClassMethod::class, Function_::class];
+        return [ClassMethod::class, Function_::class, Closure::class, Node\Stmt\If_::class, Node\Stmt\ElseIf_::class, Node\Stmt\Else_::class, Node\Stmt\Foreach_::class, Node\Stmt\For_::class, Node\Stmt\While_::class, Node\Stmt\Do_::class, Node\Stmt\TryCatch::class, Node\Stmt\Catch_::class, Node\Stmt\Finally_::class, Node\Stmt\Case_::class];
     }
 
     /**
-     * @param ClassMethod|Function_ $node
+     * @param ClassMethod|Function_|Closure|Node\Stmt\If_|Node\Stmt\ElseIf_|Node\Stmt\Else_|Node\Stmt\Foreach_|Node\Stmt\For_|Node\Stmt\While_|Node\Stmt\Do_|Node\Stmt\TryCatch|Node\Stmt\Catch_|Node\Stmt\Finally_|Node\Stmt\Case_ $node
      */
     public function refactor(Node $node): ?Node
     {
@@ -54,7 +58,7 @@ final class ProductStreamBuilderBuildFiltersToEnrichCriteriaRector extends Abstr
             return null;
         }
 
-        [$newStmts, $changed] = $this->processStmts($node->stmts);
+        [$newStmts, $changed] = $this->processStmts($node->stmts, $node instanceof ClassMethod || $node instanceof Function_ || $node instanceof Closure);
 
         if (!$changed) {
             return null;
@@ -70,7 +74,7 @@ final class ProductStreamBuilderBuildFiltersToEnrichCriteriaRector extends Abstr
      *
      * @return array{Node\Stmt[], bool}
      */
-    private function processStmts(array $stmts): array
+    private function processStmts(array $stmts, bool $allowAssignment): array
     {
         $newStmts = [];
         $changed = false;
@@ -81,7 +85,13 @@ final class ProductStreamBuilderBuildFiltersToEnrichCriteriaRector extends Abstr
             $nextStmt = $stmts[$i + 1] ?? null;
 
             // Pattern 1: $var = $x->buildFilters($id, $ctx); $criteria->addFilter(...$var);
-            $enrichCriteriaCall = $this->matchAssignPlusAddFilter($stmt, $nextStmt);
+            $enrichCriteriaCall = $allowAssignment ? $this->matchAssignPlusAddFilter($stmt, $nextStmt) : null;
+            if ($enrichCriteriaCall !== null && $stmt instanceof Expression && $stmt->expr instanceof Assign && $stmt->expr->var instanceof Variable) {
+                $variable = $stmt->expr->var;
+                if ($this->betterNodeFinder->findFirst(array_slice($stmts, $i + 2), static fn (Node $later): bool => $later instanceof Variable && $later->name === $variable->name) !== null) {
+                    $enrichCriteriaCall = null;
+                }
+            }
             if ($enrichCriteriaCall !== null) {
                 $newStmts[] = new Expression($enrichCriteriaCall);
                 $i++;
@@ -98,7 +108,13 @@ final class ProductStreamBuilderBuildFiltersToEnrichCriteriaRector extends Abstr
             }
 
             // Fallback: buildFilters() in an unrecognised context — add a TODO comment
-            if ($this->findBuildFiltersCall($stmt) !== null) {
+            if (($stmt instanceof Expression || $stmt instanceof Node\Stmt\Return_) && $this->findBuildFiltersCall($stmt) !== null) {
+                foreach ($stmt->getComments() as $comment) {
+                    if (str_contains($comment->getText(), 'TODO: Replace buildFilters()')) {
+                        $newStmts[] = $stmt;
+                        continue 2;
+                    }
+                }
                 $stmt->setAttribute('comments', [
                     ...$stmt->getComments(),
                     new Comment('// TODO: Replace buildFilters() call with AbstractProductStreamBuilder::enrichCriteria() - please check manually'),
@@ -129,11 +145,16 @@ final class ProductStreamBuilderBuildFiltersToEnrichCriteriaRector extends Abstr
         if (!$this->isName($buildFiltersCall->name, 'buildFilters')) {
             return null;
         }
-        if (!$this->isObjectType($buildFiltersCall->var, new ObjectType(self::INTERFACE))) {
+        if (!$this->isBuilder($buildFiltersCall->var)) {
             return null;
         }
         if (count($buildFiltersCall->args) !== 2) {
             return null;
+        }
+        foreach ($buildFiltersCall->args as $arg) {
+            if (!$arg instanceof Arg || $arg->unpack || ($arg->name !== null && !in_array($arg->name->toString(), ['id', 'context'], true))) {
+                return null;
+            }
         }
 
         $filtersVarName = $assign->var->name;
@@ -144,6 +165,9 @@ final class ProductStreamBuilderBuildFiltersToEnrichCriteriaRector extends Abstr
 
         $addFilterCall = $nextStmt->expr;
         if (!$this->isName($addFilterCall->name, 'addFilter')) {
+            return null;
+        }
+        if (count($addFilterCall->args) !== 1) {
             return null;
         }
 
@@ -174,6 +198,9 @@ final class ProductStreamBuilderBuildFiltersToEnrichCriteriaRector extends Abstr
         if (!$this->isName($addFilterCall->name, 'addFilter')) {
             return null;
         }
+        if (count($addFilterCall->args) !== 1) {
+            return null;
+        }
 
         foreach ($addFilterCall->args as $arg) {
             if (!$arg instanceof Arg || !$arg->unpack || !$arg->value instanceof MethodCall) {
@@ -184,11 +211,16 @@ final class ProductStreamBuilderBuildFiltersToEnrichCriteriaRector extends Abstr
             if (!$this->isName($buildFiltersCall->name, 'buildFilters')) {
                 continue;
             }
-            if (!$this->isObjectType($buildFiltersCall->var, new ObjectType(self::INTERFACE))) {
+            if (!$this->isBuilder($buildFiltersCall->var)) {
                 continue;
             }
             if (count($buildFiltersCall->args) !== 2) {
                 continue;
+            }
+            foreach ($buildFiltersCall->args as $argument) {
+                if (!$argument instanceof Arg || $argument->unpack || ($argument->name !== null && !in_array($argument->name->toString(), ['id', 'context'], true))) {
+                    continue 2;
+                }
             }
 
             return new MethodCall(
@@ -209,7 +241,7 @@ final class ProductStreamBuilderBuildFiltersToEnrichCriteriaRector extends Abstr
     {
         if ($node instanceof MethodCall
             && $this->isName($node->name, 'buildFilters')
-            && $this->isObjectType($node->var, new ObjectType(self::INTERFACE))
+            && $this->isBuilder($node->var)
         ) {
             return $node;
         }
@@ -234,5 +266,16 @@ final class ProductStreamBuilderBuildFiltersToEnrichCriteriaRector extends Abstr
         }
 
         return null;
+    }
+
+    private function isBuilder(Node $node): bool
+    {
+        foreach ([self::INTERFACE, 'Shopware\Core\Content\ProductStream\Service\AbstractProductStreamBuilder', 'Shopware\Core\Content\ProductStream\Service\ProductStreamBuilder'] as $class) {
+            if ($this->isObjectType($node, new ObjectType($class))) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
