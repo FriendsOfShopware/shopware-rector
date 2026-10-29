@@ -5,5 +5,6 @@ declare(strict_types=1);
 use Rector\Config\RectorConfig;
 
 return static function (RectorConfig $rectorConfig): void {
+    $rectorConfig->import(__DIR__ . '/v6.7/migrations.php');
     $rectorConfig->import(__DIR__ . '/v6.8/renaming.php');
 };
