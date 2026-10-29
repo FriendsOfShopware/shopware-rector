@@ -20,29 +20,8 @@ The guide contains forward-looking changes; rules also recognize types whose inh
 
 ## Early adoption on Shopware 6.7
 
-`ShopwareSetList::SHOPWARE_6_7_0` also enables these migrations:
-
-| Rule | Compatibility with Shopware 6.7.0.0 |
-| --- | --- |
-| `ReflectionHelperToNativeReflectionRector` | The [original helper](https://github.com/shopware/shopware/blob/v6.7.0.0/src/Core/Framework/Test/TestCaseHelper/ReflectionHelper.php) wraps native reflection, which supports these operations on the required PHP 8.2 baseline. |
-| `FilterablePriceDefinitionRector` | [FilterableInterface](https://github.com/shopware/shopware/blob/v6.7.0.0/src/Core/Checkout/Cart/Price/Struct/FilterableInterface.php) already declares `getFilter(): ?Rule`; matching custom price definitions can implement it now. |
-
-Both sets import the same registration for these two rules.
-Their existing `Rule\v68` class names remain available.
-Adding `FilterableInterface` also makes a custom price definition eligible for the interface checks already used by 6.7 promotion discount packaging; test the affected promotions.
-
-The compatibility baseline is **6.7.0.0**, rather than the latest 6.7 patch.
-The other 6.8 rules are not enabled wholesale in the 6.7 set:
-
-| Candidate | Reason to keep it in the 6.8 set |
-| --- | --- |
-| Result collection delegation | In [6.7.0.0](https://github.com/shopware/shopware/blob/v6.7.0.0/src/Core/Framework/DataAbstractionLayer/Search/EntitySearchResult.php), `filter()` and `slice()` return result wrappers with metadata, and mutations can affect separate wrapper and entity-collection storage. |
-| Email constraint context | [The 6.7 constructor](https://github.com/shopware/shopware/blob/v6.7.0.0/src/Core/Checkout/Customer/Validation/Constraint/CustomerEmailUnique.php) accepts separate framework and sales-channel contexts; replacing one with the other can change the context returned. |
-| Constraint constructors, exception factories, configuration getters and renamed maintenance APIs | The replacement signatures or methods are missing from 6.7.0.0. |
-| Checkout permissions, moved classes, product-stream and number-range abstractions | Their replacement classes are missing from 6.7.0.0. |
-| Entity-definition constructor removal | The 6.7 parent constructor still initializes the definition's class name. |
-| Mixed helper/type rules | Individual replacements may exist earlier, but the complete rules also reference later APIs, such as `ArrayValues` or the abstract product-stream builder. |
-| Removed cache states, profile labels, primary order associations and remote-thumbnail assignments | These depend on changed behavior or data contracts; the presence of a replacement symbol alone does not establish 6.7 compatibility. |
+The reflection-helper and filterable-price migrations are also enabled by the 6.7 set.
+See the [6.7 forward compatibility guide](shopware-6.7.md) for examples, the 6.7.0.0 baseline and the compatibility audit.
 
 ## Automated PHP changes
 

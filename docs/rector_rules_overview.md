@@ -2,6 +2,14 @@
 
 For Shopware 6.8, see the [migration coverage and manual steps](shopware-6.8.md).
 
+## Shopware 6.7 forward-compatible rules
+
+These rules are enabled by both `ShopwareSetList::SHOPWARE_6_7_0` and `ShopwareSetList::SHOPWARE_6_8_0`.
+See the [compatibility baseline and migration examples](shopware-6.7.md).
+
+- [FilterablePriceDefinitionRector](../src/Rule/v68/FilterablePriceDefinitionRector.php)
+- [ReflectionHelperToNativeReflectionRector](../src/Rule/v68/ReflectionHelperToNativeReflectionRector.php)
+
 ## AddArgumentToClassWithoutDefaultRector
 
 This Rector adds new default arguments in calls of defined methods and class types.
