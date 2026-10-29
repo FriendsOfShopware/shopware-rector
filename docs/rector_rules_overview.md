@@ -1,4 +1,12 @@
-# 11 Rules Overview
+# Rules Overview
+
+## Shopware 6.7 forward-compatible rules
+
+These rules are enabled by both `ShopwareSetList::SHOPWARE_6_7_0` and `ShopwareSetList::SHOPWARE_6_8_0`.
+See the [compatibility baseline and migration examples](shopware-6.7.md).
+
+- [FilterablePriceDefinitionRector](../src/Rule/v68/FilterablePriceDefinitionRector.php)
+- [ReflectionHelperToNativeReflectionRector](../src/Rule/v68/ReflectionHelperToNativeReflectionRector.php)
 
 ## AddArgumentToClassWithoutDefaultRector
 
