@@ -65,6 +65,10 @@ final class RemoveMethodCallParamRector extends AbstractRector implements Config
             return null;
         }
 
+        if ($node->getAttribute(self::class) === true) {
+            return null;
+        }
+
         $hasChanged = false;
 
         foreach ($this->removeMethodCallParams as $removeMethodCallParam) {
@@ -88,6 +92,8 @@ final class RemoveMethodCallParamRector extends AbstractRector implements Config
         if (!$hasChanged) {
             return null;
         }
+
+        $node->setAttribute(self::class, true);
 
         return $node;
     }

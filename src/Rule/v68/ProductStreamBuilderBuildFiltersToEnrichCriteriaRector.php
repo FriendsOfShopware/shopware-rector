@@ -22,6 +22,8 @@ final class ProductStreamBuilderBuildFiltersToEnrichCriteriaRector extends Abstr
 {
     private const INTERFACE = 'Shopware\Core\Content\ProductStream\Service\ProductStreamBuilderInterface';
 
+    private const MANUAL_MIGRATION_COMMENT = '// TODO: Replace buildFilters() call with AbstractProductStreamBuilder::enrichCriteria() - please check manually';
+
     public function getRuleDefinition(): RuleDefinition
     {
         return new RuleDefinition(
@@ -99,9 +101,16 @@ final class ProductStreamBuilderBuildFiltersToEnrichCriteriaRector extends Abstr
 
             // Fallback: buildFilters() in an unrecognised context — add a TODO comment
             if ($this->findBuildFiltersCall($stmt) !== null) {
+                foreach ($stmt->getComments() as $comment) {
+                    if ($comment->getText() === self::MANUAL_MIGRATION_COMMENT) {
+                        $newStmts[] = $stmt;
+                        continue 2;
+                    }
+                }
+
                 $stmt->setAttribute('comments', [
                     ...$stmt->getComments(),
-                    new Comment('// TODO: Replace buildFilters() call with AbstractProductStreamBuilder::enrichCriteria() - please check manually'),
+                    new Comment(self::MANUAL_MIGRATION_COMMENT),
                 ]);
                 $newStmts[] = $stmt;
                 $changed = true;

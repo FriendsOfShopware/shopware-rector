@@ -11,8 +11,11 @@ permissions:
 
 jobs:
   unit:
-    name: PHPUnit
+    name: PHPUnit (Rector ${{ matrix.rector }})
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        rector: ['2.8.0', '^2.8']
 
     steps:
     - uses: actions/checkout@v7
@@ -25,12 +28,12 @@ jobs:
       uses: actions/cache@v6
       with:
         path: vendor
-        key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+        key: ${{ runner.os }}-php-rector-${{ matrix.rector }}-${{ hashFiles('**/composer.json') }}
         restore-keys: |
           ${{ runner.os }}-php-
 
     - name: Install dependencies
-      run: composer install --prefer-dist --no-progress
+      run: composer update --with 'rector/rector:${{ matrix.rector }}' --prefer-dist --no-progress --no-interaction
 
     - name: Run test suite
       run: ./vendor/bin/phpunit

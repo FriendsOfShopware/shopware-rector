@@ -58,6 +58,7 @@ final class AddEntityNameToEntityExtension extends AbstractRector implements Con
         }
 
         $foundGetEntityName = false;
+        $hasChanged = false;
         $targetDefinitionClass = null;
 
         foreach ($node->stmts as $stmt) {
@@ -81,11 +82,12 @@ final class AddEntityNameToEntityExtension extends AbstractRector implements Con
             }
         }
 
-        if (!$this->backwardsCompatible) {
+        if (!$this->backwardsCompatible && $node->getMethod('getDefinitionClass') !== null) {
             // remove getDefinitionClass method
             $node->stmts = array_values(array_filter($node->stmts, static function (Node\Stmt $stmt): bool {
                 return !$stmt instanceof Node\Stmt\ClassMethod || $stmt->name->toString() !== 'getDefinitionClass';
             }));
+            $hasChanged = true;
         }
 
         if (!$foundGetEntityName) {
@@ -100,9 +102,10 @@ final class AddEntityNameToEntityExtension extends AbstractRector implements Con
             }
 
             $node->stmts[] = $classMethod;
+            $hasChanged = true;
         }
 
-        return null;
+        return $hasChanged ? $node : null;
     }
 
     public function configure(array $configuration): void
