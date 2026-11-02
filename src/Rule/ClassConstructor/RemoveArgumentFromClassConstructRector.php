@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Frosh\Rector\Rule\ClassConstructor;
 
-use Frosh\Rector\Rule\ClassMethod\AddArgumentToClassWithoutDefault;
 use PhpParser\Node;
 use PhpParser\Node\Expr\New_;
 use PhpParser\Node\Stmt\Class_;
@@ -17,7 +16,7 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 final class RemoveArgumentFromClassConstructRector extends AbstractRector implements ConfigurableRectorInterface
 {
     /**
-     * @var AddArgumentToClassWithoutDefault[]
+     * @var RemoveArgumentFromClassConstruct[]
      */
     protected array $configuration = [];
 
@@ -54,6 +53,10 @@ final class RemoveArgumentFromClassConstructRector extends AbstractRector implem
      */
     public function refactor(Node $node): ?Node
     {
+        if ($node->getAttribute(self::class) === true) {
+            return null;
+        }
+
         if ($node instanceof New_) {
             return $this->rebuildNew($node);
         }
@@ -66,6 +69,8 @@ final class RemoveArgumentFromClassConstructRector extends AbstractRector implem
         }
 
         if ($changes) {
+            $node->setAttribute(self::class, true);
+
             return $node;
         }
 
@@ -73,7 +78,7 @@ final class RemoveArgumentFromClassConstructRector extends AbstractRector implem
     }
 
     /**
-     * @param AddArgumentToClassWithoutDefault[] $configuration
+     * @param RemoveArgumentFromClassConstruct[] $configuration
      */
     public function configure(array $configuration): void
     {
@@ -99,6 +104,7 @@ final class RemoveArgumentFromClassConstructRector extends AbstractRector implem
 
         if ($hasChanged) {
             $node->args = \array_values($node->args);
+            $node->setAttribute(self::class, true);
 
             return $node;
         }

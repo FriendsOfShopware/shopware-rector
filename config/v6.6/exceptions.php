@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
+use Frosh\Rector\Rule\Transform\Rector\New_\NewToStaticCallRector;
+use Frosh\Rector\Rule\Transform\ValueObject\NewToStaticCall;
 use Rector\Config\RectorConfig;
-use Rector\Transform\Rector\New_\NewToStaticCallRector;
-use Rector\Transform\ValueObject\NewToStaticCall;
 
 return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->import(__DIR__ . '/../config.php');

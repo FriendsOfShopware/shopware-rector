@@ -5,7 +5,7 @@
   "license": "mit",
   "require": {
     "php": "^8.2",
-    "rector/rector": "^2.6.2",
+    "rector/rector": "^2.8",
     "webmozart/assert": "^1 || ^2"
   },
   "require-dev": {
@@ -16,7 +16,7 @@
     "symplify/easy-coding-standard": "~11.2"
   },
   "conflict": {
-    "rector/rector": "<2.6.2"
+    "rector/rector": "<2.8"
   },
   "autoload": {
     "psr-4": {
