@@ -18,6 +18,8 @@ The 6.8 configuration adds optional parameters to overrides, widens parameter ty
 Existing compatible types, explicit arguments, unpacked calls, and first-class callables are preserved.
 Optional parameters are not inserted into variadic signatures.
 Each migration is configured explicitly in [`config/v6.8/bc-changes.php`](../config/v6.8/bc-changes.php).
+Regenerate this configuration with [`bin/generate-bc-change-config.php`](../bin/generate-bc-change-config.php) from Shopware's BC attributes.
+The generator also registers `ClassMoved` mappings with Rector's `RenameClassRector`.
 No Shopware version range is required.
 
 ```diff
