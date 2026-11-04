@@ -29,6 +29,10 @@ return RectorConfig::configure()
     ]);
 ```
 
+The `SHOPWARE_6_8_0` set includes generic BC-change rules configured for Shopware 6.8.
+They add announced optional parameters to overrides, widen parameter types, narrow return types, and make current defaults explicit at call sites.
+Changes are configured directly in `config/v6.8/bc-changes.php`; there is no minimum/target-version configuration or generated migration history.
+
 ## Use directly the config
 
 ```bash
