@@ -7,7 +7,7 @@ use Frosh\Rector\Generator\BCChangeConfigGenerator;
 
 require dirname(__DIR__) . '/vendor/autoload.php';
 
-if ($argc !== 4) {
+if (!isset($argv) || count($argv) !== 4) {
     fwrite(\STDERR, "Usage: bin/generate-bc-change-config.php <shopware-autoload.php> <version> <output.php>\n");
     exit(1);
 }
