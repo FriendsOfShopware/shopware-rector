@@ -41,7 +41,7 @@ return static function (RectorConfig $rectorConfig): void {
         [
             new RenameClassAndConstFetch('Shopware\Core\Checkout\Cart\AbstractCartPersister', 'PERSIST_CART_ERROR_PERMISSION', 'Shopware\Core\Checkout\CheckoutPermissions', 'PERSIST_CART_ERROR'),
 
-            new RenameClassAndConstFetch('Shopware\Core\Checkout\Cart\Delivery\DeliveryProcessor', 'SKIP_DELIVERY_PRICE_RECALCULATION', 'Shopware\Core\Checkout\CheckoutPermissions', 'SKIP_PRODUCT_STOCK_VALIDATION'),
+            new RenameClassAndConstFetch('Shopware\Core\Checkout\Cart\Delivery\DeliveryProcessor', 'SKIP_DELIVERY_PRICE_RECALCULATION', 'Shopware\Core\Checkout\CheckoutPermissions', 'SKIP_DELIVERY_PRICE_RECALCULATION'),
             new RenameClassAndConstFetch('Shopware\Core\Checkout\Cart\Delivery\DeliveryProcessor', 'SKIP_DELIVERY_TAX_RECALCULATION', 'Shopware\Core\Checkout\CheckoutPermissions', 'SKIP_DELIVERY_TAX_RECALCULATION'),
 
             new RenameClassAndConstFetch('Shopware\Core\Checkout\Promotion\Cart\PromotionCollector', 'SKIP_PROMOTION', 'Shopware\Core\Checkout\CheckoutPermissions', 'SKIP_PROMOTION'),
