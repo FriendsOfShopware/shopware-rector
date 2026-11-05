@@ -12,7 +12,6 @@ abstract class AbstractCartFoo
 
 class CartImplt implements CartFoo
 {
-
 }
 
 ?>
