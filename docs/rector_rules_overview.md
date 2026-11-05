@@ -8,6 +8,13 @@ See the [compatibility baseline and migration examples](shopware-6.7.md).
 - [FilterablePriceDefinitionRector](../src/Rule/v68/FilterablePriceDefinitionRector.php)
 - [ReflectionHelperToNativeReflectionRector](../src/Rule/v68/ReflectionHelperToNativeReflectionRector.php)
 
+## Shopware 6.8 rules
+
+These rules are enabled by `ShopwareSetList::SHOPWARE_6_8_0` only, because they need APIs introduced after Shopware 6.7.0.0.
+See the [migration details](shopware-6.8.md).
+
+- [CookieProviderToCookieGroupCollectListenerRector](../src/Rule/v68/CookieProviderToCookieGroupCollectListenerRector.php)
+
 ## AddArgumentToClassWithoutDefaultRector
 
 This Rector adds new default arguments in calls of defined methods and class types.
