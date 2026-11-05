@@ -29,6 +29,23 @@ return RectorConfig::configure()
     ]);
 ```
 
+The `SHOPWARE_6_8_0` set includes generic BC-change rules configured for Shopware 6.8.
+They add announced optional parameters to overrides, widen parameter types, narrow return types, and make current defaults explicit at call sites.
+Changes are configured directly in `config/v6.8/bc-changes.php`; there is no minimum/target-version configuration or generated migration history.
+
+## Regenerate BC changes
+
+Run the generator against a Shopware source checkout with its Composer dependencies installed:
+
+```bash
+php bin/generate-bc-change-config.php /path/to/shopware/vendor/autoload.php v6.8.0 config/v6.8/bc-changes.php
+```
+
+It scans Shopware's `src/` tree and reads BC attributes through reflection, without requiring an optimized Composer class map.
+The version selects the announced changes to generate for the set; it does not introduce runtime version-range configuration.
+The generated config also maps `ClassMoved` attributes through Rector's existing class-renaming rule.
+Other BC attributes that require implementation decisions remain manual migrations.
+
 ## Use directly the config
 
 ```bash

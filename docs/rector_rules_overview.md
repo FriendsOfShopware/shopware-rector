@@ -8,6 +8,31 @@ See the [compatibility baseline and migration examples](shopware-6.7.md).
 - [FilterablePriceDefinitionRector](../src/Rule/v68/FilterablePriceDefinitionRector.php)
 - [ReflectionHelperToNativeReflectionRector](../src/Rule/v68/ReflectionHelperToNativeReflectionRector.php)
 
+## FutureCompatibleBCChangeRector
+
+Applies configured BC changes and is enabled by `ShopwareSetList::SHOPWARE_6_8_0`.
+
+- class: [`Frosh\Rector\Rule\BCChange\FutureCompatibleBCChangeRector`](../src/Rule/BCChange/FutureCompatibleBCChangeRector.php)
+
+The 6.8 configuration adds optional parameters to overrides, widens parameter types, narrows return types, and preserves current defaults at call sites.
+Existing compatible types, explicit arguments, unpacked calls, and first-class callables are preserved.
+Optional parameters are not inserted into variadic signatures.
+Each migration is configured explicitly in [`config/v6.8/bc-changes.php`](../config/v6.8/bc-changes.php).
+Regenerate this configuration with [`bin/generate-bc-change-config.php`](../bin/generate-bc-change-config.php) from Shopware's BC attributes.
+The generator also registers `ClassMoved` mappings with Rector's `RenameClassRector`.
+No Shopware version range is required.
+
+```diff
+ class Extension extends CoreClass
+ {
+-    public function load(string $id): object {}
++    public function load(int|string $id, bool $fresh = false): static {}
+ }
+
+-$core->enabled();
++$core->enabled(enabled: false);
+```
+
 ## AddArgumentToClassWithoutDefaultRector
 
 This Rector adds new default arguments in calls of defined methods and class types.
