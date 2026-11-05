@@ -8,7 +8,6 @@ abstract class AbstractCartPersister {}
 class MyClass implements CartPersisterInterface
 {
     private CartPersisterInterface $cartPersister;
-
     public function __construct(CartPersisterInterface $cartPersister)
     {
         $this->cartPersister = $cartPersister;
