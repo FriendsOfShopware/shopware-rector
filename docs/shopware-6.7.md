@@ -52,6 +52,7 @@ Other proposed 6.8 migrations cannot be enabled wholesale in this set:
 | Email constraint context | [The 6.7 constructor](https://github.com/shopware/shopware/blob/v6.7.0.0/src/Core/Checkout/Customer/Validation/Constraint/CustomerEmailUnique.php) accepts separate framework and sales-channel contexts; replacing one with the other can change the context returned. |
 | Constraint constructors, exception factories, configuration getters and renamed maintenance APIs | The replacement signatures or methods are missing from 6.7.0.0. |
 | Checkout permissions, moved classes, product-stream and number-range abstractions | Their replacement classes are missing from 6.7.0.0. |
+| Cookie provider decorators | The `CookieGroupCollectEvent` exists since 6.7.3.0, so the migration is part of the [6.8 set](shopware-6.8.md). |
 | Entity-definition constructor removal | The 6.7 parent constructor still initializes the definition's class name. |
 | Mixed helper/type rules | Individual replacements may exist earlier, but the complete rules also reference later APIs, such as `ArrayValues` or the abstract product-stream builder. |
 | Removed cache states, profile labels, primary order associations and remote-thumbnail assignments | These depend on changed behavior or data contracts; the presence of a replacement symbol alone does not establish 6.7 compatibility. |
