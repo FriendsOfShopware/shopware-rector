@@ -12,6 +12,8 @@ return Architecture::define()
     ->layer('Class_', 'src/Rule/Class_/')
     ->layer('ClassConstructor', 'src/Rule/ClassConstructor/')
     ->layer('ClassMethod', 'src/Rule/ClassMethod/')
+    ->layer('BCChange', 'src/Rule/BCChange/')
+    ->layer('Generator', 'src/Generator/')
     ->layer('Transform', 'src/Rule/Transform/')
     ->layerPattern('Version', '#^Frosh\\\Rector\\\Rule\\\v\d+\\\#')
     ->layer('Set', 'src/Set/')
@@ -19,6 +21,8 @@ return Architecture::define()
         'Class_' => [],
         'ClassConstructor' => ['+ClassMethod'],
         'ClassMethod' => [],
+        'BCChange' => [],
+        'Generator' => ['+BCChange'],
         'Transform' => [],
         'Version' => [],
         'Set' => [],
