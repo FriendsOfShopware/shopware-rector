@@ -31,15 +31,23 @@ final class ChangeReturnTypeOfClassMethodRector extends AbstractRector implement
 
         foreach ($this->configuration as $config) {
             if (!$this->isObjectType($node, new ObjectType($config->class))) {
-                return null;
+                continue;
             }
 
-            foreach ($node->stmts as $stmt) {
-                if ($stmt instanceof Node\Stmt\ClassMethod && $stmt->name->toString() === $config->method) {
-                    $stmt->returnType = new Node\Name\FullyQualified($config->returnType);
-                    $hasChanged = true;
-                }
+            $classMethod = $node->getMethod($config->method);
+            if ($classMethod === null) {
+                continue;
             }
+
+            if (
+                $classMethod->returnType instanceof Node\Name
+                && $this->isName($classMethod->returnType, $config->returnType->toString())
+            ) {
+                continue;
+            }
+
+            $classMethod->returnType = new Node\Name\FullyQualified($config->returnType);
+            $hasChanged = true;
         }
 
         return $hasChanged ? $node : null;
