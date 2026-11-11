@@ -10,6 +10,8 @@ use Rector\Config\RectorConfig;
 return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->import(__DIR__ . '/../../../../../config/config_test.php');
     $rectorConfig->ruleWithConfiguration(ChangeReturnTypeOfClassMethodRector::class, [
+        // does not match the fixtures, must not stop processing of the following entries
+        new ChangeReturnTypeOfClassMethod('\Shopware\Core\Checkout\Cart\Price\Struct\PriceDefinitionInterface', 'getType', new FullyQualified('Stringable')),
         new ChangeReturnTypeOfClassMethod('\Shopware\Elasticsearch\Framework\AbstractElasticsearchDefinition', 'buildTermQuery', new FullyQualified('OpenSearchDSL\BuilderInterface')),
     ]);
 };
