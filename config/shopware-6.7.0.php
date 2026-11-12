@@ -8,15 +8,11 @@ use Frosh\Rector\Rule\v67\AddEntityNameToEntityExtension;
 use Frosh\Rector\Rule\v67\AddLoggerToScheduledTaskConstructorRector;
 use PhpParser\Node\Name\FullyQualified;
 use Rector\Config\RectorConfig;
-use Rector\Symfony\Set\SymfonySetList;
 
 return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->import(__DIR__ . '/v6.7/renaming.php');
     $rectorConfig->import(__DIR__ . '/v6.7/migrations.php');
-
-    $rectorConfig->sets([
-        SymfonySetList::COMPOSER_BASED,
-    ]);
+    $rectorConfig->import(__DIR__ . '/symfony.php');
 
     $rectorConfig->ruleWithConfiguration(AddEntityNameToEntityExtension::class, [
         'backwardsCompatible' => false,
