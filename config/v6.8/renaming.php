@@ -7,6 +7,7 @@ use Frosh\Rector\Rule\Class_\InterfaceReplacedWithAbstractClassRector;
 use Frosh\Rector\Rule\v68\CartBehaviorIsRecalculationRector;
 use Frosh\Rector\Rule\v68\EntitySearchResultGetEntitiesRector;
 use Frosh\Rector\Rule\v68\ProductStreamBuilderBuildFiltersToEnrichCriteriaRector;
+use Frosh\Rector\Rule\v68\XmlConfigImportToYamlRector;
 use Rector\Config\RectorConfig;
 use Rector\Renaming\Rector\ClassConstFetch\RenameClassConstFetchRector;
 use Rector\Renaming\Rector\Name\RenameClassRector;
@@ -18,6 +19,7 @@ return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->rule(CartBehaviorIsRecalculationRector::class);
     $rectorConfig->rule(EntitySearchResultGetEntitiesRector::class);
     $rectorConfig->rule(ProductStreamBuilderBuildFiltersToEnrichCriteriaRector::class);
+    $rectorConfig->rule(XmlConfigImportToYamlRector::class);
 
     $rectorConfig->ruleWithConfiguration(
         InterfaceReplacedWithAbstractClassRector::class,
