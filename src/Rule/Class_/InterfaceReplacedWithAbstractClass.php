@@ -22,11 +22,11 @@ final class InterfaceReplacedWithAbstractClass
 
     public function getInterfaceObject(): ObjectType
     {
-        return new ObjectType($this->interface);
+        return new ObjectType(ltrim($this->interface, '\\'));
     }
 
     public function getAbstractClassObject(): ObjectType
     {
-        return new ObjectType($this->abstractClass);
+        return new ObjectType(ltrim($this->abstractClass, '\\'));
     }
 }
