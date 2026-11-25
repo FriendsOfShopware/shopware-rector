@@ -10,22 +10,31 @@ use PhpParser\Node\Arg;
 use PhpParser\Node\Expr;
 use PhpParser\Node\Expr\Assign;
 use PhpParser\Node\Expr\BooleanNot;
+use PhpParser\Node\Expr\Closure;
 use PhpParser\Node\Expr\FuncCall;
 use PhpParser\Node\Expr\Instanceof_;
 use PhpParser\Node\Expr\MethodCall;
 use PhpParser\Node\Expr\New_;
+use PhpParser\Node\Expr\PropertyFetch;
 use PhpParser\Node\Expr\Variable;
+use PhpParser\Node\FunctionLike;
+use PhpParser\Node\Identifier;
 use PhpParser\Node\Name;
 use PhpParser\Node\Name\FullyQualified;
+use PhpParser\Node\Scalar;
 use PhpParser\Node\Stmt;
+use PhpParser\Node\Stmt\ClassLike;
+use PhpParser\Node\Stmt\ClassMethod;
 use PhpParser\Node\Stmt\Echo_;
 use PhpParser\Node\Stmt\Expression;
 use PhpParser\Node\Stmt\Foreach_;
+use PhpParser\Node\Stmt\Function_;
 use PhpParser\Node\Stmt\If_;
+use PhpParser\Node\Stmt\Namespace_;
 use PhpParser\Node\Stmt\Return_;
 use PhpParser\NodeFinder;
 use PHPStan\Type\ObjectType;
-use Rector\PhpParser\Enum\NodeGroup;
+use Rector\PhpParser\Node\FileNode;
 use Rector\Rector\AbstractRector;
 use Symplify\RuleDocGenerator\ValueObject\CodeSample\CodeSample;
 use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
@@ -59,11 +68,53 @@ final class ProductStreamBuilderBuildFiltersToEnrichCriteriaRector extends Abstr
         Expr\AssignOp\Coalesce::class,
         Expr\Ternary::class,
         Expr\Match_::class,
-        Expr\Closure::class,
+        Closure::class,
         Expr\ArrowFunction::class,
         Expr\NullsafeMethodCall::class,
         Expr\NullsafePropertyFetch::class,
     ];
+
+    /**
+     * Expressions that can change state, so a buildFilters() call must not be moved across them.
+     *
+     * @var list<class-string<Expr>>
+     */
+    private const SIDE_EFFECT_EXPRESSIONS = [
+        Assign::class,
+        Expr\AssignOp::class,
+        Expr\AssignRef::class,
+        Expr\PreInc::class,
+        Expr\PreDec::class,
+        Expr\PostInc::class,
+        Expr\PostDec::class,
+        FuncCall::class,
+        MethodCall::class,
+        Expr\NullsafeMethodCall::class,
+        Expr\StaticCall::class,
+        New_::class,
+        Expr\Include_::class,
+        Expr\Eval_::class,
+        Expr\Exit_::class,
+        Expr\Print_::class,
+        Expr\Yield_::class,
+        Expr\YieldFrom::class,
+        Expr\Throw_::class,
+        Expr\ShellExec::class,
+    ];
+
+    /**
+     * Functions that read or write variables without naming them.
+     */
+    private const DYNAMIC_VARIABLE_ACCESS_FUNCTIONS = ['compact', 'extract', 'get_defined_vars', 'parse_str'];
+
+    /**
+     * Variable names in use in the scope that is currently processed, including the temporary criteria allocated so far.
+     *
+     * @var array<string, true>
+     */
+    private array $usedVariableNames = [];
+
+    private ?Node $scope = null;
 
     public function getRuleDefinition(): RuleDefinition
     {
@@ -93,26 +144,35 @@ final class ProductStreamBuilderBuildFiltersToEnrichCriteriaRector extends Abstr
         );
     }
 
+    /**
+     * Every node type that opens a PHP variable scope. Nested statement lists (if, loops, try, ...) are walked
+     * from there, so checks on variables always see the whole scope.
+     */
     public function getNodeTypes(): array
     {
-        return NodeGroup::STMTS_AWARE;
+        return [ClassMethod::class, Function_::class, Closure::class, Namespace_::class, FileNode::class];
     }
 
+    /**
+     * @param ClassMethod|Function_|Closure|Namespace_|FileNode $node
+     */
     public function refactor(Node $node): ?Node
     {
-        if ($node instanceof If_) {
-            $this->markLegacyBranches($node);
-        }
-
-        if ($node->getAttribute(self::LEGACY_BRANCH_ATTRIBUTE) === true) {
+        if ($node->getAttribute(self::LEGACY_BRANCH_ATTRIBUTE) === true || $node->stmts === null) {
             return null;
         }
 
-        if (!property_exists($node, 'stmts') || !\is_array($node->stmts)) {
-            return null;
+        $this->scope = $node;
+        $this->usedVariableNames = [];
+        foreach ((new NodeFinder())->findInstanceOf($node, Variable::class) as $variable) {
+            if (\is_string($variable->name)) {
+                $this->usedVariableNames[$variable->name] = true;
+            }
         }
 
         $newStmts = $this->processStmts($node->stmts);
+        $this->scope = null;
+
         if ($newStmts === null) {
             return null;
         }
@@ -120,52 +180,6 @@ final class ProductStreamBuilderBuildFiltersToEnrichCriteriaRector extends Abstr
         $node->stmts = $newStmts;
 
         return $node;
-    }
-
-    /**
-     * Dual-path code that checks the builder type with instanceof keeps its legacy branch untouched.
-     * That branch is dead code once the interface is gone and has to be removed manually.
-     */
-    private function markLegacyBranches(If_ $if): void
-    {
-        $thenIsLegacy = $this->isLegacyThenBranch($if->cond);
-        if ($thenIsLegacy === true) {
-            $if->setAttribute(self::LEGACY_BRANCH_ATTRIBUTE, true);
-        } elseif ($thenIsLegacy === false && $if->else !== null) {
-            $if->else->setAttribute(self::LEGACY_BRANCH_ATTRIBUTE, true);
-        }
-
-        foreach ($if->elseifs as $elseIf) {
-            if ($this->isLegacyThenBranch($elseIf->cond) === true) {
-                $elseIf->setAttribute(self::LEGACY_BRANCH_ATTRIBUTE, true);
-            }
-        }
-    }
-
-    /**
-     * @return bool|null true: the "then" branch is the legacy one, false: the "else" branch is, null: no builder type check
-     */
-    private function isLegacyThenBranch(Expr $cond): ?bool
-    {
-        $negated = false;
-        if ($cond instanceof BooleanNot) {
-            $negated = true;
-            $cond = $cond->expr;
-        }
-
-        if (!$cond instanceof Instanceof_ || !$cond->class instanceof Name) {
-            return null;
-        }
-
-        if ($this->isName($cond->class, self::INTERFACE)) {
-            return !$negated;
-        }
-
-        if ($this->isName($cond->class, self::ABSTRACT_CLASS)) {
-            return $negated;
-        }
-
-        return null;
     }
 
     /**
@@ -209,7 +223,7 @@ final class ProductStreamBuilderBuildFiltersToEnrichCriteriaRector extends Abstr
             }
 
             $stmt = $stmts[$index];
-            if ($this->findBuildFiltersCall($stmt) !== null && !$this->hasManualMigrationComment($stmt)) {
+            if ($this->findBuildFiltersCalls($stmt) !== [] && !$this->hasManualMigrationComment($stmt)) {
                 $stmt->setAttribute('comments', [
                     ...$stmt->getComments(),
                     new Comment(self::MANUAL_MIGRATION_COMMENT),
@@ -220,7 +234,115 @@ final class ProductStreamBuilderBuildFiltersToEnrichCriteriaRector extends Abstr
             $newStmts[] = $stmt;
         }
 
+        foreach ($newStmts as $stmt) {
+            if ($this->processNestedStmts($stmt)) {
+                $changed = true;
+            }
+        }
+
         return $changed ? $newStmts : null;
+    }
+
+    /**
+     * Processes the statement lists nested in a statement (if, else, loops, try, catch, ...) within the same variable scope.
+     * Classes, functions and closures open a scope of their own and are visited on their own, see getNodeTypes().
+     */
+    private function processNestedStmts(Stmt $stmt): bool
+    {
+        if ($stmt instanceof ClassLike || $stmt instanceof FunctionLike || $stmt instanceof Namespace_) {
+            return false;
+        }
+
+        if ($stmt instanceof If_) {
+            $this->markLegacyBranches($stmt);
+        }
+
+        $changed = false;
+        foreach ($stmt->getSubNodeNames() as $subNodeName) {
+            $subNode = $stmt->{$subNodeName};
+
+            if ($subNodeName === 'stmts' && \is_array($subNode)) {
+                if ($stmt->getAttribute(self::LEGACY_BRANCH_ATTRIBUTE) === true) {
+                    $this->markClosuresAsLegacy($subNode);
+
+                    continue;
+                }
+
+                $newStmts = $this->processStmts($subNode);
+                if ($newStmts !== null) {
+                    $stmt->{$subNodeName} = $newStmts;
+                    $changed = true;
+                }
+
+                continue;
+            }
+
+            foreach (\is_array($subNode) ? $subNode : [$subNode] as $nestedStmt) {
+                if ($nestedStmt instanceof Stmt && $this->processNestedStmts($nestedStmt)) {
+                    $changed = true;
+                }
+            }
+        }
+
+        return $changed;
+    }
+
+    /**
+     * Dual-path code that checks the builder type with instanceof keeps its legacy branch untouched.
+     * That branch is dead code once the interface is gone and has to be removed manually.
+     */
+    private function markLegacyBranches(If_ $if): void
+    {
+        $thenIsLegacy = $this->isLegacyThenBranch($if->cond);
+        if ($thenIsLegacy === true) {
+            $if->setAttribute(self::LEGACY_BRANCH_ATTRIBUTE, true);
+        } elseif ($thenIsLegacy === false && $if->else !== null) {
+            $if->else->setAttribute(self::LEGACY_BRANCH_ATTRIBUTE, true);
+        }
+
+        foreach ($if->elseifs as $elseIf) {
+            if ($this->isLegacyThenBranch($elseIf->cond) === true) {
+                $elseIf->setAttribute(self::LEGACY_BRANCH_ATTRIBUTE, true);
+            }
+        }
+    }
+
+    /**
+     * Closures are visited on their own, so they need to know that they are part of a legacy branch.
+     *
+     * @param array<Stmt> $stmts
+     */
+    private function markClosuresAsLegacy(array $stmts): void
+    {
+        foreach ((new NodeFinder())->findInstanceOf($stmts, Closure::class) as $closure) {
+            $closure->setAttribute(self::LEGACY_BRANCH_ATTRIBUTE, true);
+        }
+    }
+
+    /**
+     * @return bool|null true: the "then" branch is the legacy one, false: the "else" branch is, null: no builder type check
+     */
+    private function isLegacyThenBranch(Expr $cond): ?bool
+    {
+        $negated = false;
+        if ($cond instanceof BooleanNot) {
+            $negated = true;
+            $cond = $cond->expr;
+        }
+
+        if (!$cond instanceof Instanceof_ || !$cond->class instanceof Name) {
+            return null;
+        }
+
+        if ($this->isName($cond->class, self::INTERFACE)) {
+            return !$negated;
+        }
+
+        if ($this->isName($cond->class, self::ABSTRACT_CLASS)) {
+            return $negated;
+        }
+
+        return null;
     }
 
     /**
@@ -245,37 +367,141 @@ final class ProductStreamBuilderBuildFiltersToEnrichCriteriaRector extends Abstr
             return null;
         }
 
+        // In the whole scope, the variable may only be written here and read in the addFilter() call,
+        // otherwise removing the assignment changes what other readers see
         $variableName = $assign->var->name;
-        $nodeFinder = new NodeFinder();
-        $match = null;
+        if ($this->scope === null
+            || $this->hasDynamicVariableAccess($this->scope)
+            || $this->countVariableUsages($this->scope, $variableName) !== 2
+        ) {
+            return null;
+        }
 
-        // The variable must be used exactly once afterwards, and that use must be addFilter(...$variable)
+        $nodeFinder = new NodeFinder();
         for ($i = $index + 1, $count = \count($stmts); $i < $count; $i++) {
-            $usages = $nodeFinder->find(
+            $usage = $nodeFinder->findFirst(
                 $stmts[$i],
                 static fn (Node $node): bool => $node instanceof Variable && $node->name === $variableName,
             );
 
-            if ($usages === []) {
+            if ($usage === null) {
                 continue;
-            }
-
-            if ($match !== null || \count($usages) !== 1) {
-                return null;
             }
 
             $addFilterArgument = $this->matchSingleUnpackedAddFilterArgument($stmts[$i]);
             if ($addFilterArgument === null
                 || !$addFilterArgument[1] instanceof Variable
                 || $addFilterArgument[1]->name !== $variableName
+                || !$this->canMoveAcross(\array_slice($stmts, $index + 1, $i - $index - 1), $buildFiltersCall)
             ) {
                 return null;
             }
 
-            $match = [$i, $this->createEnrichCriteriaCall($buildFiltersCall, $addFilterArgument[0])];
+            return [$i, $this->createEnrichCriteriaCall($buildFiltersCall, $addFilterArgument[0])];
         }
 
-        return $match;
+        return null;
+    }
+
+    /**
+     * Whether the buildFilters() call can be executed after the given statements, at the position of the addFilter() call,
+     * without changing its result. The statements must not touch anything the call reads and must not leave early.
+     *
+     * @param array<Stmt> $stmts
+     */
+    private function canMoveAcross(array $stmts, MethodCall $buildFiltersCall): bool
+    {
+        if ($stmts === []) {
+            return true;
+        }
+
+        $variableNames = [];
+        $propertyNames = [];
+        $readsThis = false;
+        foreach ([$buildFiltersCall->var, $buildFiltersCall->args[0], $buildFiltersCall->args[1]] as $dependency) {
+            foreach ([$dependency, ...(new NodeFinder())->find($dependency, static fn (): bool => true)] as $node) {
+                if ($node instanceof Variable) {
+                    if (!\is_string($node->name)) {
+                        return false;
+                    }
+
+                    if ($node->name === 'this') {
+                        $readsThis = true;
+                    } else {
+                        $variableNames[$node->name] = true;
+                    }
+                } elseif ($node instanceof PropertyFetch) {
+                    if (!$node->name instanceof Identifier) {
+                        return false;
+                    }
+
+                    $propertyNames[$node->name->toString()] = true;
+                } elseif (!$node instanceof Arg && !$node instanceof Identifier && !$node instanceof Name
+                    && !$node instanceof Expr\ConstFetch && !$node instanceof Expr\ClassConstFetch && !$node instanceof Scalar
+                ) {
+                    // Anything else, like a method call in an argument, could return something else later
+                    return false;
+                }
+            }
+        }
+
+        $conflict = (new NodeFinder())->findFirst($stmts, static function (Node $node) use ($variableNames, $propertyNames, $readsThis): bool {
+            if ($node instanceof Variable) {
+                return !\is_string($node->name) || isset($variableNames[$node->name]);
+            }
+
+            if ($node instanceof PropertyFetch || $node instanceof Expr\NullsafePropertyFetch || $node instanceof Expr\StaticPropertyFetch) {
+                return !$node->name instanceof Identifier || isset($propertyNames[$node->name->toString()]);
+            }
+
+            // A method of the own class could change the properties the call reads
+            if ($readsThis && ($node instanceof MethodCall || $node instanceof Expr\NullsafeMethodCall)) {
+                return $node->var instanceof Variable && $node->var->name === 'this';
+            }
+
+            if ($readsThis && $node instanceof Expr\StaticCall) {
+                return $node->class instanceof Name && \in_array($node->class->toLowerString(), ['self', 'static', 'parent'], true);
+            }
+
+            if ($node instanceof FuncCall) {
+                return $node->name instanceof Name && \in_array($node->name->toLowerString(), self::DYNAMIC_VARIABLE_ACCESS_FUNCTIONS, true);
+            }
+
+            return $node instanceof Return_
+                || $node instanceof Stmt\Break_
+                || $node instanceof Stmt\Continue_
+                || $node instanceof Stmt\Goto_
+                || $node instanceof Stmt\Label
+                || $node instanceof Expr\Throw_
+                || $node instanceof Expr\Exit_
+                || $node instanceof Expr\Yield_
+                || $node instanceof Expr\YieldFrom
+                || $node instanceof Expr\Include_
+                || $node instanceof Expr\Eval_;
+        });
+
+        return $conflict === null;
+    }
+
+    private function countVariableUsages(Node $scope, string $variableName): int
+    {
+        return \count((new NodeFinder())->find(
+            $scope,
+            static fn (Node $node): bool => $node instanceof Variable && $node->name === $variableName,
+        ));
+    }
+
+    private function hasDynamicVariableAccess(Node $scope): bool
+    {
+        return (new NodeFinder())->findFirst($scope, static function (Node $node): bool {
+            if ($node instanceof Variable) {
+                return !\is_string($node->name);
+            }
+
+            return $node instanceof FuncCall
+                && $node->name instanceof Name
+                && \in_array($node->name->toLowerString(), self::DYNAMIC_VARIABLE_ACCESS_FUNCTIONS, true);
+        }) !== null;
     }
 
     private function matchInlineAddFilter(Stmt $stmt): ?MethodCall
@@ -327,29 +553,122 @@ final class ProductStreamBuilderBuildFiltersToEnrichCriteriaRector extends Abstr
             return null;
         }
 
-        $buildFiltersCall = $this->findBuildFiltersCall($stmt);
-        if ($buildFiltersCall === null || !$this->isBuildFiltersCall($buildFiltersCall)) {
+        $buildFiltersCalls = $this->findBuildFiltersCalls($stmt);
+        if ($buildFiltersCalls === []) {
             return null;
         }
 
-        if ($this->isConditionallyEvaluated($stmt, $buildFiltersCall)) {
-            return null;
+        foreach ($buildFiltersCalls as $buildFiltersCall) {
+            if (!$this->isBuildFiltersCall($buildFiltersCall)
+                || $this->isConditionallyEvaluated($stmt, $buildFiltersCall)
+                || $this->hasEarlierSideEffect($stmt, $buildFiltersCall, $buildFiltersCalls)
+            ) {
+                return null;
+            }
         }
 
-        $temporaryCriteria = new Variable(self::TEMPORARY_CRITERIA_VARIABLE);
+        // Each call gets its own temporary criteria, so no call overwrites a variable that is still read
+        $hoisted = [];
+        $replacements = new \SplObjectStorage();
+        foreach ($buildFiltersCalls as $buildFiltersCall) {
+            $temporaryCriteria = new Variable($this->allocateTemporaryVariableName());
+            $hoisted[] = new Expression(new Assign($temporaryCriteria, new New_(new FullyQualified(self::CRITERIA))));
+            $hoisted[] = new Expression($this->createEnrichCriteriaCall($buildFiltersCall, $temporaryCriteria));
+            $replacements[$buildFiltersCall] = new FuncCall(
+                new Name('array_values'),
+                [new Arg(new MethodCall($temporaryCriteria, 'getFilters'))],
+            );
+        }
 
         $this->traverseNodesWithCallable(
             $stmt,
-            static fn (Node $node): ?Node => $node === $buildFiltersCall
-                ? new FuncCall(new Name('array_values'), [new Arg(new MethodCall($temporaryCriteria, 'getFilters'))])
+            static fn (Node $node): ?Node => $node instanceof MethodCall && isset($replacements[$node])
+                ? $replacements[$node]
                 : null,
         );
 
-        return [
-            new Expression(new Assign($temporaryCriteria, new New_(new FullyQualified(self::CRITERIA)))),
-            new Expression($this->createEnrichCriteriaCall($buildFiltersCall, $temporaryCriteria)),
-            $stmt,
-        ];
+        return [...$hoisted, $stmt];
+    }
+
+    /**
+     * Whether something that runs before the buildFilters() call in the statement can change state.
+     * Hoisting the call in front of the statement would then change what it reads.
+     * Other buildFilters() calls are hoisted in the same order, so they keep their relative order.
+     *
+     * @param list<MethodCall> $buildFiltersCalls
+     */
+    private function hasEarlierSideEffect(Stmt $stmt, MethodCall $buildFiltersCall, array $buildFiltersCalls): bool
+    {
+        $callStart = $buildFiltersCall->getStartFilePos();
+        if ($callStart < 0) {
+            return true;
+        }
+
+        $nodeFinder = new NodeFinder();
+        foreach ($this->findSideEffects($stmt, $buildFiltersCalls, true) as $sideEffect) {
+            $isAncestor = $nodeFinder->findFirst($sideEffect, static fn (Node $node): bool => $node === $buildFiltersCall) !== null;
+            if ($isAncestor) {
+                continue;
+            }
+
+            $start = $sideEffect->getStartFilePos();
+            if ($start < 0 || $start < $callStart) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Collects side effect expressions of the statement itself, without nested statements, function bodies and
+     * the buildFilters() calls that are hoisted.
+     *
+     * @param list<MethodCall> $buildFiltersCalls
+     *
+     * @return list<Expr>
+     */
+    private function findSideEffects(Node $node, array $buildFiltersCalls, bool $isRoot = false): array
+    {
+        if ((!$isRoot && $node instanceof Stmt)
+            || $node instanceof Closure
+            || $node instanceof Expr\ArrowFunction
+            || \in_array($node, $buildFiltersCalls, true)
+        ) {
+            return [];
+        }
+
+        $sideEffects = [];
+        foreach (self::SIDE_EFFECT_EXPRESSIONS as $class) {
+            if ($node instanceof $class) {
+                $sideEffects[] = $node;
+
+                break;
+            }
+        }
+
+        foreach ($node->getSubNodeNames() as $subNodeName) {
+            $subNodes = $node->{$subNodeName};
+            foreach (\is_array($subNodes) ? $subNodes : [$subNodes] as $subNode) {
+                if ($subNode instanceof Node) {
+                    array_push($sideEffects, ...$this->findSideEffects($subNode, $buildFiltersCalls));
+                }
+            }
+        }
+
+        return $sideEffects;
+    }
+
+    private function allocateTemporaryVariableName(): string
+    {
+        $name = self::TEMPORARY_CRITERIA_VARIABLE;
+        for ($suffix = 2; isset($this->usedVariableNames[$name]); $suffix++) {
+            $name = self::TEMPORARY_CRITERIA_VARIABLE . $suffix;
+        }
+
+        $this->usedVariableNames[$name] = true;
+
+        return $name;
     }
 
     private function isConditionallyEvaluated(Stmt $stmt, MethodCall $buildFiltersCall): bool
@@ -402,37 +721,35 @@ final class ProductStreamBuilderBuildFiltersToEnrichCriteriaRector extends Abstr
     }
 
     /**
-     * Finds a buildFilters() call in the statement itself, without descending into nested statements.
-     * Nested statement lists are visited on their own, see getNodeTypes().
+     * Finds the buildFilters() calls in the statement itself, without descending into nested statements.
+     * Nested statement lists are processed on their own, see processNestedStmts().
+     *
+     * @return list<MethodCall>
      */
-    private function findBuildFiltersCall(Node $node, bool $isRoot = true): ?MethodCall
+    private function findBuildFiltersCalls(Node $node, bool $isRoot = true): array
     {
         if (!$isRoot && $node instanceof Stmt) {
-            return null;
+            return [];
         }
 
         if ($node instanceof MethodCall
             && $this->isName($node->name, 'buildFilters')
             && $this->isObjectType($node->var, new ObjectType(self::INTERFACE))
         ) {
-            return $node;
+            return [$node];
         }
 
+        $calls = [];
         foreach ($node->getSubNodeNames() as $subNodeName) {
             $subNodes = $node->{$subNodeName};
             foreach (\is_array($subNodes) ? $subNodes : [$subNodes] as $subNode) {
-                if (!$subNode instanceof Node) {
-                    continue;
-                }
-
-                $result = $this->findBuildFiltersCall($subNode, false);
-                if ($result !== null) {
-                    return $result;
+                if ($subNode instanceof Node) {
+                    array_push($calls, ...$this->findBuildFiltersCalls($subNode, false));
                 }
             }
         }
 
-        return null;
+        return $calls;
     }
 
     private function hasManualMigrationComment(Stmt $stmt): bool
