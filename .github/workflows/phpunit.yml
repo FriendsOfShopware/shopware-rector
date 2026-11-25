@@ -15,7 +15,12 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        rector: ['2.8.0', '^2.8']
+        include:
+          - rector: '2.8.0'
+            # Rector 2.8.0-2.8.2 bundle an older phpstan/phpdoc-parser whose CallableTypeNode rejects FullyQualifiedNameNode from PHPStan 2.3.4+
+            phpstan: '2.3.3'
+          - rector: '^2.8'
+            phpstan: '^2.0'
 
     steps:
     - uses: actions/checkout@v7
@@ -28,12 +33,12 @@ jobs:
       uses: actions/cache@v6
       with:
         path: vendor
-        key: ${{ runner.os }}-php-rector-${{ matrix.rector }}-${{ hashFiles('**/composer.json') }}
+        key: ${{ runner.os }}-php-rector-${{ matrix.rector }}-phpstan-${{ matrix.phpstan }}-${{ hashFiles('**/composer.json') }}
         restore-keys: |
           ${{ runner.os }}-php-
 
     - name: Install dependencies
-      run: composer update --with 'rector/rector:${{ matrix.rector }}' --prefer-dist --no-progress --no-interaction
+      run: composer update --with 'rector/rector:${{ matrix.rector }}' --with 'phpstan/phpstan:${{ matrix.phpstan }}' --prefer-dist --no-progress --no-interaction
 
     - name: Run test suite
       run: ./vendor/bin/phpunit
