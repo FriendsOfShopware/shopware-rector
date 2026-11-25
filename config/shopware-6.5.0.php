@@ -5,7 +5,7 @@ declare(strict_types=1);
 use Frosh\Rector\Rule\v65\AbstractMessageHandlerToMessageSubscriberRector;
 use Frosh\Rector\Rule\v67\AddEntityNameToEntityExtension;
 use Rector\Config\RectorConfig;
-use Rector\Set\ValueObject\SetList;
+use Rector\Set\ValueObject\LevelSetList;
 
 return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->import(__DIR__ . '/v6.5/flysystem-v3.php');
@@ -14,9 +14,7 @@ return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->import(__DIR__ . '/symfony.php');
 
     $rectorConfig->sets([
-        SetList::PHP_74,
-        SetList::PHP_80,
-        SetList::PHP_81,
+        LevelSetList::UP_TO_PHP_81,
     ]);
 
     $rectorConfig->ruleWithConfiguration(AddEntityNameToEntityExtension::class, [
